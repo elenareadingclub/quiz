@@ -850,7 +850,7 @@ function ttsVoiceScore(v) {
 function pickEnglishVoice() {
   if (!ttsVoices.length) loadTtsVoices();
   let best = null, bestScore = -1;
-  ttsVoices.forEach(v => { const s = ttsVoiceScore(v); if (s > bestScore) { best = v; bestScore = s; } });
+  ttsVoices.forEach(v => { if (ttsFailed[v.name]) return; const s = ttsVoiceScore(v); if (s > bestScore) { best = v; bestScore = s; } });
   return best;
 }
 function showTtsNotice() {
@@ -866,23 +866,47 @@ function showTtsNotice() {
 // lang='en-US' and let the OS/browser resolve it (some setups don't expose voices in
 // enumeration correctly but can still speak them). Only show the "not installed"
 // notice if an actual speech error comes back on that final attempt.
+let ttsCurrent = null;
+const ttsFailed = {};
 function speak(text, attempt) {
   if (!soundEnabled) return;
   if (attempt === undefined) attempt = 0;
   try {
-    if (!window.speechSynthesis) { showTtsNotice(); return; }
+    const synth = window.speechSynthesis;
+    if (!synth) { showTtsNotice(); return; }
     const voice = pickEnglishVoice();
-    if (!voice && !ttsVoices.length && attempt < 8) {
-      setTimeout(() => speak(text, attempt + 1), 200);
-      return;
+    // 음성 목록이 다 불러와졌는데 영어 음성이 없을 때만 안내한다
+    if (!voice && ttsVoices.length && ttsVoices.some(v => ttsVoiceScore(v) >= 0)) {
+      // 영어 음성이 있는데 모두 실패로 표시됐다면 표시를 지우고 다시 고른다
+      Object.keys(ttsFailed).forEach(k => delete ttsFailed[k]);
+      if (attempt < 2) { speak(text, attempt + 1); return; }
     }
-    if (!voice) { showTtsNotice(); return; }
-    window.speechSynthesis.cancel();
+    if (!voice && ttsVoices.length && !ttsVoices.some(v => ttsVoiceScore(v) >= 0)) { showTtsNotice(); return; }
+    if (synth.speaking || synth.pending) synth.cancel();
+    if (synth.paused) synth.resume();
     const u = new SpeechSynthesisUtterance(text);
-    u.voice = voice; u.lang = voice.lang;
+    if (voice) { u.voice = voice; u.lang = voice.lang; } else { u.lang = 'en-US'; }
     u.rate = 0.9;
-    u.onerror = () => { showTtsNotice(); };
-    window.speechSynthesis.speak(u);
+    let started = false;
+    ttsCurrent = u;
+    u.onstart = () => { started = true; };
+    u.onend = () => { if (ttsCurrent === u) ttsCurrent = null; };
+    u.onerror = ev => {
+      const err = ev && ev.error;
+      if (err === 'interrupted' || err === 'canceled') return;
+      if (ttsCurrent !== u) return;
+      if (voice && attempt < 2) { ttsFailed[voice.name] = true; speak(text, attempt + 1); return; }
+      showTtsNotice();
+    };
+    synth.speak(u);
+    // 1.2초 안에 소리가 시작되지 않으면 그 음성을 빼고 다른 영어 음성으로 한 번 더
+    setTimeout(() => {
+      if (started || ttsCurrent !== u) return;
+      if (attempt >= 2) return;
+      try { synth.cancel(); } catch (e) {}
+      if (voice) ttsFailed[voice.name] = true;
+      speak(text, attempt + 1);
+    }, 1200);
   } catch (e) { showTtsNotice(); }
 }
 
@@ -2810,6 +2834,7 @@ document.getElementById('hwOverlay').addEventListener('click', e => { if (e.targ
 // ===== 온라인 버전: 중계(Apps Script) 연결 =====
 let onlinePin = '';
 let onlineTrial = false;
+let onlineClass = '';
 let pinBusy = false;
 let onlineHomework = [];
 let hallCache = { at: 0, items: [] };
@@ -2867,6 +2892,7 @@ async function confirmPinOnline() {
     if (r.ok) {
       onlinePin = typed;
       onlineTrial = !!r.trial;
+      onlineClass = r.cls || '';
       if (r.icon) NAME_ICON[r.name] = r.icon;
       currentName = r.name;
       hidePinPrompt();
@@ -2905,7 +2931,7 @@ async function onlineProgress() {
 // --- 이번 주 숙제 (노션 '이번 주 숙제' 표)
 async function onlineAfterSetList() {
   try {
-    const r = await relayPost({ action: 'homework', level: LEVEL_CODE });
+    const r = await relayPost({ action: 'homework', level: LEVEL_CODE, cls: onlineClass });
     onlineHomework = r.ok ? (r.items || []) : [];
   } catch (e) { onlineHomework = []; }
   renderHomeworkBanner();
@@ -3039,7 +3065,7 @@ if (ONLINE) {
   ['pointerdown', 'keydown', 'touchstart'].forEach(ev => document.addEventListener(ev, resetIdle, { passive: true }));
   window.addEventListener('online', flushOutbox);
   setInterval(flushOutbox, 60000);
-  document.getElementById('nameBackBtn').addEventListener('click', () => { onlinePin = ''; clearTimeout(idleTimer); });
+  document.getElementById('nameBackBtn').addEventListener('click', () => { onlinePin = ''; onlineClass = ''; clearTimeout(idleTimer); });
 }
 
 // ===== 4-2 extra steps =====
