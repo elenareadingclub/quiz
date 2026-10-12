@@ -716,14 +716,6 @@
   </div>
 
   <footer>ERC 영어독서클럽 · E레벨 단어 확인용 · 퀴즈는 단어 수만큼 문항(영→한·한→영 혼합)으로 구성 · 통과 기준: 퀴즈·매칭게임·스펠쓰기 각 70% 이상
-    <div style="margin-top:10px;">
-      <button class="exitbtn" id="teacherGateBtn" style="display:inline-block;margin:0;font-size:11px;">🔒 교사용</button>
-      <div id="teacherGateBox" hidden style="margin-top:8px;">
-        <input type="password" id="teacherGateInput" inputmode="numeric" maxlength="8" placeholder="교사 비밀번호" autocomplete="off" style="width:150px;padding:6px 10px;border:1px solid var(--line);border-radius:8px;background:var(--surface-2);color:var(--ink);font-size:13px;">
-        <button class="secondary" id="teacherGateOk" style="padding:6px 12px;">확인</button>
-        <div id="teacherGateErr" hidden style="color:var(--danger);font-size:11.5px;margin-top:4px;">비밀번호가 틀렸어요.</div>
-      </div>
-    </div>
   </footer>
 </div>
 
@@ -922,28 +914,8 @@ const RELAY_URL = 'https://script.google.com/macros/s/AKfycbzVuoGbwxRDZ90_5TNyjQ
 const LEVEL_CODE = 'E';
 const ONLINE = !!RELAY_URL;
 
-const TEACHER_PIN = '';
-let TEACHER_MODE = !ONLINE && new URLSearchParams(location.search).get('teacher') === '1';
-if (TEACHER_MODE) document.getElementById('teacherPanel').hidden = false;
-(function setupTeacherGate() {
-  const openBtn = document.getElementById('teacherGateBtn');
-  const box = document.getElementById('teacherGateBox');
-  const input = document.getElementById('teacherGateInput');
-  const err = document.getElementById('teacherGateErr');
-  if (TEACHER_MODE || ONLINE) { openBtn.hidden = true; return; }
-  openBtn.addEventListener('click', () => { box.hidden = !box.hidden; if (!box.hidden) input.focus(); });
-  function tryUnlock() {
-    if (input.value.trim() === TEACHER_PIN) {
-      TEACHER_MODE = true;
-      document.getElementById('teacherPanel').hidden = false;
-      box.hidden = true; openBtn.hidden = true; err.hidden = true; input.value = '';
-      loadTeacherDashboard();
-      window.scrollTo(0, 0);
-    } else { err.hidden = false; input.value = ''; }
-  }
-  document.getElementById('teacherGateOk').addEventListener('click', tryUnlock);
-  input.addEventListener('keydown', e => { if (e.key === 'Enter') tryUnlock(); });
-})();
+// 교사용 화면은 앱에서 없앴다 (결과는 노션에서 본다)
+let TEACHER_MODE = false;
 const STUDENT_PARAM = new URLSearchParams(location.search).get('student');
 
 let db = null;
