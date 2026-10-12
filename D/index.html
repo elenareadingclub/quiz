@@ -73,6 +73,11 @@
   .submitnote{font-size:13px; color:var(--ink-soft); margin-top:4px;}
   .setbtn.locked{opacity:.4; filter:grayscale(1); cursor:not-allowed;}
   .wpbtn.wpmeanbtn.on{border-color:var(--accent); background:var(--accent-soft); color:var(--accent-strong);}
+  .wpnav{display:none !important;}
+  .wpknowbtns{display:flex; gap:6px; justify-content:flex-end; flex:0 1 auto;}
+  .wpknowitem{flex-wrap:nowrap;}
+  .wpknowmain{min-width:0 !important; word-break:break-word;}
+  .wpmeaning{display:block; max-width:min(48vw,200px); text-align:right; font-weight:800; font-size:17px; line-height:1.35; color:var(--accent-strong); padding:6px 4px; cursor:pointer; word-break:keep-all; overflow-wrap:anywhere;}
   @media (max-width:480px){
     #modepicker{grid-template-columns:1fr;}
     .wrap{padding:24px 14px 48px;}
@@ -128,6 +133,7 @@
     color:var(--ink); overflow:hidden;
   }
   .setrow.complete{background:var(--accent-soft); border-color:var(--accent);}
+  .donechip{display:inline-block; background:#1E8449; color:#fff; font-size:11px; font-weight:800; border-radius:10px; padding:1px 8px; margin:0 2px 0 4px; vertical-align:middle;}
   .setrow-preview{
     flex:1; display:flex; align-items:center; gap:10px; text-align:left;
     background:transparent; border:none; padding:12px 14px; cursor:pointer; color:inherit;
@@ -606,7 +612,7 @@
 <div class="wordpreview-overlay" id="hwOverlay" hidden>
   <div class="wordpreview-card" style="max-width:430px">
     <div class="wordpreview-top">
-      <span>📸 숙제 결과 카드</span>
+      <span>📋 숙제 결과 카드</span>
       <button class="exitbtn" id="hwCloseBtn" aria-label="닫기">✕ 닫기</button>
     </div>
     <div class="wordpreview-list" id="hwBody"></div>
@@ -666,13 +672,13 @@
     <div id="warmupWrap"></div>
     <label>모드를 선택하세요</label>
     <div class="setpicker" id="modepicker">
-      <button class="setbtn active" data-mode="wordcheck">📖 단어확인 <span class="dot" id="modeDotWord"></span><span class="repbadge" id="repWord"></span><br><span class="hint" style="margin:0;">뜻 확인 · 발음 듣기</span></button>
-      <button class="setbtn" data-mode="quiz">📝 단어 퀴즈 <span class="dot" id="modeDotQuiz"></span><span class="repbadge" id="repQuiz"></span><br><span class="hint" style="margin:0;">15문항 4지선다</span></button>
-      <button class="setbtn" data-mode="match">🔗 매칭게임 <span class="dot" id="modeDotMatch"></span><br><span class="hint" style="margin:0;">80초 타이머</span></button>
-      <button class="setbtn" data-mode="spell">✏️ 스펠쓰기 <span class="dot" id="modeDotSpell"></span><br><span class="hint" style="margin:0;">8문항 타이핑</span></button>
+      <button class="setbtn active" data-mode="wordcheck">📖 단어확인 <span class="donechip" id="doneWord" hidden>완료</span><span class="dot" id="modeDotWord"></span><span class="repbadge" id="repWord"></span><br><span class="hint" style="margin:0;">뜻 확인 · 발음 듣기</span></button>
+      <button class="setbtn" data-mode="quiz">📝 단어 퀴즈 <span class="donechip" id="doneQuiz" hidden>완료</span><span class="dot" id="modeDotQuiz"></span><span class="repbadge" id="repQuiz"></span><br><span class="hint" style="margin:0;">단어 수만큼 4지선다</span></button>
+      <button class="setbtn" data-mode="match">🔗 매칭게임 <span class="donechip" id="doneMatch" hidden>완료</span><span class="dot" id="modeDotMatch"></span><br><span class="hint" style="margin:0;">80초 타이머</span></button>
+      <button class="setbtn" data-mode="spell">✏️ 스펠쓰기 <span class="donechip" id="doneSpell" hidden>완료</span><span class="dot" id="modeDotSpell"></span><br><span class="hint" style="margin:0;">8문항 타이핑</span></button>
     </div>
     <div class="hint" id="modeLockNote" hidden style="color:var(--danger);font-weight:700;margin:-8px 0 10px;">🔒 단어확인을 먼저 해요! 뜻 확인을 모두 누르면 열려요</div>
-    <button class="primary" id="startBtn">퀴즈 시작 (15문항)</button>
+    <button class="primary" id="startBtn">단어확인 시작 (뜻 확인)</button>
     <div id="stepupWrap" hidden>
       <div class="stepuphead">⬆️ Step Up · 추가 코너</div>
       <div class="setpicker" id="stepupPicker">
@@ -680,7 +686,7 @@
         <button class="setbtn" data-extra="body">🐾 강아지 몸 <span class="dot" id="exDotBody"></span><br><span class="hint" style="margin:0;">그림에서 찾기</span></button>
       </div>
     </div>
-    <button class="secondary" id="hwBtn" style="width:100%;margin-top:10px;">📸 숙제 결과 카드 (캡처해서 제출)</button>
+    <button class="secondary" id="hwBtn" style="width:100%;margin-top:10px;">📋 숙제 결과 카드 보기</button>
   </div>
 
   <div class="card" id="quizCard" hidden>
@@ -768,7 +774,7 @@
       <button class="secondary" id="retryBtn">다시 풀기</button>
       <button class="secondary" id="backBtn">세트 목록으로</button>
     </div>
-    <button class="secondary" id="hwBtn2" style="width:100%;margin-top:10px;">📸 숙제 결과 카드 보기</button>
+    <button class="secondary" id="hwBtn2" style="width:100%;margin-top:10px;">📋 숙제 결과 카드 보기</button>
     <div class="submitbanner" id="submitBanner" hidden></div>
   </div>
 
@@ -778,7 +784,7 @@
     <div class="hint">최근 20건까지 표시됩니다.</div>
   </div>
 
-  <footer>ERC 영어독서클럽 · D레벨 단어 확인용 · 퀴즈는 15문항(영→한·한→영 혼합)으로 구성 · 통과 기준: 퀴즈·매칭게임·스펠쓰기 각 70% 이상
+  <footer>ERC 영어독서클럽 · D레벨 단어 확인용 · 퀴즈는 단어 수만큼 문항(영→한·한→영 혼합)으로 구성 · 통과 기준: 퀴즈·매칭게임·스펠쓰기 각 70% 이상
     <div style="margin-top:10px;">
       <button class="exitbtn" id="teacherGateBtn" style="display:inline-block;margin:0;font-size:11px;">🔒 교사용</button>
       <div id="teacherGateBox" hidden style="margin-top:8px;">
@@ -1067,7 +1073,7 @@ function renderSetList(progress) {
   const el = document.getElementById('setListItems');
   el.innerHTML = items.map(s => `
     <div class="setrow${s.complete ? ' complete' : ''}" data-no="${s.no}">
-      <button class="setrow-preview" data-no="${s.no}" aria-label="${setLabel(s.no)} 단어 미리보기">
+      <button class="setrow-preview" data-no="${s.no}" aria-label="${setLabel(s.no)} 시작">
         <span class="setrow-no">${setLabel(s.no)}</span>
         <span class="setrow-title">${s.title}</span>
       </button>
@@ -1082,7 +1088,7 @@ function renderSetList(progress) {
         <span class="setrow-arrow">›</span>
       </button>
     </div>`).join('');
-  el.querySelectorAll('.setrow-preview').forEach(btn => btn.addEventListener('click', () => openWordPreview(btn.dataset.no)));
+  el.querySelectorAll('.setrow-preview').forEach(btn => btn.addEventListener('click', () => openModeScreen(btn.dataset.no)));
   el.querySelectorAll('.setrow-enter').forEach(btn => btn.addEventListener('click', () => openModeScreen(btn.dataset.no)));
 }
 
@@ -1107,7 +1113,7 @@ async function markWordCheckComplete(setNo, unknown) {
   } catch (e) {}
 }
 
-const WP_PAGE_SIZE = 5;
+const WP_PAGE_SIZE = 1000;
 let wpPage = 0;
 let wpSeen = {};
 let wpRunCounted = false;
@@ -1153,8 +1159,8 @@ function wpItemHtml(w, idx) {
   const seen = !!wpSeen[w.en];
   return '<div class="wpknowitem" data-en="' + w.en + '">' + num +
     '<div class="wpknowmain"><div class="wpknowtop"><span class="wpemoji">' + (w.emoji || '') + '</span><span class="wpen">' + w.en + '</span>' + speakBtn + '</div>' +
-    (seen ? '<span class="wpko">→ ' + w.ko + '</span>' : '') + '</div>' +
-    '<div class="wpknowbtns"><button class="wpbtn wpmeanbtn' + (seen ? ' on' : '') + '" data-mean="1">' + (seen ? '✓ 확인함' : '👀 뜻 확인') + '</button></div></div>';
+    '</div>' +
+    '<div class="wpknowbtns">' + (seen ? '<span class="wpmeaning" data-en="' + w.en + '" title="누르면 다시 들려요">' + w.ko + '</span>' : '<button class="wpbtn wpmeanbtn" data-mean="1">👀 뜻 확인</button>') + '</div></div>';
 }
 function renderWpPage() {
   const words = wpSetWords();
@@ -1171,7 +1177,7 @@ function openWordPreview(setNo) {
   wpSeen = {};
   wpRunCounted = false;
   document.getElementById('wordPreviewTitle').textContent = setLabel(set.no) + ' — ' + set.title + ' (' + set.words.length + '개)';
-  const missions = '<div class="wpmissions"><div class="wpmission">👆 단어마다 <b>뜻 확인</b>을 눌러요. 발음도 들려요 (5개씩, 모두 눌러야 다음으로 넘어가요)</div><div class="wphint" id="wpProgress"></div></div>';
+  const missions = '<div class="wpmissions"><div class="wpmission">👆 단어마다 <b>뜻 확인</b>을 눌러요. 발음도 들려요 (전체 목록에서 모두 누르면 다음 단계가 열려요)</div><div class="wphint" id="wpProgress"></div></div>';
   document.getElementById('wordPreviewList').innerHTML = missions + '<div id="wpItems"></div>' +
     '<div class="wpnav"><button id="wpPrev">‹ 이전</button><span class="wppagelbl" id="wpPageLbl"></span><button id="wpNext">다음 5개 ›</button></div>';
   renderWpPage();
@@ -1182,6 +1188,8 @@ function openWordPreview(setNo) {
 document.getElementById('wordPreviewList').addEventListener('click', e => {
   const sp = e.target.closest('.wpspeak');
   if (sp) { e.stopPropagation(); speak(sp.dataset.en); return; }
+  const mn = e.target.closest('.wpmeaning');
+  if (mn) { speak(mn.dataset.en); return; }
   if (e.target.id === 'wpPrev' || e.target.id === 'wpNext') {
     wpPage += e.target.id === 'wpNext' ? 1 : -1;
     renderWpPage();
@@ -1193,7 +1201,10 @@ document.getElementById('wordPreviewList').addEventListener('click', e => {
     const en = mean.closest('.wpknowitem').dataset.en;
     wpSeen[en] = true;
     speak(en);
-    renderWpPage();
+    const words = wpSetWords();
+    const wi = words.findIndex(x => x.en === en);
+    const row = mean.closest('.wpknowitem');
+    if (wi >= 0 && row) row.outerHTML = wpItemHtml(words[wi], wi);
     updateWpProgress();
   }
 });
@@ -1204,7 +1215,7 @@ function enterQuizDirectly(setNo) {
   openModeScreen(setNo);
   mode = 'quiz';
   [...modepicker.children].forEach(c => c.classList.toggle('active', c.dataset.mode === 'quiz'));
-  startBtn.textContent = '퀴즈 시작 (15문항)';
+  startBtn.textContent = quizStartLabel();
   document.getElementById('modeScreen').hidden = true;
   document.getElementById('resultCard').hidden = true;
   document.getElementById('boardCard').hidden = true;
@@ -1344,6 +1355,32 @@ function renderMatchBoard() {
   boardCard.hidden = false;
 }
 
+function quizStartLabel() {
+  const q = QUIZZES.find(x => x.no === currentSet);
+  return '퀴즈 시작 (' + (q ? q.questions.length : 15) + '문항)';
+}
+function stageOrder(setNo) { return setNo === 'review6' ? ['wordcheck', 'quiz', 'match'] : ['wordcheck', 'quiz', 'match', 'spell']; }
+// 앞 단계를 통과했거나, 이미 이 단계나 그 뒤 단계를 통과한 기록이 있으면 열려 있다
+function modeUnlocked(setNo, m) {
+  const order = stageOrder(setNo);
+  const idx = order.indexOf(m);
+  if (idx <= 0) return true;
+  const p = studentProgress[setNo] || {};
+  return !!p[order[idx - 1]] || order.slice(idx).some(k => p[k]);
+}
+function firstOpenStage(setNo) {
+  const p = studentProgress[setNo] || {};
+  for (const m of stageOrder(setNo)) { if (!p[m]) return m; }
+  return 'quiz';
+}
+function startLabelFor(m) {
+  return m === 'wordcheck' ? '단어확인 시작 (뜻 확인)' : m === 'quiz' ? quizStartLabel() : m === 'spell' ? '스펠쓰기 시작 (8문항)' : '매칭게임 시작 (80초)';
+}
+const LOCK_TEXT = {
+  quiz: '🔒 단어확인을 먼저 끝내요! 뜻 확인을 모두 누르면 열려요',
+  match: '🔒 단어 퀴즈를 통과하면 매칭게임이 열려요 (70% 이상)',
+  spell: '🔒 매칭게임을 통과하면 스펠쓰기가 열려요 (70% 이상)'
+};
 function wordcheckDone(setNo) {
   const p = studentProgress[setNo];
   return !!(p && p.wordcheck);
@@ -1351,18 +1388,21 @@ function wordcheckDone(setNo) {
 function refreshModeLocks() {
   const wc = wordcheckDone(currentSet);
   [...modepicker.children].forEach(c => {
-    const locked = c.dataset.mode !== 'wordcheck' && !wc;
+    const locked = !modeUnlocked(currentSet, c.dataset.mode);
     c.classList.toggle('locked', locked);
     c.setAttribute('aria-disabled', locked ? 'true' : 'false');
   });
+  const pp = studentProgress[currentSet] || {};
+  [['Word', 'wordcheck'], ['Quiz', 'quiz'], ['Match', 'match'], ['Spell', 'spell']].forEach(([id, k]) => { const c = document.getElementById('done' + id); if (c) c.hidden = !pp[k]; });
   const dot = document.getElementById('modeDotWord');
   if (dot) dot.className = 'dot' + (wc ? ' pass' : '');
   refreshRepBadges();
 }
 let modeLockTimer = null;
-function showModeLockNote() {
+function showModeLockNote(m) {
   const n = document.getElementById('modeLockNote');
   if (!n) return;
+  n.textContent = LOCK_TEXT[m] || LOCK_TEXT.quiz;
   n.hidden = false;
   clearTimeout(modeLockTimer);
   modeLockTimer = setTimeout(() => { n.hidden = true; }, 2800);
@@ -1377,10 +1417,9 @@ function openModeScreen(setNo) {
   document.getElementById('mhsub').textContent = setLabel(quiz.no);
   document.getElementById('mhemoji').textContent = bd.e || '';
   document.getElementById('mhtitle').textContent = bd.t || quiz.title;
-  const wcDone = wordcheckDone(setNo);
-  mode = wcDone ? 'quiz' : 'wordcheck';
+  mode = firstOpenStage(setNo);
   [...modepicker.children].forEach(c => c.classList.toggle('active', c.dataset.mode === mode));
-  startBtn.textContent = wcDone ? '퀴즈 시작 (15문항)' : '단어확인 시작 (뜻 확인)';
+  startBtn.textContent = startLabelFor(mode);
   document.getElementById('modeLockNote').hidden = true;
   const spellBtnEl = [...modepicker.children].find(c => c.dataset.mode === 'spell');
   spellBtnEl.hidden = (setNo === 'review6');
@@ -1481,17 +1520,17 @@ document.getElementById('setBackBtn').addEventListener('click', () => {
 modepicker.addEventListener('click', e => {
   const btn = e.target.closest('.setbtn');
   if (!btn) return;
-  if (btn.classList.contains('locked')) { showModeLockNote(); return; }
+  if (btn.classList.contains('locked')) { showModeLockNote(btn.dataset.mode); return; }
   document.getElementById('modeLockNote').hidden = true;
   mode = btn.dataset.mode;
   [...modepicker.children].forEach(c => c.classList.toggle('active', c === btn));
-  startBtn.textContent = mode === 'wordcheck' ? '단어확인 시작 (뜻 확인)' : mode === 'quiz' ? '퀴즈 시작 (15문항)' : mode === 'spell' ? '스펠쓰기 시작 (8문항)' : '매칭게임 시작 (80초)';
+  startBtn.textContent = mode === 'wordcheck' ? '단어확인 시작 (뜻 확인)' : mode === 'quiz' ? quizStartLabel() : mode === 'spell' ? '스펠쓰기 시작 (8문항)' : '매칭게임 시작 (80초)';
   loadBoard();
 });
 
 startBtn.addEventListener('click', () => {
   if (mode === 'wordcheck') { openWordPreview(currentSet); return; }
-  if (!wordcheckDone(currentSet)) { showModeLockNote(); return; }
+  if (!modeUnlocked(currentSet, mode)) { showModeLockNote(mode); return; }
   document.getElementById('resultCard').hidden = true;
   document.getElementById('boardCard').hidden = true;
   document.getElementById('modeScreen').hidden = true;
@@ -1642,7 +1681,7 @@ function configureNextModeBtn(fromMode) {
   // review6 (과거형) has no spelling mode, so match is its last step
   const chain = currentSet === 'review6' ? { quiz: 'match' } : { quiz: 'match', match: 'spell' };
   const next = chain[fromMode];
-  if (!next) { btn.hidden = true; return; }
+  if (!next || !modeUnlocked(currentSet, next)) { btn.hidden = true; return; }
   const labels = { match: '다음: 매칭게임 →', spell: '다음: 스펠쓰기 →' };
   btn.textContent = labels[next];
   btn.hidden = false;
@@ -2766,10 +2805,7 @@ function openHwCard() {
     rows.join('') +
     (done ? '<div class="hwfinal done">🎉 숙제 완료!</div>' : '<div class="hwfinal notyet">아직 남은 단계가 있어요</div>') +
     wrongHtml +
-    '<div class="hwnote">마지막으로 푼 결과예요 · 캡처하거나 글자로 복사해서 선생님께 보내요</div>' +
-    '<button class="primary" id="hwCopyBtn" style="width:100%;margin-top:12px;">📋 결과를 글자로 복사</button>' +
-    '<textarea id="hwCopyBox" class="hwcopybox" readonly hidden></textarea>';
-  document.getElementById('hwCopyBtn').addEventListener('click', copyHwText);
+    '<div class="hwnote">마지막으로 푼 결과예요</div>';
   document.getElementById('hwOverlay').hidden = false;
 }
 function hwPlainText() {
@@ -3179,8 +3215,9 @@ function renderHomeworkBanner() {
   });
   if (!onlineHomework.length) { box.hidden = true; return; }
   box.hidden = false;
-  box.innerHTML = '<div class="hwbtitle">📌 이번 주 숙제</div>' + onlineHomework.map(h =>
-    '<div class="hwbrow">' + escHtml(h.sets.map(s => setLabel(s)).join(', ')) +
+  const rows = onlineHomework.slice().sort((x, y) => String(x.title).localeCompare(String(y.title)));
+  box.innerHTML = '<div class="hwbtitle">📌 이번 주 숙제</div>' + rows.map(h =>
+    '<div class="hwbrow">' + (h.title ? escHtml(h.title) + ' <span class="hwbdue">(' + escHtml(h.sets.map(s => setLabel(s)).join(', ')) + ')</span>' : escHtml(h.sets.map(s => setLabel(s)).join(', '))) +
     (h.due ? ' <span class="hwbdue">· 마감 ' + escHtml(fmtDue(h.due)) + ' 23:59</span>' : '') + '</div>').join('');
 }
 

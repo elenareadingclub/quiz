@@ -1,0 +1,3003 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex">
+<style>body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+</head>
+<body>
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>B레벨 단어 퀴즈</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Andika:wght@400;700&family=Baloo+2:wght@500;700;800&family=Gowun+Batang:wght@400;700&family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#FFF8EE; --surface:#FFFFFF; --surface-2:#FFF3E1;
+    --ink:#2D2A24; --ink-soft:#6E6255; --ink-faint:#A79A87;
+    --line:#FFE1B8; --accent:#F39C12; --accent-strong:#B9770E; --accent-soft:#FDEBD0;
+    --gold:#FFB100; --gold-soft:#FFEFC7; --danger:#EF476F; --danger-soft:#FFE1E9;
+    --shadow: 0 2px 4px rgba(255,140,20,0.08), 0 10px 26px -14px rgba(255,120,20,0.28);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#1C1712; --surface:#26201A; --surface-2:#2C251D;
+      --ink:#FBF0DE; --ink-soft:#D8C6AC; --ink-faint:#9C8B74;
+      --line:#453623; --accent:#F5B041; --accent-strong:#F8C471; --accent-soft:#3D2A10;
+      --gold:#FFC94D; --gold-soft:#3A2C10; --danger:#FF7A9C; --danger-soft:#3E1D28;
+      --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 12px 28px -16px rgba(0,0,0,0.55);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#1C1712; --surface:#26201A; --surface-2:#2C251D;
+    --ink:#FBF0DE; --ink-soft:#D8C6AC; --ink-faint:#9C8B74;
+    --line:#453623; --accent:#2ECC71; --accent-strong:#6EE7A8; --accent-soft:#1C3527;
+    --gold:#FFC94D; --gold-soft:#3A2C10; --danger:#FF7A9C; --danger-soft:#3E1D28;
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 12px 28px -16px rgba(0,0,0,0.55);
+  }
+  *{box-sizing:border-box;}
+  body{background:var(--bg); color:var(--ink); font-family:"IBM Plex Sans KR","Pretendard",-apple-system,sans-serif; line-height:1.6;}
+  .wrap{max-width:640px; margin:0 auto; padding:36px 20px 64px;}
+  h1,h2{font-family:"Baloo 2","Gowun Batang","Noto Serif KR",serif; font-weight:700; text-wrap:balance; color:var(--ink); margin:0;}
+  .mono{font-family:"IBM Plex Mono",ui-monospace,monospace;}
+
+  header.page{display:flex; flex-direction:column; gap:6px; margin-bottom:22px;}
+  .eyebrow{font-family:"IBM Plex Mono",monospace; font-size:12px; letter-spacing:.09em; text-transform:uppercase; color:var(--accent); font-weight:600;}
+  header.page h1{font-size:clamp(22px,4vw,27px);}
+  .currentnamebadge{
+    align-self:flex-start; margin-top:2px;
+    font-family:"IBM Plex Sans KR",sans-serif; font-size:12.5px; font-weight:600; color:var(--accent-strong);
+    background:var(--accent-soft); border:1px solid var(--accent); border-radius:20px; padding:5px 13px;
+  }
+
+  .card{background:var(--surface); border:1px solid var(--line); border-radius:16px; box-shadow:var(--shadow); padding:22px 22px 24px; margin-bottom:16px;}
+
+  .setpicker{display:grid; grid-template-columns:repeat(2,1fr); gap:8px; margin-bottom:18px;}
+  #modepicker{grid-template-columns:repeat(2,1fr);}
+  .hwbanner{background:var(--gold-soft); border:2px solid var(--gold); border-radius:14px; padding:10px 14px; margin:0 0 12px;}
+  .hwbtitle{font-weight:800; font-size:14px; color:var(--ink); margin-bottom:2px;}
+  .hwbrow{font-size:14px; font-weight:600; color:var(--ink);}
+  .hwbdue{color:var(--ink-soft); font-weight:500;}
+  .setrow.assigned{box-shadow:0 0 0 2px var(--gold); border-radius:12px;}
+  .setrow.assigned .setrow-title::after{content:" 📌";}
+  .hallbox{border:1.5px dashed var(--line); border-radius:14px; padding:10px 12px; margin:6px 0 12px; background:var(--surface-2);}
+  .hallttl{font-weight:800; font-size:14px; color:var(--ink); margin-bottom:6px;}
+  .hallcnt{font-size:11.5px; font-weight:800; color:var(--gold); margin-left:4px;}
+  .hallchips{display:flex; flex-wrap:wrap; gap:6px;}
+  .hallchip{font-size:13px; font-weight:700; background:var(--surface); border:1px solid var(--line); border-radius:20px; padding:3px 10px; color:var(--ink);}
+  .hallchip small{font-weight:500; color:var(--ink-faint); font-size:11px;}
+  .hallnone{font-size:12.5px; color:var(--ink-soft);}
+  .submitnote{font-size:13px; color:var(--ink-soft); margin-top:4px;}
+  .setbtn.locked{opacity:.4; filter:grayscale(1); cursor:not-allowed;}
+  .wpbtn.wpmeanbtn.on{border-color:var(--accent); background:var(--accent-soft); color:var(--accent-strong);}
+  .wpnav{display:none !important;}
+  .wpknowbtns{display:flex; gap:6px; justify-content:flex-end; flex:0 1 auto;}
+  .wpknowitem{flex-wrap:nowrap;}
+  .wpknowmain{min-width:0 !important; word-break:break-word;}
+  .wpmeaning{display:block; max-width:min(48vw,200px); text-align:right; font-weight:800; font-size:17px; line-height:1.35; color:var(--accent-strong); padding:6px 4px; cursor:pointer; word-break:keep-all; overflow-wrap:anywhere;}
+  @media (max-width:480px){
+    #modepicker{grid-template-columns:1fr;}
+    .wrap{padding:24px 14px 48px;}
+  }
+  .setbtn{
+    font-family:"Baloo 2","IBM Plex Sans KR",sans-serif; font-size:13.5px; text-align:left;
+    background:var(--surface); border:2px solid var(--line); border-radius:14px;
+    padding:10px 12px; cursor:pointer; color:var(--ink); font-weight:600;
+  }
+  .setbtn .no{font-family:"IBM Plex Mono",monospace; font-size:11px; color:var(--ink-faint); display:block; margin-bottom:2px;}
+  .setbtn.active{border-color:var(--accent); background:var(--accent-soft); color:var(--accent-strong);}
+
+  label{font-size:13px; color:var(--ink-soft); display:block; margin-bottom:6px;}
+  input[type=text]{
+    width:100%; font-family:"IBM Plex Sans KR",sans-serif; font-size:15px;
+    padding:10px 12px; border:1px solid var(--line); border-radius:10px;
+    background:var(--surface-2); color:var(--ink);
+  }
+  input[type=text]:focus{outline:2px solid var(--accent); outline-offset:1px;}
+
+  button.primary{
+    font-family:"Baloo 2","IBM Plex Sans KR",sans-serif; font-weight:700; font-size:15px;
+    background:var(--accent); color:#2D2A24; border:none; border-radius:14px;
+    padding:12px 18px; cursor:pointer; margin-top:14px; width:100%;
+  }
+  button.primary:disabled{background:var(--ink-faint); cursor:not-allowed;}
+  button.secondary{
+    font-family:"IBM Plex Sans KR",sans-serif; font-weight:500; font-size:13.5px;
+    background:transparent; color:var(--accent-strong); border:1px solid var(--accent); border-radius:10px;
+    padding:9px 14px; cursor:pointer;
+  }
+  .err{font-size:12.5px; color:var(--danger); margin-top:6px; display:none;}
+  .pinprompt{
+    margin-top:16px; padding-top:16px; border-top:1px dashed var(--line);
+  }
+  .pinprompt label{font-weight:600; color:var(--ink);}
+  #pinInput{
+    width:100%; font-family:"IBM Plex Mono",monospace; font-size:26px; font-weight:700;
+    text-align:center; letter-spacing:.3em; padding:12px 14px; border:1.5px solid var(--line);
+    border-radius:10px; background:var(--surface-2); color:var(--ink);
+  }
+  #pinInput:focus{outline:2px solid var(--accent); outline-offset:1px;}
+  .passsub{font-size:11px; color:var(--ink-soft); margin-top:2px; margin-bottom:8px;}
+
+  .screentop{display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; gap:10px;}
+  .whoami{font-family:"IBM Plex Sans KR",sans-serif; font-size:13px; font-weight:600; color:var(--ink-soft);}
+  .setlisthint{font-size:11.5px; color:var(--ink-faint); margin:-2px 0 10px;}
+  .setlist{display:flex; flex-direction:column; gap:8px;}
+  .setrow{
+    display:flex; align-items:stretch; gap:0; width:100%;
+    font-family:"IBM Plex Sans KR",sans-serif; font-size:14px;
+    background:var(--surface-2); border:1px solid var(--line); border-radius:10px;
+    color:var(--ink); overflow:hidden;
+  }
+  .setrow.complete{background:var(--accent-soft); border-color:var(--accent);}
+  .donechip{display:inline-block; background:#1E8449; color:#fff; font-size:11px; font-weight:800; border-radius:10px; padding:1px 8px; margin:0 2px 0 4px; vertical-align:middle;}
+  .setrow-preview{
+    flex:1; display:flex; align-items:center; gap:10px; text-align:left;
+    background:transparent; border:none; padding:12px 14px; cursor:pointer; color:inherit;
+    font-family:inherit; font-size:inherit;
+  }
+  .setrow-preview:hover{text-decoration:underline;}
+  .setrow-enter{
+    display:flex; align-items:center; gap:8px; flex-shrink:0;
+    background:transparent; border:none; border-left:1px dashed var(--line); padding:12px 14px; cursor:pointer;
+  }
+  .setrow.complete .setrow-enter{border-left-color:var(--accent);}
+  .setrow-enter:hover{background:rgba(0,0,0,0.03);}
+  .setrow-arrow{color:var(--ink-faint); font-size:16px;}
+  .setrow-no{font-family:"IBM Plex Mono",monospace; font-size:11px; color:var(--ink-faint); flex-shrink:0;}
+  .setrow-title{flex:1; font-weight:700; font-family:"Baloo 2",inherit;}
+  .setrow.complete .setrow-title{color:var(--accent-strong);}
+  .setrow-dots{display:flex; gap:4px; flex-shrink:0;}
+  .setrow-badge{font-size:13px; color:var(--accent-strong); font-weight:700; flex-shrink:0;}
+
+  .retestbanner{
+    display:flex; align-items:center; gap:8px; margin-bottom:14px;
+    background:var(--danger-soft); color:var(--danger); border:1px solid var(--danger);
+    border-radius:10px; padding:9px 12px; font-size:12.5px; font-weight:600;
+  }
+  .choice.needclick{animation:pulseChoice 1s ease-in-out infinite;}
+  @keyframes pulseChoice{0%,100%{box-shadow:0 0 0 0 var(--accent-soft);} 50%{box-shadow:0 0 0 5px var(--accent-soft);}}
+  .spellcorrectreveal{
+    font-family:"IBM Plex Mono",monospace; font-size:22px; font-weight:700; color:var(--accent-strong);
+    background:var(--accent-soft); border:1.5px solid var(--accent); border-radius:10px;
+    padding:12px 14px; margin-bottom:10px; text-align:center; letter-spacing:.04em;
+  }
+  .rostertable{width:100%; border-collapse:collapse; margin-top:8px; font-size:12.5px;}
+  .rostertable th{text-align:center; font-family:"IBM Plex Mono",monospace; font-size:10px; color:var(--ink-faint); font-weight:500; padding:4px 6px; border-bottom:1px solid var(--line);}
+  .rostertable th:first-child{text-align:left;}
+  .rostertable td{padding:7px 6px; border-bottom:1px dashed var(--line);}
+  .rostertable td.rstat{text-align:center;}
+  .rostertable td:first-child{font-weight:600; color:var(--ink);}
+  .dot{display:inline-block; width:13px; height:13px; border-radius:50%; background:var(--surface); border:1.5px solid var(--line); vertical-align:middle;}
+  .dot.pass{background:var(--accent); border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-soft);}
+  .statcell{
+    display:inline-block; font-family:"IBM Plex Mono",monospace; font-weight:600; font-size:11.5px;
+    color:var(--ink-faint); background:var(--surface-2); border:1px solid var(--line);
+    border-radius:20px; padding:2px 9px;
+  }
+  .statcell.pass{color:var(--accent-strong); background:var(--accent-soft); border-color:var(--accent);}
+
+  .overviewwrap{background:var(--surface); border-radius:10px; padding:10px 11px; margin-top:8px;}
+  .overviewscroll{overflow-x:auto;}
+  .overviewtable{border-collapse:collapse; font-size:12px; min-width:100%;}
+  .overviewtable th{
+    font-family:"IBM Plex Mono",monospace; font-size:10px; font-weight:500; color:var(--ink-faint);
+    padding:4px 5px; border-bottom:1px solid var(--line); text-align:center; white-space:nowrap;
+  }
+  .overviewtable th:first-child{text-align:left; position:sticky; left:0; background:var(--surface); z-index:1;}
+  .overviewtable td{padding:5px; border-bottom:1px dashed var(--line); text-align:center;}
+  .overviewtable td:first-child{
+    text-align:left; font-weight:700; font-size:12.5px; color:var(--ink); white-space:nowrap;
+    position:sticky; left:0; background:var(--surface); padding-right:10px; z-index:1;
+  }
+  .ovcell{
+    display:inline-block; min-width:30px; font-family:"IBM Plex Mono",monospace; font-variant-numeric:tabular-nums;
+    font-weight:600; font-size:11px; color:var(--ink-faint); background:var(--surface-2);
+    border:1px solid var(--line); border-radius:20px; padding:2px 6px;
+  }
+  .ovcell.partial{color:var(--gold-ink,#8a6100); background:var(--gold-soft,#fdf3d8); border-color:var(--gold,#e0b74a);}
+  .ovcell.full{color:var(--accent-strong); background:var(--accent-soft); border-color:var(--accent);}
+  .ovtotal{font-family:"IBM Plex Mono",monospace; font-weight:700; font-size:11.5px; color:var(--ink-soft);}
+  .teacherpanel{border:1.5px dashed var(--danger); background:var(--danger-soft);}
+  .teacherpanel .rostertable{background:var(--surface); border-radius:10px; padding:2px 4px;}
+  .teacherpanel .passsub{font-size:11.5px; color:var(--ink-soft); margin:14px 0 8px; font-weight:600;}
+  .teachercards{display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:8px;}
+  .teachercard{background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:10px 11px;}
+  .teachercard.perfect{border-color:var(--accent);}
+  .teachercard.empty{opacity:.6;}
+  .tname{font-family:"IBM Plex Sans KR",sans-serif; font-weight:700; font-size:13px; color:var(--ink); margin-bottom:4px;}
+  .tcount{font-family:"IBM Plex Mono",monospace; font-weight:600; font-size:10.5px; color:var(--danger); background:var(--danger-soft); border-radius:20px; padding:1px 7px; margin-left:4px;}
+  .tnote{font-size:11.5px; color:var(--ink-faint);}
+  .wrongchips{display:flex; flex-direction:column; gap:4px;}
+  .wrongchip{font-family:"IBM Plex Mono",monospace; font-size:12px; font-weight:600; color:var(--danger); display:flex; justify-content:space-between; gap:6px;}
+  .wrongchip .wko{font-family:"IBM Plex Sans KR",sans-serif; font-weight:400; color:var(--ink-soft);}
+
+  .qnum{font-family:"IBM Plex Mono",monospace; font-size:11.5px; color:var(--ink-faint); margin-bottom:6px;}
+  .qprompt{font-family:"Baloo 2","IBM Plex Mono",monospace; font-size:clamp(24px,7vw,34px); font-weight:700; color:var(--ink); margin-bottom:6px; letter-spacing:-.01em; word-break:break-word;}
+  .qemoji{font-size:clamp(30px,8vw,44px); line-height:1; margin-bottom:2px;}
+  .qdir{font-size:11.5px; color:var(--accent); margin-bottom:16px;}
+  .choices{display:grid; grid-template-columns:1fr 1fr; gap:8px;}
+  .choice{display:flex; align-items:center; gap:8px;}
+  .cnum{flex-shrink:0; width:34px; height:34px; border-radius:50%; background:var(--accent-soft); border:2px solid var(--accent); color:var(--ink); font-family:"IBM Plex Sans KR","Pretendard",-apple-system,sans-serif; font-weight:700; font-size:19px; line-height:1; display:inline-flex; align-items:center; justify-content:center;}
+  .choices .choice{font-size:16px; padding-top:10px; padding-bottom:10px; gap:10px;}
+  .choice{
+    text-align:left; font-family:"IBM Plex Sans KR",sans-serif; font-size:14.5px;
+    background:var(--surface-2); border:1px solid var(--line); border-radius:10px;
+    padding:11px 14px; cursor:pointer; color:var(--ink);
+  }
+  .choice:hover{border-color:var(--accent);}
+  .choice.correct{background:var(--accent-soft); border-color:var(--accent); color:var(--accent-strong);}
+  .choice.wrong{background:var(--danger-soft); border-color:var(--danger); color:var(--danger);}
+  .choice[disabled]{cursor:default;}
+  .progress{height:5px; border-radius:3px; background:var(--accent-soft); overflow:hidden; margin-bottom:18px;}
+  .progress > span{display:block; height:100%; background:var(--accent);}
+
+  .spellhint{font-family:"Baloo 2","IBM Plex Mono",monospace; font-size:16px; letter-spacing:.1em; color:var(--ink-faint); margin-bottom:14px;}
+  .spelldiff{display:flex; gap:8px; margin-bottom:14px;}
+  .diffbtn{
+    flex:1; font-family:"Baloo 2",sans-serif; font-weight:700; font-size:12.5px;
+    padding:9px 6px; border-radius:12px; border:2px solid var(--line);
+    background:var(--surface); color:var(--ink-soft); cursor:pointer;
+  }
+  .diffbtn.active{border-color:var(--accent); background:var(--accent-soft); color:var(--accent-strong);}
+  .easyBlanks{display:flex; flex-wrap:wrap; gap:6px; justify-content:center; margin:6px 0 18px;}
+  .easyBlank{
+    width:34px; height:42px; border-radius:9px; border:2.5px dashed var(--line);
+    display:flex; align-items:center; justify-content:center;
+    font-family:"Baloo 2",monospace; font-size:18px; font-weight:700; color:var(--ink); background:var(--surface-2);
+  }
+  .easyBlank.filled{cursor:pointer; border-style:solid; border-color:var(--accent); background:var(--accent-soft); color:var(--accent-strong);}
+  .easyBlank.gap{border:none; background:transparent; width:14px;}
+  .easyTiles{display:flex; flex-wrap:wrap; gap:8px; justify-content:center;}
+  .easyTile{
+    width:42px; height:46px; border-radius:11px; border:2px solid var(--line);
+    background:var(--surface); font-family:"Baloo 2",monospace; font-weight:800; font-size:18px;
+    color:var(--ink); cursor:pointer; box-shadow:0 2px 6px rgba(0,0,0,.06);
+  }
+  .easyTile:active{transform:scale(0.92);}
+  .easyTile.used{opacity:.2; pointer-events:none;}
+  input.spellinput{
+    width:100%; font-family:"IBM Plex Mono",monospace; font-size:22px; font-weight:600;
+    padding:12px 14px; border:1.5px solid var(--line); border-radius:10px;
+    background:var(--surface-2); color:var(--ink); letter-spacing:.02em;
+  }
+  input.spellinput:focus{outline:2px solid var(--accent); outline-offset:1px;}
+  input.spellinput.correct{border-color:var(--accent); background:var(--accent-soft); color:var(--accent-strong);}
+  input.spellinput.wrong{border-color:var(--danger); background:var(--danger-soft); color:var(--danger);}
+  .spellfeedback{font-family:"IBM Plex Sans KR",sans-serif; font-size:13.5px; font-weight:600; margin-top:10px; border-radius:10px; padding:9px 12px;}
+  .spellfeedback.correct{background:var(--accent-soft); color:var(--accent-strong);}
+  .spellfeedback.wrong{background:var(--danger-soft); color:var(--danger);}
+
+  .nextbtn{
+    display:flex; align-items:center; justify-content:center; gap:6px;
+    font-family:"Baloo 2","IBM Plex Sans KR",sans-serif; font-weight:700; font-size:15px;
+    background:var(--accent); color:#2D2A24; border:none; border-radius:14px;
+    padding:12px 18px; cursor:pointer; margin-top:16px; width:100%;
+  }
+  .nextbtn .arrow{font-style:normal; font-family:"IBM Plex Mono",monospace;}
+  .nextbtn:focus-visible{outline:2px solid var(--accent-strong); outline-offset:2px;}
+
+  .scoretile{text-align:center; padding:18px 0;}
+  .scoretile .num{font-family:"Baloo 2","IBM Plex Mono",monospace; font-size:44px; font-weight:700; color:var(--accent-strong);}
+  .scoretile .lbl{font-size:13px; color:var(--ink-soft); margin-top:4px;}
+  .passbadge{
+    display:inline-block; margin-top:12px; font-size:14px; font-weight:600;
+    border-radius:20px; padding:6px 16px;
+  }
+  .passbadge.pass{background:var(--accent-soft); color:var(--accent-strong);}
+  .passbadge.fail{background:var(--danger-soft); color:var(--danger);}
+  .resultbtnrow{display:flex; gap:8px; margin-top:10px;}
+  .resultbtnrow .secondary{flex:1; margin-top:0;}
+
+  .submitbanner{margin-top:14px;}
+  .submitbanner .submitcard{
+    background:var(--gold-soft); border:1.5px solid var(--gold); border-radius:12px;
+    padding:14px 16px; text-align:center;
+  }
+  .submitbanner .submittitle{font-family:"Gowun Batang","Noto Serif KR",serif; font-weight:700; font-size:15px; color:var(--gold); margin-bottom:8px;}
+  .submitbanner button.primary{background:var(--gold); margin-top:0;}
+  .submitbanner .submitdone{font-size:12.5px; color:var(--ink-soft); line-height:1.6;}
+  .submitbanner .submitdone b{color:var(--gold); font-weight:700;}
+
+  .confetti-container{position:fixed; inset:0; pointer-events:none; z-index:9999; overflow:hidden;}
+  .confetti-piece{position:absolute; top:-20px; width:8px; height:14px; opacity:.9; animation-name:confettiFall; animation-timing-function:ease-in; animation-fill-mode:forwards;}
+  @keyframes confettiFall{0%{transform:translateY(0) rotate(0deg); opacity:1;} 100%{transform:translateY(110vh) rotate(540deg); opacity:.25;}}
+  .celebratebanner{
+    position:fixed; top:40%; left:50%; transform:translate(-50%,-50%); z-index:10000;
+    text-align:center; pointer-events:none;
+    font-family:"Gowun Batang","Noto Serif KR",serif; font-weight:700;
+    font-size:clamp(28px,7vw,44px); color:var(--accent-strong);
+    text-shadow:0 2px 16px rgba(0,0,0,0.18);
+    animation:celebratePop .5s cubic-bezier(.34,1.56,.64,1);
+  }
+  @keyframes celebratePop{0%{transform:translate(-50%,-50%) scale(.4); opacity:0;} 60%{transform:translate(-50%,-50%) scale(1.12); opacity:1;} 100%{transform:translate(-50%,-50%) scale(1); opacity:1;}}
+
+  .soundtoggle{
+    position:fixed; top:16px; right:16px; z-index:500;
+    width:38px; height:38px; border-radius:50%; font-size:17px;
+    background:var(--surface); border:1px solid var(--line); box-shadow:var(--shadow);
+    cursor:pointer; display:flex; align-items:center; justify-content:center;
+  }
+  .soundtoggle.muted{opacity:.55;}
+
+  .ttsnotice{
+    position:fixed; bottom:20px; left:50%; transform:translateX(-50%); z-index:10002;
+    max-width:min(90vw,420px); text-align:center;
+    background:var(--ink); color:var(--bg); font-size:12.5px; font-weight:600;
+    border-radius:10px; padding:10px 16px; box-shadow:var(--shadow);
+  }
+
+  .grandcelebrate{
+    position:fixed; inset:0; z-index:10001; pointer-events:none;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px;
+    background:rgba(20,18,14,0.35);
+  }
+  .grandcelebrate .gtitle{
+    font-family:"Gowun Batang","Noto Serif KR",serif; font-weight:700;
+    font-size:clamp(30px,8vw,52px); color:var(--gold); text-shadow:0 3px 20px rgba(0,0,0,0.35);
+    animation:celebratePop .6s cubic-bezier(.34,1.56,.64,1);
+  }
+  .grandcelebrate .gsub{
+    font-family:"IBM Plex Sans KR",sans-serif; font-weight:600; font-size:15px; color:#fff;
+  }
+
+  .warmupcard{
+    background:var(--surface-2); border:1px solid var(--gold); border-radius:12px;
+    padding:12px 14px; margin-bottom:16px;
+  }
+  .warmupcard .warmtitle{font-family:"Gowun Batang","Noto Serif KR",serif; font-weight:700; font-size:13.5px; color:var(--gold); margin-bottom:8px;}
+  .warmupchips{display:flex; flex-wrap:wrap; gap:8px;}
+  .warmupchip{
+    font-family:"IBM Plex Sans KR",sans-serif; font-size:12.5px; background:var(--surface);
+    border:1px solid var(--line); border-radius:9px; padding:6px 10px; display:flex; gap:6px; align-items:baseline;
+  }
+  .warmupchip .wen{font-family:"IBM Plex Mono",monospace; font-weight:700; color:var(--ink);}
+  .warmupchip .wko{color:var(--ink-soft);}
+
+  .exportbox{margin-top:14px;}
+  .exportbox textarea{
+    width:100%; min-height:110px; font-family:"IBM Plex Mono",monospace; font-size:11.5px;
+    padding:10px; border:1px solid var(--line); border-radius:8px; background:var(--surface); color:var(--ink);
+    resize:vertical; margin-top:8px;
+  }
+
+  .wordpreview-overlay{
+    position:fixed; inset:0; z-index:2000; background:rgba(20,18,14,0.45);
+    display:flex; align-items:center; justify-content:center; padding:20px;
+  }
+  .wordpreview-card{
+    background:var(--surface); border-radius:16px; box-shadow:var(--shadow);
+    max-width:440px; width:100%; max-height:80vh; display:flex; flex-direction:column; overflow:hidden;
+  }
+  .wordpreview-top{
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+    padding:16px 18px; border-bottom:1px solid var(--line); flex-shrink:0;
+  }
+  .wordpreview-top span{font-family:"Baloo 2","Gowun Batang","Noto Serif KR",serif; font-weight:700; font-size:15px; color:var(--ink);}
+  .wordpreview-list{overflow-y:auto; padding:10px 18px 18px;}
+  .wordpreview-footer{
+    padding:12px 18px; border-top:1px solid var(--line); flex-shrink:0;
+    display:flex; justify-content:flex-end;
+  }
+  .wordpreview-footer button.primary{width:auto; padding:10px 20px; margin-top:0;}
+  .wordpreview-footer button.primary:disabled{background:var(--ink-faint); cursor:not-allowed; opacity:.6;}
+  .wpmissions{
+    background:var(--surface-2); border:1px solid var(--line); border-radius:10px;
+    padding:10px 12px; margin-bottom:10px;
+  }
+  .wpmission{display:flex; align-items:center; gap:7px; font-size:12.5px; color:var(--ink-soft); padding:2px 0;}
+  .wpmission b{color:var(--ink); font-weight:700;}
+  .wphint{font-size:11px; color:var(--ink-faint); margin-top:4px;}
+  .wpmarker{display:inline-block; width:13px; height:13px; flex-shrink:0;}
+  .wpmarker.noun{border:2.5px solid var(--danger); border-radius:50%;}
+  .wpmarker.verb{
+    width:0; height:0; border-left:7px solid transparent; border-right:7px solid transparent;
+    border-bottom:12px solid var(--accent);
+  }
+  .wpitem{
+    width:100%; display:flex; align-items:baseline; gap:8px; padding:7px 4px; border-bottom:1px dashed var(--line);
+    font-size:14px; background:transparent; border-left:none; border-right:none; border-top:none;
+    text-align:left; cursor:pointer; font-family:inherit; color:inherit; position:relative;
+  }
+  .wpitem:last-child{border-bottom:none;}
+  .wpitem[data-marker]:not([data-marker=""]):hover{background:var(--surface-2); border-radius:6px;}
+  .wpko{color:var(--ink-soft); min-width:76px;}
+  .wparrow{color:var(--ink-faint); font-size:12px;}
+  .wpen{font-family:"Baloo 2","IBM Plex Mono",monospace; font-weight:700; color:var(--ink);}
+  .wpemoji{font-size:17px; margin-right:2px;}
+  .wpitem.marked .wpen{position:relative;}
+  .wpspeak{
+    margin-left:auto; flex-shrink:0; font-size:13px; padding:3px 6px; border-radius:6px;
+    color:var(--ink-faint);
+  }
+  .wpspeak:hover{background:var(--surface-2); color:var(--accent-strong);}
+  .wpitem.marked[data-marker="noun"] .wpen::after{
+    content:''; position:absolute; left:50%; top:50%; transform:translate(-50%,-50%);
+    width:calc(100% + 14px); height:26px; border:2.5px solid var(--danger); border-radius:50%; pointer-events:none;
+  }
+  .wpitem.marked[data-marker="verb"] .wpko::before{
+    content:''; display:inline-block; margin-right:6px;
+    width:0; height:0; border-left:6px solid transparent; border-right:6px solid transparent;
+    border-bottom:10px solid var(--accent); vertical-align:middle;
+  }
+
+  .wpnum{flex-shrink:0; min-width:22px; font-family:"IBM Plex Mono",monospace; font-size:11.5px; font-weight:600; color:var(--ink-faint);}
+  .wpknowitem{display:flex; align-items:center; gap:10px; padding:10px 4px; border-bottom:1px dashed var(--line); flex-wrap:wrap;}
+  .wpknowmain{flex:1; min-width:150px;}
+  .wpknowtop{display:flex; align-items:center; gap:8px;}
+  .wpknowitem .wpen{font-size:19px;}
+  .wpknowitem .wpko{display:block; margin-top:2px; font-size:13.5px; font-weight:600; color:var(--accent-strong);}
+  .wpknowbtns{display:flex; gap:6px;}
+  .wpbtn{font-family:"Baloo 2","IBM Plex Sans KR",sans-serif; font-weight:700; font-size:13px; padding:8px 12px; border-radius:12px; border:2px solid var(--line); background:var(--surface); color:var(--ink-soft); cursor:pointer;}
+  .wpbtn.know.on{border-color:var(--accent); background:var(--accent-soft); color:var(--accent-strong);}
+  .wpbtn.unknown.on{border-color:var(--danger); background:var(--danger-soft); color:var(--danger);}
+  .wpnav{display:flex; align-items:center; justify-content:space-between; gap:8px; margin-top:12px;}
+  .wpnav button{font-family:"IBM Plex Sans KR",sans-serif; font-weight:600; font-size:13px; padding:8px 14px; border-radius:10px; border:1px solid var(--accent); background:transparent; color:var(--accent-strong); cursor:pointer;}
+  .wpnav button:disabled{opacity:.35; cursor:not-allowed;}
+  .wpnav .wppagelbl{font-family:"IBM Plex Mono",monospace; font-size:12px; color:var(--ink-faint);}
+  table.board{width:100%; border-collapse:collapse; font-size:13px; margin-top:10px;}
+  table.board th{text-align:left; font-family:"IBM Plex Mono",monospace; font-size:10.5px; color:var(--ink-faint); font-weight:500; padding:6px 8px; border-bottom:1px solid var(--line);}
+  table.board td{padding:7px 8px; border-bottom:1px dashed var(--line);}
+  table.board td.score{font-family:"IBM Plex Mono",monospace; font-weight:600; text-align:right;}
+  table.board tr.top1 td{background:var(--gold-soft); color:var(--gold); font-weight:600;}
+  table.board tr.top1 td:first-child{font-size:15px; text-align:center;}
+  table.board tr.me td{background:var(--accent-soft); color:var(--accent-strong); font-weight:600;}
+  table.board tr.me td:first-child{font-size:13px; text-align:center;}
+  table.board tr.top1.me td{background:var(--gold-soft); color:var(--gold);}
+  table.board td.done-check{color:var(--ink-faint); font-weight:400; font-family:"IBM Plex Sans KR",sans-serif;}
+
+  .hint{font-size:12px; color:var(--ink-faint); margin-top:10px;}
+
+  .matchtop{display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; gap:10px;}
+  .exitbtn{
+    font-family:"IBM Plex Sans KR",sans-serif; font-size:12.5px; color:var(--ink-soft);
+    background:transparent; border:1px solid var(--line); border-radius:8px;
+    padding:6px 10px; cursor:pointer; display:block; margin-bottom:14px;
+  }
+  .exitbtn:hover{border-color:var(--ink-faint); color:var(--ink);}
+  .timer{font-family:"Baloo 2","IBM Plex Mono",monospace; font-size:26px; font-weight:700; color:var(--ink);}
+  .matchscore{font-family:"Baloo 2","IBM Plex Mono",monospace; font-size:17px; font-weight:700; color:var(--accent-strong);}
+  .matchpairsrow{text-align:center; font-size:11.5px; color:var(--ink-faint); margin:-10px 0 10px;}
+  .matchgrid{display:grid; grid-template-columns:1fr 1fr; gap:0 12px;}
+  .matchgrid .col-en, .matchgrid .col-ko{display:flex; flex-direction:column; gap:8px;}
+  .tile{
+    font-family:"IBM Plex Sans KR",sans-serif; font-size:13.5px; text-align:left;
+    background:var(--surface-2); border:1px solid var(--line); border-radius:9px;
+    padding:10px 12px; cursor:pointer; color:var(--ink); min-height:40px;
+  }
+  .tile.en{font-family:"Baloo 2","IBM Plex Mono",monospace; font-weight:700;}
+  .tile.sel{border-color:var(--accent); background:var(--accent-soft); color:var(--accent-strong);}
+  .tile.done{border-color:var(--accent); background:var(--accent-soft); color:var(--accent-strong); opacity:.55; cursor:default;}
+  .tile.correctflash{border-color:var(--accent); background:var(--accent); color:var(--surface);}
+  .tile.wrongflash{border-color:var(--danger); background:var(--danger-soft); color:var(--danger);}
+  @keyframes tileHintGlow{0%,100%{box-shadow:0 0 0 0 var(--gold-soft);} 50%{box-shadow:0 0 0 8px var(--gold-soft);}}
+  .tile.hint{border-color:var(--gold); background:var(--gold-soft); animation:tileHintGlow .7s ease-in-out infinite;}
+
+  @keyframes pulseTimer{0%,100%{transform:scale(1);} 50%{transform:scale(1.16);}}
+  .timer.low{color:var(--danger); animation:pulseTimer .6s ease-in-out infinite;}
+  .streakrow{
+    text-align:center; font-size:13.5px; font-weight:600; color:var(--gold);
+    margin-bottom:10px;
+  }
+
+  .pointPop{
+    position:fixed; z-index:9997; pointer-events:none; transform:translate(-50%,0);
+    display:flex; flex-direction:column; align-items:center; gap:1px; text-align:center;
+    font-family:"Baloo 2","IBM Plex Sans KR",sans-serif; text-shadow:0 2px 8px rgba(0,0,0,0.25);
+    animation:pointRise 1s ease-out forwards;
+  }
+  .pointPop b{font-size:26px; font-weight:800; line-height:1;}
+  .pointPop span{font-size:12.5px; font-weight:700; white-space:nowrap;}
+  .pointPop.good{color:var(--accent-strong);}
+  .pointPop.great{color:var(--gold);}
+  .pointPop.bad{color:var(--danger);}
+  @keyframes pointRise{0%{opacity:0; transform:translate(-50%,6px) scale(.6);} 18%{opacity:1; transform:translate(-50%,-6px) scale(1.15);} 100%{opacity:0; transform:translate(-50%,-56px) scale(1);}}
+  .repbadge{font-size:11px; font-weight:800; color:var(--gold); margin-left:4px;}
+  .comboToast{
+    position:fixed; top:26%; left:50%; transform:translate(-50%,-50%); z-index:9998;
+    pointer-events:none; text-align:center;
+    font-family:"Baloo 2",sans-serif; font-weight:800; color:var(--gold);
+    font-size:clamp(26px,7vw,40px); text-shadow:0 3px 14px rgba(0,0,0,0.25);
+    animation:comboPop .6s cubic-bezier(.34,1.56,.64,1);
+  }
+  @keyframes comboPop{0%{transform:translate(-50%,-50%) scale(.5); opacity:0;} 55%{transform:translate(-50%,-50%) scale(1.15); opacity:1;} 100%{transform:translate(-50%,-50%) scale(1); opacity:1;}}
+
+  .sirenBanner{
+    display:flex; align-items:center; justify-content:center; gap:6px;
+    background:var(--danger); color:#fff; font-family:"Baloo 2",sans-serif; font-weight:700; font-size:13.5px;
+    border-radius:10px; padding:8px; margin-bottom:10px; animation:sirenBlink .5s steps(1,end) infinite;
+  }
+  @keyframes sirenBlink{50%{opacity:.4;}}
+  @keyframes sirenPulse{0%,100%{box-shadow:0 0 0 0 rgba(239,71,111,0);} 50%{box-shadow:0 0 0 9px rgba(239,71,111,0.35);}}
+  .matchgrid.siren .tile{animation:sirenPulse .5s ease-in-out infinite;}
+
+  .timeWarnBanner{
+    display:flex; align-items:center; justify-content:center; gap:6px;
+    background:var(--gold-soft); color:var(--gold); font-family:"Baloo 2",sans-serif; font-weight:700; font-size:13.5px;
+    border:1.5px solid var(--gold); border-radius:10px; padding:8px; margin-bottom:10px;
+  }
+
+  .modehero{text-align:center; padding:6px 0 20px; margin-bottom:18px; border-bottom:1px dashed var(--line);}
+  .mhsub{font-family:"IBM Plex Mono",monospace; font-size:12px; font-weight:600; letter-spacing:.08em; color:var(--ink-faint); margin-bottom:6px;}
+  .mhemoji{font-size:clamp(44px,12vw,64px); line-height:1.1; margin-bottom:6px;}
+  .mhtitle{font-family:"Baloo 2","IBM Plex Sans KR",sans-serif; font-weight:800; font-size:clamp(26px,7.5vw,38px); line-height:1.15; color:var(--ink); text-wrap:balance;}
+  .qprompt,.wpen,.tile.en,.mhtitle,.easyBlank,.easyTile,.spellhint,.warmupchip .wen{font-family:"Andika","IBM Plex Sans KR","Baloo 2",sans-serif; letter-spacing:.01em;}
+  .qprompt{font-weight:700;}
+  .wpknowitem .wpen{font-size:22px;}
+  .tile.en{font-weight:700; font-size:15px;}
+  .hwhead{text-align:center; padding:4px 0 14px; border-bottom:1px dashed var(--line); margin-bottom:10px;}
+  .hwname{font-family:"Baloo 2","IBM Plex Sans KR",sans-serif; font-weight:800; font-size:26px; line-height:1.2;}
+  .hwset{font-family:"Andika","IBM Plex Sans KR",sans-serif; font-weight:700; font-size:16px; margin-top:4px;}
+  .hwdate{font-size:12.5px; color:var(--ink-soft); margin-top:2px;}
+  .hwrow{display:flex; align-items:center; gap:10px; padding:11px 0; border-bottom:1px dashed var(--line);}
+  .hwrow .hwstep{flex:1; font-weight:700; font-size:15px;}
+  .hwrow .hwres{font-size:14.5px; text-align:right; font-weight:600;}
+  .hwrow.ok .hwres{color:var(--accent-strong);}
+  .hwrow.retry .hwres{color:var(--danger);}
+  .hwrow.todo .hwres{color:var(--ink-faint);}
+  .hwfinal{margin-top:14px; text-align:center; border-radius:14px; padding:12px; font-family:"Baloo 2","IBM Plex Sans KR",sans-serif; font-weight:800; font-size:19px;}
+  .hwfinal.done{background:var(--accent-soft); color:var(--accent-strong); border:2px solid var(--accent);}
+  .hwfinal.notyet{background:var(--surface-2); color:var(--ink-soft); border:2px dashed var(--line); font-size:15px;}
+  .hwwrongtitle{margin-top:16px; font-weight:800; font-size:14.5px; padding-bottom:6px; border-bottom:2px solid var(--line);}
+  .hwwrong{display:flex; align-items:baseline; gap:10px; padding:7px 0; border-bottom:1px dashed var(--line);}
+  .hwwrong .hwen{font-family:"Andika","IBM Plex Sans KR",sans-serif; font-weight:700; font-size:16px; flex:0 0 42%;}
+  .hwwrong .hwko{flex:1; font-size:14.5px;}
+  .hwwrong .hwtag{font-size:11px; color:var(--danger); font-weight:700; white-space:nowrap;}
+  .hwcopybox{width:100%; min-height:130px; margin-top:8px; font:13px/1.5 "IBM Plex Sans KR",sans-serif; padding:8px; border:1px solid var(--line); border-radius:10px; background:var(--surface-2); color:var(--ink); resize:none;}
+  .hwnote{font-size:12px; color:var(--ink-faint); text-align:center; margin-top:10px;}
+  footer{margin-top:20px; text-align:center; font-size:11px; color:var(--ink-faint);}
+</style>
+
+<div class="celebratebanner" id="celebrateBanner" hidden>🎉 You did it! 🎉</div>
+<div class="ttsnotice" id="ttsNotice" hidden>🔇 이 기기엔 영어 음성이 설치되어 있지 않아요 — 기기 설정에서 영어 음성(언어팩)을 추가해보세요.</div>
+<div class="grandcelebrate" id="grandCelebrate" hidden>
+  <div class="gtitle">🏆 전체 마스터! 🏆</div>
+  <div class="gsub" id="grandCelebrateSub"></div>
+</div>
+<button class="soundtoggle" id="soundToggleBtn" aria-label="소리 켜기/끄기">🔊</button>
+
+<div class="wordpreview-overlay" id="wordPreviewOverlay" hidden>
+  <div class="wordpreview-card">
+    <div class="wordpreview-top">
+      <span id="wordPreviewTitle"></span>
+      <button class="exitbtn" id="wordPreviewCloseBtn" aria-label="닫기">✕ 닫기</button>
+    </div>
+    <div class="wordpreview-list" id="wordPreviewList"></div>
+    <div class="wordpreview-footer">
+      <button class="primary" id="wordPreviewDoneBtn" disabled>완료 → 퀴즈 시작</button>
+    </div>
+  </div>
+</div>
+
+<div class="wordpreview-overlay" id="hwOverlay" hidden>
+  <div class="wordpreview-card" style="max-width:430px">
+    <div class="wordpreview-top">
+      <span>📋 숙제 결과 카드</span>
+      <button class="exitbtn" id="hwCloseBtn" aria-label="닫기">✕ 닫기</button>
+    </div>
+    <div class="wordpreview-list" id="hwBody"></div>
+  </div>
+</div>
+
+<div class="wrap">
+  <header class="page">
+    <span class="eyebrow">ERC 언어교육 콘텐츠 · B레벨 단어 확인 퀴즈</span>
+    <h1>B레벨 원서별 단어 퀴즈</h1>
+    <div class="currentnamebadge" id="currentNameBadge" hidden>👤 <span id="currentNameText"></span></div>
+  </header>
+
+  <div class="card teacherpanel" id="teacherPanel" hidden>
+    <div class="eyebrow" style="color:var(--danger);">🔒 교사용 대시보드 · 학생에게는 보이지 않음</div>
+    <div id="teacherOverviewWrap"></div>
+    <h2 style="margin-top:14px;">SET <span id="teacherSetNo"></span> 결과 파악</h2>
+    <table class="rostertable" id="teacherRosterTable"></table>
+    <div class="hint" id="teacherRosterCaption" style="margin-top:4px;"></div>
+    <div id="teacherSubmitWrap"></div>
+    <div id="teacherWrongWrap"></div>
+    <div class="exportbox">
+      <button class="secondary" id="exportBtn">📋 이 세트 결과표 내보내기 (복사용)</button>
+      <textarea id="exportArea" readonly hidden placeholder="위 버튼을 누르면 여기에 복사용 표가 만들어집니다."></textarea>
+      <button class="secondary" id="exportSelectBtn" hidden style="margin-top:6px;">전체 선택 (그 다음 Ctrl+C)</button>
+    </div>
+  </div>
+
+  <div class="card" id="nameScreen">
+    <label>이름을 선택하세요</label>
+    <div class="setpicker" id="namepicker"></div>
+    <div class="pinprompt" id="pinPrompt" hidden>
+      <label id="pinPromptLabel">번호를 입력하세요</label>
+      <input type="text" id="pinInput" inputmode="numeric" pattern="[0-9]*" maxlength="4" placeholder="4자리 번호" autocomplete="off">
+      <div class="err" id="pinErr" style="display:none;">번호가 틀렸어요. 선생님께 확인해보세요.</div>
+      <button class="primary" id="pinConfirmBtn">확인</button>
+      <button class="secondary" id="pinCancelBtn" style="margin-top:8px; width:100%;">취소</button>
+    </div>
+  </div>
+
+  <div class="card" id="setListScreen" hidden>
+    <div class="screentop">
+      <button class="exitbtn" id="nameBackBtn" aria-label="이름 다시 고르기">← 다른 이름</button>
+      <span class="whoami" id="whoamiLabel"></span>
+    </div>
+    <label>원서를 골라보세요</label>
+    <div class="setlisthint">📖 제목을 누르면 단어 확인 · 오른쪽 <span class="mono">›</span>을 누르면 시작</div>
+    <div class="setlist" id="setListItems"></div>
+  </div>
+
+  <div class="card" id="modeScreen" hidden>
+    <div class="screentop">
+      <button class="exitbtn" id="setBackBtn" aria-label="목록으로">← 목록으로</button>
+      <span class="whoami" id="modeSetTitle"></span>
+    </div>
+    <div class="modehero"><div class="mhsub" id="mhsub"></div><div class="mhemoji" id="mhemoji"></div><div class="mhtitle" id="mhtitle"></div></div>
+    <div id="warmupWrap"></div>
+    <label>모드를 선택하세요</label>
+    <div class="setpicker" id="modepicker">
+      <button class="setbtn active" data-mode="wordcheck">📖 단어확인 <span class="donechip" id="doneWord" hidden>완료</span><span class="dot" id="modeDotWord"></span><span class="repbadge" id="repWord"></span><br><span class="hint" style="margin:0;">뜻 확인 · 발음 듣기</span></button>
+      <button class="setbtn" data-mode="quiz">📝 단어 퀴즈 <span class="donechip" id="doneQuiz" hidden>완료</span><span class="dot" id="modeDotQuiz"></span><span class="repbadge" id="repQuiz"></span><br><span class="hint" style="margin:0;">단어 수만큼 4지선다</span></button>
+      <button class="setbtn" data-mode="match">🔗 매칭게임 <span class="donechip" id="doneMatch" hidden>완료</span><span class="dot" id="modeDotMatch"></span><br><span class="hint" style="margin:0;">80초 타이머</span></button>
+      <button class="setbtn" data-mode="spell">✏️ 스펠쓰기 <span class="donechip" id="doneSpell" hidden>완료</span><span class="dot" id="modeDotSpell"></span><br><span class="hint" style="margin:0;">8문항 타이핑</span></button>
+    </div>
+    <div class="hint" id="modeLockNote" hidden style="color:var(--danger);font-weight:700;margin:-8px 0 10px;">🔒 단어확인을 먼저 해요! 뜻 확인을 모두 누르면 열려요</div>
+    <button class="primary" id="startBtn">단어확인 시작 (뜻 확인)</button>
+    <button class="secondary" id="hwBtn" style="width:100%;margin-top:10px;">📋 숙제 결과 카드 보기</button>
+  </div>
+
+  <div class="card" id="quizCard" hidden>
+    <button class="exitbtn" id="quizExitBtn" aria-label="그만하고 모드 선택으로">← 그만하기</button>
+    <div class="retestbanner" id="retestBanner" hidden>🔁 복습 라운드 — 틀렸던 단어만 다시 풀어요!</div>
+    <div class="progress"><span id="progressBar" style="width:0%"></span></div>
+    <div class="qnum" id="qnum"></div>
+    <div class="qdir" id="qdir"></div>
+    <div class="qemoji" id="qemoji"></div>
+    <div class="qprompt" id="qprompt"></div>
+    <div class="choices" id="choices"></div>
+    <button class="nextbtn" id="nextBtn" hidden aria-label="다음 문제">다음 <i class="arrow">→</i></button>
+  </div>
+
+  <div class="card" id="spellCard" hidden>
+    <button class="exitbtn" id="spellExitBtn" aria-label="그만하고 모드 선택으로">← 그만하기</button>
+    <div class="spelldiff" id="spellDiffToggle">
+      <button class="diffbtn" data-diff="easy" id="diffEasyBtn">🐣 이지 (터치로 완성)</button>
+      <button class="diffbtn" data-diff="hard" id="diffHardBtn">🔥 하드 (타이핑)</button>
+    </div>
+    <div class="retestbanner" id="spellRetestBanner" hidden>🔁 복습 라운드 — 틀렸던 단어만 다시!</div>
+    <div class="progress"><span id="spellProgressBar" style="width:0%"></span></div>
+    <div class="qnum" id="spellQnum"></div>
+    <div class="qdir" id="spellQdir">뜻을 보고 영단어를 타이핑하세요</div>
+    <div class="qemoji" id="spellEmoji"></div>
+    <div class="qprompt" id="spellPrompt"></div>
+    <div class="spellhint" id="spellHint"></div>
+    <div class="spellcorrectreveal" id="spellCorrectReveal" hidden></div>
+    <input type="text" id="spellInput" class="spellinput" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" inputmode="text">
+    <div id="spellEasyArea" hidden>
+      <div class="easyBlanks" id="easyBlanks"></div>
+      <div class="easyTiles" id="easyTiles"></div>
+      <button class="secondary" id="easyUndoBtn" style="width:100%;margin-top:10px;">⌫ 한 글자 지우기</button>
+    </div>
+    <div class="spellfeedback" id="spellFeedback" hidden></div>
+    <button class="primary" id="spellCheckBtn">확인</button>
+    <button class="nextbtn" id="spellNextBtn" hidden aria-label="다음 문제">다음 <i class="arrow">→</i></button>
+  </div>
+
+  <div class="card" id="matchCard" hidden>
+    <div class="matchtop">
+      <button class="exitbtn" id="matchExitBtn" aria-label="그만하고 돌아가기">← 뒤로</button>
+      <div class="timer" id="matchTimer">1:20</div>
+      <div class="matchscore" id="matchScoreLive">⭐ 0점</div>
+    </div>
+    <div class="matchpairsrow" id="matchPairsRow">맞힌 쌍: 0</div>
+    <div class="sirenBanner" id="sirenBanner" hidden>🚨 빨리 눌러요! 🚨</div>
+    <div class="timeWarnBanner" id="timeWarnBanner" hidden>⏰ 20초 남았어요!</div>
+    <div class="streakrow" id="streakRow" hidden>🔥 <span id="streakNum">0</span>연속!</div>
+    <div class="matchgrid" id="matchGrid"></div>
+  </div>
+
+  <div class="card" id="resultCard" hidden>
+    <div class="scoretile">
+      <div class="num" id="scoreNum">0 / 20</div>
+      <div class="lbl" id="scoreLbl"></div>
+      <div class="passbadge" id="passBadge" hidden></div>
+    </div>
+    <button class="primary" id="nextModeBtn" hidden>다음 모드로 →</button>
+    <div class="resultbtnrow">
+      <button class="secondary" id="retryBtn">다시 풀기</button>
+      <button class="secondary" id="backBtn">세트 목록으로</button>
+    </div>
+    <button class="secondary" id="hwBtn2" style="width:100%;margin-top:10px;">📋 숙제 결과 카드 보기</button>
+    <div class="submitbanner" id="submitBanner" hidden></div>
+  </div>
+
+  <div class="card" id="boardCard" hidden>
+    <label id="boardLabel">이 원서 누적 기록</label>
+    <table class="board" id="boardTable"></table>
+    <div class="hint">최근 20건까지 표시됩니다.</div>
+  </div>
+
+  <footer>ERC 영어독서클럽 · B레벨 단어 확인용 · 퀴즈는 단어 수만큼 문항(영→한·한→영 혼합)으로 구성 · 통과 기준: 퀴즈·매칭게임·스펠쓰기 각 70% 이상
+    <div style="margin-top:10px;">
+      <button class="exitbtn" id="teacherGateBtn" style="display:inline-block;margin:0;font-size:11px;">🔒 교사용</button>
+      <div id="teacherGateBox" hidden style="margin-top:8px;">
+        <input type="password" id="teacherGateInput" inputmode="numeric" maxlength="8" placeholder="교사 비밀번호" autocomplete="off" style="width:150px;padding:6px 10px;border:1px solid var(--line);border-radius:8px;background:var(--surface-2);color:var(--ink);font-size:13px;">
+        <button class="secondary" id="teacherGateOk" style="padding:6px 12px;">확인</button>
+        <div id="teacherGateErr" hidden style="color:var(--danger);font-size:11.5px;margin-top:4px;">비밀번호가 틀렸어요.</div>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<script>
+const QUIZZES = [{"no":"1-1","title":"A New Friend","questions":[{"prompt":"hello","direction":"en2ko","correct":"안녕","choices":["짖다","쫓다","개","안녕"]},{"prompt":"개","direction":"ko2en","correct":"dog","choices":["play","bark","cat","dog"]},{"prompt":"cat","direction":"en2ko","correct":"고양이","choices":["안녕(작별)","친구","안녕","고양이"]},{"prompt":"좋아","direction":"ko2en","correct":"okay","choices":["cat","chase","good-bye","okay"]},{"prompt":"play","direction":"en2ko","correct":"놀다","choices":["짖다","안녕","좋아","놀다"]},{"prompt":"오다","direction":"ko2en","correct":"come","choices":["friend","hello","come","cat"]},{"prompt":"good-bye","direction":"en2ko","correct":"안녕(작별)","choices":["좋아","안녕(작별)","안녕","친구"]},{"prompt":"짖다","direction":"ko2en","correct":"bark","choices":["good-bye","chase","bark","friend"]},{"prompt":"chase","direction":"en2ko","correct":"쫓다","choices":["좋아","고양이","쫓다","오다"]},{"prompt":"친구","direction":"ko2en","correct":"friend","choices":["cat","friend","play","come"]}]},{"no":"1-2","title":"Clara and Clem Take a Ride","questions":[{"prompt":"tree","direction":"en2ko","correct":"나무","choices":["하늘","블록들","나무","가다"]},{"prompt":"바위들","direction":"ko2en","correct":"rocks","choices":["slide","rocks","sky","go"]},{"prompt":"bird","direction":"en2ko","correct":"새","choices":["가다","새","미끄러지다","보다, 보이다"]},{"prompt":"털","direction":"ko2en","correct":"fur","choices":["fur","see","blocks","fly"]},{"prompt":"blocks","direction":"en2ko","correct":"블록들","choices":["새","털","날다","블록들"]},{"prompt":"상자","direction":"ko2en","correct":"box","choices":["tree","box","slide","stop"]},{"prompt":"night","direction":"en2ko","correct":"밤","choices":["보다, 보이다","털","블록들","밤"]},{"prompt":"하늘","direction":"ko2en","correct":"sky","choices":["sky","stop","slide","nest"]},{"prompt":"nest","direction":"en2ko","correct":"둥지","choices":["나무","상자","블록들","둥지"]},{"prompt":"멈추다","direction":"ko2en","correct":"stop","choices":["stop","night","fur","fly"]},{"prompt":"go","direction":"en2ko","correct":"가다","choices":["바위들","하늘","가다","새"]},{"prompt":"타다","direction":"ko2en","correct":"ride","choices":["ride","box","see","stop"]},{"prompt":"slide","direction":"en2ko","correct":"미끄러지다","choices":["블록들","미끄러지다","밤","보다, 보이다"]},{"prompt":"쳐다보다","direction":"ko2en","correct":"look","choices":["look","fur","tree","sky"]},{"prompt":"see","direction":"en2ko","correct":"보다, 보이다","choices":["보다, 보이다","타다","밤","둥지"]},{"prompt":"날다","direction":"ko2en","correct":"fly","choices":["see","bird","night","fly"]}]},{"no":"2-1","title":"Go to Bed, Blue","questions":[{"prompt":"bed","direction":"en2ko","correct":"침대","choices":["우주선","놀다","침대","서랍"]},{"prompt":"베개","direction":"ko2en","correct":"pillow","choices":["play","pillow","spaceship","one"]},{"prompt":"drawer","direction":"en2ko","correct":"서랍","choices":["나무집","서랍","헬멧","놀다"]},{"prompt":"깃털","direction":"ko2en","correct":"feather","choices":["one","alien","pillow","feather"]},{"prompt":"lamp","direction":"en2ko","correct":"램프","choices":["램프","뛰다","헬멧","셋"]},{"prompt":"헬멧","direction":"ko2en","correct":"helmet","choices":["two","bed","helmet","tree house"]},{"prompt":"pogo stick","direction":"en2ko","correct":"포고스틱","choices":["램프","놀다","포고스틱","서랍"]},{"prompt":"나무집","direction":"ko2en","correct":"tree house","choices":["tree house","feather","play","three"]},{"prompt":"alien","direction":"en2ko","correct":"외계인","choices":["달리다","램프","외계인","깃털"]},{"prompt":"우주선","direction":"ko2en","correct":"spaceship","choices":["stop","run","spaceship","lamp"]},{"prompt":"one","direction":"en2ko","correct":"하나","choices":["하나","서랍","달리다","뛰다"]},{"prompt":"둘","direction":"ko2en","correct":"two","choices":["feather","two","helmet","lamp"]},{"prompt":"three","direction":"en2ko","correct":"셋","choices":["포고스틱","램프","나무집","셋"]},{"prompt":"놀다","direction":"ko2en","correct":"play","choices":["play","spaceship","funny","lamp"]},{"prompt":"jump","direction":"en2ko","correct":"뛰다","choices":["뛰다","하나","둘","헬멧"]},{"prompt":"달리다","direction":"ko2en","correct":"run","choices":["run","tree house","pogo stick","drawer"]},{"prompt":"stop","direction":"en2ko","correct":"멈추다","choices":["놀다","깃털","멈추다","서랍"]},{"prompt":"재미있는","direction":"ko2en","correct":"funny","choices":["play","stop","three","funny"]}]},{"no":"2-2","title":"Cat Days","questions":[{"prompt":"cat","direction":"en2ko","correct":"고양이","choices":["날다","고양이","매트","공"]},{"prompt":"모자","direction":"ko2en","correct":"hat","choices":["run","mat","hat","roll"]},{"prompt":"box","direction":"en2ko","correct":"상자","choices":["자동차","개","상자","구르다"]},{"prompt":"자동차","direction":"ko2en","correct":"car","choices":["car","hop","frog","play"]},{"prompt":"mat","direction":"en2ko","correct":"매트","choices":["놀다","매트","개구리","앉다"]},{"prompt":"벌레","direction":"ko2en","correct":"bug","choices":["car","bug","mat","frog"]},{"prompt":"ball","direction":"en2ko","correct":"공","choices":["공","모자","달리다","구르다"]},{"prompt":"개구리","direction":"ko2en","correct":"frog","choices":["frog","bug","hat","car"]},{"prompt":"dog","direction":"en2ko","correct":"개","choices":["고양이","낮잠","개","벌레"]},{"prompt":"앉다","direction":"ko2en","correct":"sit","choices":["ball","sit","roll","nap"]},{"prompt":"play","direction":"en2ko","correct":"놀다","choices":["개","놀다","벌레","고양이"]},{"prompt":"날다","direction":"ko2en","correct":"fly","choices":["fly","ball","hat","frog"]},{"prompt":"roll","direction":"en2ko","correct":"구르다","choices":["구르다","개구리","상자","매트"]},{"prompt":"머무르다","direction":"ko2en","correct":"stay","choices":["stay","run","bug","nap"]},{"prompt":"run","direction":"en2ko","correct":"달리다","choices":["고양이","개구리","자동차","달리다"]},{"prompt":"깡충 뛰다","direction":"ko2en","correct":"hop","choices":["frog","hop","box","play"]},{"prompt":"nap","direction":"en2ko","correct":"낮잠","choices":["놀다","매트","자동차","낮잠"]}]},{"no":"3-1","title":"Whose Hat Is It?","questions":[{"prompt":"hat","direction":"en2ko","correct":"모자","choices":["바람","거북이","모자","코끼리"]},{"prompt":"바람","direction":"ko2en","correct":"wind","choices":["crocodile","mouse","wind","beaver"]},{"prompt":"turtle","direction":"en2ko","correct":"거북이","choices":["모자","거북이","바람","비버"]},{"prompt":"쥐","direction":"ko2en","correct":"mouse","choices":["mouse","hat","crocodile","wind"]},{"prompt":"rabbit","direction":"en2ko","correct":"토끼","choices":["거북이","비버","코끼리","토끼"]},{"prompt":"비버","direction":"ko2en","correct":"beaver","choices":["beaver","crocodile","mouse","find"]},{"prompt":"crocodile","direction":"en2ko","correct":"악어","choices":["비버","바람","악어","쥐"]},{"prompt":"코끼리","direction":"ko2en","correct":"elephant","choices":["crocodile","mouse","elephant","turtle"]},{"prompt":"find","direction":"en2ko","correct":"찾다","choices":["바람","찾다","거북이","코끼리"]}]},{"no":"3-2","title":"Mine's the Best","questions":[{"prompt":"best","direction":"en2ko","correct":"최고의","choices":["풍선","머리","모자","최고의"]},{"prompt":"더 큰","direction":"ko2en","correct":"bigger","choices":["balloon","sick","bigger","ride"]},{"prompt":"stand up","direction":"en2ko","correct":"일어서다","choices":["모자","똑똑한","최고의","일어서다"]},{"prompt":"앉다","direction":"ko2en","correct":"sit","choices":["dead","sit","smart","think"]},{"prompt":"head","direction":"en2ko","correct":"머리","choices":["바지","머리","타다","모자"]},{"prompt":"타다","direction":"ko2en","correct":"ride","choices":["stand up","head","ride","sick"]},{"prompt":"sick","direction":"en2ko","correct":"아픈","choices":["죽은","똑똑한","아픈","타다"]},{"prompt":"죽은","direction":"ko2en","correct":"dead","choices":["best","dead","fault","think"]},{"prompt":"fault","direction":"en2ko","correct":"잘못","choices":["미워하다","바지","잘못","똑똑한"]},{"prompt":"바지","direction":"ko2en","correct":"pants","choices":["pants","head","hat","bigger"]},{"prompt":"hat","direction":"en2ko","correct":"모자","choices":["모자","머리","최고의","타다"]},{"prompt":"생각하다","direction":"ko2en","correct":"think","choices":["dead","smart","think","stand up"]},{"prompt":"smart","direction":"en2ko","correct":"똑똑한","choices":["잘못","똑똑한","모자","아픈"]},{"prompt":"미워하다","direction":"ko2en","correct":"hate","choices":["pants","head","hate","dead"]},{"prompt":"balloon","direction":"en2ko","correct":"풍선","choices":["타다","일어서다","앉다","풍선"]}]},{"no":"4-1","title":"Max Has a Fish","questions":[{"prompt":"boy","direction":"en2ko","correct":"소년","choices":["팔","불다","춤추다","소년"]},{"prompt":"방울들","direction":"ko2en","correct":"bubbles","choices":["eat","swim","bear","bubbles"]},{"prompt":"fish","direction":"en2ko","correct":"물고기","choices":["소년","물고기","팔","엉덩이"]},{"prompt":"팔","direction":"ko2en","correct":"arms","choices":["blow","arms","hide","dance"]},{"prompt":"legs","direction":"en2ko","correct":"다리","choices":["소년","흔들다","다리","엉덩이"]},{"prompt":"엉덩이","direction":"ko2en","correct":"butt","choices":["butt","boy","legs","hide"]},{"prompt":"bear","direction":"en2ko","correct":"곰","choices":["엉덩이","팔","춤추다","곰"]},{"prompt":"수영하다","direction":"ko2en","correct":"swim","choices":["dance","swim","bubbles","legs"]},{"prompt":"eat","direction":"en2ko","correct":"먹다","choices":["방울들","수영하다","소년","먹다"]},{"prompt":"숨다","direction":"ko2en","correct":"hide","choices":["bubbles","hide","shake","blow"]},{"prompt":"blow","direction":"en2ko","correct":"불다","choices":["숨다","방울들","춤추다","불다"]},{"prompt":"춤추다","direction":"ko2en","correct":"dance","choices":["blow","hide","boy","dance"]},{"prompt":"shake","direction":"en2ko","correct":"흔들다","choices":["꿈틀거리다","숨다","다리","흔들다"]},{"prompt":"꿈틀거리다","direction":"ko2en","correct":"wiggle","choices":["legs","swim","wiggle","hide"]}]},{"no":"4-2","title":"Max Finds an Egg","questions":[{"prompt":"find","direction":"en2ko","correct":"찾다","choices":["금이 가다","펑 터지다","찾다","둥지"]},{"prompt":"알","direction":"ko2en","correct":"egg","choices":["chicken","wait","find","egg"]},{"prompt":"dinosaur","direction":"en2ko","correct":"공룡","choices":["공룡","펑 터지다","쪼다","놓다"]},{"prompt":"만들다","direction":"ko2en","correct":"make","choices":["crack","put","make","chicken"]},{"prompt":"nest","direction":"en2ko","correct":"둥지","choices":["기다리다","펑 터지다","둥지","찾다"]},{"prompt":"놓다","direction":"ko2en","correct":"put","choices":["put","peck","pop","make"]},{"prompt":"light","direction":"en2ko","correct":"빛","choices":["펑 터지다","알","쪼다","빛"]},{"prompt":"기다리다","direction":"ko2en","correct":"wait","choices":["find","wait","nest","make"]},{"prompt":"peck","direction":"en2ko","correct":"쪼다","choices":["만들다","닭","공룡","쪼다"]},{"prompt":"금이 가다","direction":"ko2en","correct":"crack","choices":["wait","pop","crack","peck"]},{"prompt":"pop","direction":"en2ko","correct":"펑 터지다","choices":["알","놓다","기다리다","펑 터지다"]},{"prompt":"닭","direction":"ko2en","correct":"chicken","choices":["chicken","egg","find","dinosaur"]}]},{"no":"5-1","title":"How Many Fish?","questions":[{"prompt":"fish","direction":"en2ko","correct":"물고기","choices":["불쌍한","물고기","길 잃은","양동이"]},{"prompt":"만(바다)","direction":"ko2en","correct":"bay","choices":["poor","little","dash away","bay"]},{"prompt":"feet","direction":"en2ko","correct":"발","choices":["발","물고기","불쌍한","길 잃은"]},{"prompt":"양동이","direction":"ko2en","correct":"pail","choices":["feet","bay","pail","way"]},{"prompt":"yellow","direction":"en2ko","correct":"노란색","choices":["양동이","만(바다)","쏜살같이 달아나다","노란색"]},{"prompt":"불쌍한","direction":"ko2en","correct":"poor","choices":["dash away","bay","pail","poor"]},{"prompt":"red","direction":"en2ko","correct":"빨간색","choices":["빨간색","행복한","노란색","발"]},{"prompt":"쏜살같이 달아나다","direction":"ko2en","correct":"dash away","choices":["happy","dash away","fish","pail"]},{"prompt":"happy","direction":"en2ko","correct":"행복한","choices":["길","행복한","쏜살같이 달아나다","작은"]},{"prompt":"길 잃은","direction":"ko2en","correct":"lost","choices":["happy","little","lost","way"]},{"prompt":"little","direction":"en2ko","correct":"작은","choices":["만(바다)","노란색","길","작은"]},{"prompt":"길","direction":"ko2en","correct":"way","choices":["happy","fish","way","lost"]}]},{"no":"5-2","title":"Bubble Trouble","questions":[{"prompt":"bubble","direction":"en2ko","correct":"방울","choices":["어항","가라앉다","듣다","방울"]},{"prompt":"공기","direction":"ko2en","correct":"air","choices":["fishbowl","air","sound","sink"]},{"prompt":"hair","direction":"en2ko","correct":"머리카락","choices":["소리","가라앉다","머리카락","방울"]},{"prompt":"둥근","direction":"ko2en","correct":"round","choices":["sink","round","sorry","air"]},{"prompt":"listen","direction":"en2ko","correct":"듣다","choices":["공기","마시다","둥근","듣다"]},{"prompt":"소리","direction":"ko2en","correct":"sound","choices":["drink","listen","sound","bubble"]},{"prompt":"sink","direction":"en2ko","correct":"가라앉다","choices":["가라앉다","문제","듣다","공기"]},{"prompt":"마시다","direction":"ko2en","correct":"drink","choices":["listen","round","drink","bubble gum"]},{"prompt":"bubble gum","direction":"en2ko","correct":"풍선껌","choices":["문제","듣다","둥근","풍선껌"]},{"prompt":"어항","direction":"ko2en","correct":"fishbowl","choices":["sink","fishbowl","drink","sorry"]},{"prompt":"sorry","direction":"en2ko","correct":"미안한","choices":["공기","미안한","듣다","마시다"]},{"prompt":"문제","direction":"ko2en","correct":"trouble","choices":["drink","bubble","sound","trouble"]}]},{"no":"6-1","title":"We Play on a Rainy Day","questions":[{"prompt":"skate","direction":"en2ko","correct":"스케이트 타다","choices":["소리치다","굽다","그네 타다","스케이트 타다"]},{"prompt":"달리다","direction":"ko2en","correct":"run","choices":["run","coat","boat","pout"]},{"prompt":"have fun","direction":"en2ko","correct":"재미있게 놀다","choices":["달리다","재미있게 놀다","노래하다","퍼붓다"]},{"prompt":"해","direction":"ko2en","correct":"sun","choices":["mud","pout","bake","sun"]},{"prompt":"ride","direction":"en2ko","correct":"타다","choices":["스케이트 타다","진흙","코트","타다"]},{"prompt":"미끄럼 타다","direction":"ko2en","correct":"slide","choices":["sing","pour","float","slide"]},{"prompt":"swing","direction":"en2ko","correct":"그네 타다","choices":["굽다","그네 타다","부츠","뾰로통하다"]},{"prompt":"노래하다","direction":"ko2en","correct":"sing","choices":["bake","mud","slide","sing"]},{"prompt":"cloud","direction":"en2ko","correct":"구름","choices":["타다","그네 타다","구름","해"]},{"prompt":"비","direction":"ko2en","correct":"rain","choices":["wear","rain","cloud","mud"]},{"prompt":"pour","direction":"en2ko","correct":"퍼붓다","choices":["퍼붓다","소리치다","비 오는","웅덩이"]},{"prompt":"뾰로통하다","direction":"ko2en","correct":"pout","choices":["pout","float","skate","swing"]},{"prompt":"shout","direction":"en2ko","correct":"소리치다","choices":["스케이트 타다","그네 타다","소리치다","재미있게 놀다"]},{"prompt":"입다","direction":"ko2en","correct":"wear","choices":["sun","wear","cloud","have fun"]},{"prompt":"coat","direction":"en2ko","correct":"코트","choices":["부츠","코트","미끄럼 타다","해"]},{"prompt":"부츠","direction":"ko2en","correct":"boots","choices":["wear","boots","rainy","run"]},{"prompt":"boat","direction":"en2ko","correct":"배","choices":["미끄럼 타다","비 오는","배","부츠"]},{"prompt":"뜨다","direction":"ko2en","correct":"float","choices":["slide","rain","splash","float"]},{"prompt":"mud","direction":"en2ko","correct":"진흙","choices":["진흙","그네 타다","코트","웅덩이"]},{"prompt":"굽다","direction":"ko2en","correct":"bake","choices":["bake","sing","rainy","coat"]},{"prompt":"puddle","direction":"en2ko","correct":"웅덩이","choices":["노래하다","미끄럼 타다","웅덩이","비"]},{"prompt":"첨벙거리다","direction":"ko2en","correct":"splash","choices":["cloud","boots","sun","splash"]},{"prompt":"rainy","direction":"en2ko","correct":"비 오는","choices":["노래하다","비 오는","타다","부츠"]}]},{"no":"6-2","title":"Monster Math Picnic","questions":[{"prompt":"picnic","direction":"en2ko","correct":"소풍","choices":["의자들","소풍","진흙","파도타기하다"]},{"prompt":"땅, 착륙하다","direction":"ko2en","correct":"land","choices":["land","sail","float","rest"]},{"prompt":"mud","direction":"en2ko","correct":"진흙","choices":["소풍","배","항해하다","진흙"]},{"prompt":"모래","direction":"ko2en","correct":"sand","choices":["sand","benches","float","eat"]},{"prompt":"squirrels","direction":"en2ko","correct":"다람쥐들","choices":["치즈","벌들","다람쥐들","파리들"]},{"prompt":"벤치들","direction":"ko2en","correct":"benches","choices":["sail","benches","mud","squirrels"]},{"prompt":"chairs","direction":"en2ko","correct":"의자들","choices":["땅, 착륙하다","다람쥐들","빵","의자들"]},{"prompt":"먹다","direction":"ko2en","correct":"eat","choices":["land","benches","eat","float"]},{"prompt":"bread","direction":"en2ko","correct":"빵","choices":["벤치들","항해하다","뜨다","빵"]},{"prompt":"치즈","direction":"ko2en","correct":"cheese","choices":["benches","boat","cheese","mud"]},{"prompt":"flies","direction":"en2ko","correct":"파리들","choices":["벌들","파리들","배","벤치들"]},{"prompt":"벌들","direction":"ko2en","correct":"bees","choices":["flies","float","boat","bees"]},{"prompt":"float","direction":"en2ko","correct":"뜨다","choices":["먹다","소풍","배","뜨다"]},{"prompt":"파도타기하다","direction":"ko2en","correct":"surf","choices":["chairs","cheese","float","surf"]},{"prompt":"sail","direction":"en2ko","correct":"항해하다","choices":["항해하다","쉬다","빵","다람쥐들"]},{"prompt":"배","direction":"ko2en","correct":"boat","choices":["squirrels","bread","boat","eat"]},{"prompt":"rest","direction":"en2ko","correct":"쉬다","choices":["빵","벤치들","쉬다","배"]}]},{"no":"7-1","title":"Here Comes the Snow","questions":[{"prompt":"coat","direction":"en2ko","correct":"코트","choices":["눈송이","코트","손","바람"]},{"prompt":"부츠","direction":"ko2en","correct":"boots","choices":["arms","eyes","ear","boots"]},{"prompt":"snow","direction":"en2ko","correct":"눈(내리는 눈)","choices":["눈사람","눈(신체)","눈(내리는 눈)","팔"]},{"prompt":"벙어리장갑","direction":"ko2en","correct":"mittens","choices":["slip","hand","arms","mittens"]},{"prompt":"wind","direction":"en2ko","correct":"바람","choices":["눈덩이","몸을 숙여 숨다","팔","바람"]},{"prompt":"울부짖다","direction":"ko2en","correct":"howl","choices":["angel","ear","howl","arms"]},{"prompt":"sway and bend","direction":"en2ko","correct":"흔들리고 휘다","choices":["흔들리고 휘다","눈사람","손","코트"]},{"prompt":"눈송이","direction":"ko2en","correct":"flake","choices":["hand","wind","flake","arms"]},{"prompt":"cold","direction":"en2ko","correct":"추운","choices":["눈송이","몸을 숙여 숨다","팔","추운"]},{"prompt":"미끄러지다","direction":"ko2en","correct":"slip","choices":["angel","slip","hand","slide"]},{"prompt":"slide","direction":"en2ko","correct":"쭉 타고 내려가다","choices":["쭉 타고 내려가다","벙어리장갑","눈사람","손을 흔들다"]},{"prompt":"손을 흔들다","direction":"ko2en","correct":"wave","choices":["wave","pat and roll","flake","mittens"]},{"prompt":"angel","direction":"en2ko","correct":"천사","choices":["벙어리장갑","천사","눈송이","코코아"]},{"prompt":"눈덩이","direction":"ko2en","correct":"snowball","choices":["snowman","coat","snowball","wave"]},{"prompt":"duck and hide","direction":"en2ko","correct":"몸을 숙여 숨다","choices":["추운","코","토닥이며 굴리다","몸을 숙여 숨다"]},{"prompt":"토닥이며 굴리다","direction":"ko2en","correct":"pat and roll","choices":["pat and roll","snowball","nose","boots"]},{"prompt":"snowman","direction":"en2ko","correct":"눈사람","choices":["몸을 숙여 숨다","눈사람","울부짖다","귀"]},{"prompt":"코코아","direction":"ko2en","correct":"cocoa","choices":["snowball","cocoa","cold","sway and bend"]},{"prompt":"arms","direction":"en2ko","correct":"팔","choices":["흔들리고 휘다","부츠","몸을 숙여 숨다","팔"]},{"prompt":"귀","direction":"ko2en","correct":"ear","choices":["boots","cold","ear","snow"]},{"prompt":"hand","direction":"en2ko","correct":"손","choices":["팔","손","부츠","코"]},{"prompt":"눈(신체)","direction":"ko2en","correct":"eyes","choices":["slide","eyes","howl","cold"]},{"prompt":"nose","direction":"en2ko","correct":"코","choices":["눈사람","눈(내리는 눈)","부츠","코"]}]},{"no":"7-2","title":"Turtle and Snake Go Camping","questions":[{"prompt":"turtle","direction":"en2ko","correct":"거북이","choices":["침낭","노를 젓다","거북이","뱀"]},{"prompt":"뱀","direction":"ko2en","correct":"snake","choices":["march","turtle","snake","pack"]},{"prompt":"tent","direction":"en2ko","correct":"텐트","choices":["침낭","개울","거북이","텐트"]},{"prompt":"개울","direction":"ko2en","correct":"brook","choices":["splash","sleeping bags","brook","pack"]},{"prompt":"food","direction":"en2ko","correct":"음식","choices":["연못","음식","캠핑 가다","짐을 싸다"]},{"prompt":"침낭","direction":"ko2en","correct":"sleeping bags","choices":["food","turtle","sleeping bags","splash"]},{"prompt":"pond","direction":"en2ko","correct":"연못","choices":["연못","첨벙거리다","노를 젓다","행진하다"]},{"prompt":"캠핑 가다","direction":"ko2en","correct":"go camping","choices":["sleeping bags","pond","go camping","pack"]},{"prompt":"pack","direction":"en2ko","correct":"짐을 싸다","choices":["거북이","행진하다","짐을 싸다","개울"]},{"prompt":"행진하다","direction":"ko2en","correct":"march","choices":["row","march","sleeping bags","splash"]},{"prompt":"row","direction":"en2ko","correct":"노를 젓다","choices":["노를 젓다","침낭","뱀","음식"]},{"prompt":"첨벙거리다","direction":"ko2en","correct":"splash","choices":["brook","sleeping bags","splash","tent"]}]},{"no":"8-1","title":"Muddy, Mud, Bud","questions":[{"prompt":"car","direction":"en2ko","correct":"자동차","choices":["자동차","비누 거품","기울이다","문지르다"]},{"prompt":"진흙투성이의","direction":"ko2en","correct":"muddy","choices":["muddy","spill","mud","clean"]},{"prompt":"jump","direction":"en2ko","correct":"뛰다","choices":["문지르다","뛰다","진흙","기울이다"]},{"prompt":"진흙","direction":"ko2en","correct":"mud","choices":["tip","rub","mud","suds"]},{"prompt":"rub","direction":"en2ko","correct":"문지르다","choices":["깨끗한","진흙투성이의","문지르다","쏟다"]},{"prompt":"더, 더 많은","direction":"ko2en","correct":"more","choices":["more","tip","scrub","wet"]},{"prompt":"scrub","direction":"en2ko","correct":"문질러 씻다","choices":["깨끗한","더, 더 많은","문질러 씻다","문지르다"]},{"prompt":"젖은","direction":"ko2en","correct":"wet","choices":["rub","suds","tip","wet"]},{"prompt":"clean","direction":"en2ko","correct":"깨끗한","choices":["문질러 씻다","뛰다","깨끗한","진흙"]},{"prompt":"비누 거품","direction":"ko2en","correct":"suds","choices":["suds","wet","tip","car"]},{"prompt":"tip","direction":"en2ko","correct":"기울이다","choices":["자동차","깨끗한","진흙","기울이다"]},{"prompt":"쏟다","direction":"ko2en","correct":"spill","choices":["tip","clean","muddy","spill"]}]},{"no":"8-2","title":"Biscuit","questions":[{"prompt":"bed","direction":"en2ko","correct":"침대","choices":["졸린","인형","불빛","침대"]},{"prompt":"간식","direction":"ko2en","correct":"snack","choices":["be tucked in","hear","light","snack"]},{"prompt":"drink","direction":"en2ko","correct":"마시다","choices":["불빛","이야기","담요","마시다"]},{"prompt":"듣다","direction":"ko2en","correct":"hear","choices":["be tucked in","hear","doll","bed"]},{"prompt":"story","direction":"en2ko","correct":"이야기","choices":["이야기","듣다","담요","뽀뽀하다"]},{"prompt":"담요","direction":"ko2en","correct":"blanket","choices":["story","be tucked in","kiss","blanket"]},{"prompt":"doll","direction":"en2ko","correct":"인형","choices":["안다, 포옹하다","침대","듣다","인형"]},{"prompt":"안다, 포옹하다","direction":"ko2en","correct":"hug","choices":["bed","puppy","light","hug"]},{"prompt":"kiss","direction":"en2ko","correct":"뽀뽀하다","choices":["뽀뽀하다","웅크리다","침대","간식"]},{"prompt":"불빛","direction":"ko2en","correct":"light","choices":["curl up","light","bed","puppy"]},{"prompt":"be tucked in","direction":"en2ko","correct":"이불을 덮다","choices":["듣다","웅크리다","이불을 덮다","안다, 포옹하다"]},{"prompt":"웅크리다","direction":"ko2en","correct":"curl up","choices":["blanket","drink","curl up","story"]},{"prompt":"sleepy","direction":"en2ko","correct":"졸린","choices":["이불을 덮다","졸린","안다, 포옹하다","웅크리다"]},{"prompt":"강아지","direction":"ko2en","correct":"puppy","choices":["hear","puppy","snack","bed"]}]}];
+
+const WORD_SETS = [{"no":"1-1","title":"A New Friend","words":[{"en":"hello","ko":"안녕","pos":"구","emoji":"👋","ex":"Hello, Mom!"},{"en":"dog","ko":"개","pos":"명","emoji":"🐶","ex":"The dog is big."},{"en":"cat","ko":"고양이","pos":"명","emoji":"🐱","ex":"The cat is small."},{"en":"okay","ko":"좋아","pos":"구","emoji":"👌","ex":"Okay, let's go."},{"en":"play","ko":"놀다","pos":"동","emoji":"🧸","ex":"I play with a ball."},{"en":"come","ko":"오다","pos":"동","emoji":"🏃","ex":"Come here."},{"en":"good-bye","ko":"안녕(작별)","pos":"구","emoji":"👋","ex":"Good-bye, Dad."},{"en":"bark","ko":"짖다","pos":"동","emoji":"🔊","ex":"The dog can bark."},{"en":"chase","ko":"쫓다","pos":"동","emoji":"💨","ex":"The dog will chase the cat."},{"en":"friend","ko":"친구","pos":"명","emoji":"🧑‍🤝‍🧑","ex":"She is my friend."}]},{"no":"1-2","title":"Clara and Clem Take a Ride","words":[{"en":"tree","ko":"나무","pos":"명","emoji":"🌳","ex":"I see a tree."},{"en":"rocks","ko":"바위들","pos":"명","emoji":"🪨","ex":"The rocks are big."},{"en":"bird","ko":"새","pos":"명","emoji":"🐦","ex":"A bird can fly."},{"en":"fur","ko":"털","pos":"명","emoji":"🧶","ex":"The cat has soft fur."},{"en":"blocks","ko":"블록들","pos":"명","emoji":"🧱","ex":"I play with blocks."},{"en":"box","ko":"상자","pos":"명","emoji":"📦","ex":"The box is red."},{"en":"night","ko":"밤","pos":"명","emoji":"🌙","ex":"It is night."},{"en":"sky","ko":"하늘","pos":"명","emoji":"☁️","ex":"The sky is blue."},{"en":"nest","ko":"둥지","pos":"명","emoji":"🪺","ex":"A bird is in the nest."},{"en":"stop","ko":"멈추다","pos":"동","emoji":"🛑","ex":"Stop the car."},{"en":"go","ko":"가다","pos":"동","emoji":"🟢","ex":"Let's go."},{"en":"ride","ko":"타다","pos":"동","emoji":"🚲","ex":"I ride a bike."},{"en":"slide","ko":"미끄러지다","pos":"동","emoji":"🛝","ex":"I slide down."},{"en":"look","ko":"쳐다보다","pos":"동","emoji":"👀","ex":"Look at the bird."},{"en":"see","ko":"보다, 보이다","pos":"동","emoji":"🔭","ex":"I see a tree."},{"en":"fly","ko":"날다","pos":"동","emoji":"🕊️","ex":"Birds fly."}]},{"no":"2-1","title":"Go to Bed, Blue","words":[{"en":"bed","ko":"침대","pos":"명","emoji":"🛏️","ex":"I am in bed."},{"en":"pillow","ko":"베개","pos":"명","emoji":"🛌","ex":"The pillow is soft."},{"en":"drawer","ko":"서랍","pos":"명","emoji":"🗄️","ex":"Open the drawer."},{"en":"feather","ko":"깃털","pos":"명","emoji":"🪶","ex":"I see a feather."},{"en":"lamp","ko":"램프","pos":"명","emoji":"💡","ex":"Turn on the lamp."},{"en":"helmet","ko":"헬멧","pos":"명","emoji":"⛑️","ex":"Put on your helmet."},{"en":"pogo stick","ko":"포고스틱","pos":"명","emoji":"🦘","ex":"He jumps on a pogo stick."},{"en":"tree house","ko":"나무집","pos":"명","emoji":"🏡","ex":"We play in the tree house."},{"en":"alien","ko":"외계인","pos":"명","emoji":"👽","ex":"The alien is green."},{"en":"spaceship","ko":"우주선","pos":"명","emoji":"🚀","ex":"The spaceship can fly."},{"en":"one","ko":"하나","pos":"명","emoji":"1️⃣","ex":"I have one ball."},{"en":"two","ko":"둘","pos":"명","emoji":"2️⃣","ex":"I have two eyes."},{"en":"three","ko":"셋","pos":"명","emoji":"3️⃣","ex":"I see three cats."},{"en":"play","ko":"놀다","pos":"동","emoji":"🧸","ex":"Let's play."},{"en":"jump","ko":"뛰다","pos":"동","emoji":"🤾","ex":"I can jump."},{"en":"run","ko":"달리다","pos":"동","emoji":"🏃","ex":"I can run."},{"en":"stop","ko":"멈추다","pos":"동","emoji":"🛑","ex":"Stop, please."},{"en":"funny","ko":"재미있는","pos":"형","emoji":"🤣","ex":"The alien is funny."}]},{"no":"2-2","title":"Cat Days","words":[{"en":"cat","ko":"고양이","pos":"명","emoji":"🐱","ex":"The cat sits."},{"en":"hat","ko":"모자","pos":"명","emoji":"🎩","ex":"I have a hat."},{"en":"box","ko":"상자","pos":"명","emoji":"📦","ex":"The cat is in the box."},{"en":"car","ko":"자동차","pos":"명","emoji":"🚗","ex":"I see a car."},{"en":"mat","ko":"매트","pos":"명","emoji":"🧘","ex":"The cat sits on the mat."},{"en":"bug","ko":"벌레","pos":"명","emoji":"🐛","ex":"I see a bug."},{"en":"ball","ko":"공","pos":"명","emoji":"⚽","ex":"I kick the ball."},{"en":"frog","ko":"개구리","pos":"명","emoji":"🐸","ex":"The frog can hop."},{"en":"dog","ko":"개","pos":"명","emoji":"🐶","ex":"The dog can run."},{"en":"sit","ko":"앉다","pos":"동","emoji":"🪑","ex":"Sit down."},{"en":"play","ko":"놀다","pos":"동","emoji":"🧸","ex":"We play all day."},{"en":"fly","ko":"날다","pos":"동","emoji":"🦋","ex":"A bug can fly."},{"en":"roll","ko":"구르다","pos":"동","emoji":"🛞","ex":"The ball can roll."},{"en":"stay","ko":"머무르다","pos":"동","emoji":"🏠","ex":"Stay here."},{"en":"run","ko":"달리다","pos":"동","emoji":"🏃","ex":"The dog can run."},{"en":"hop","ko":"깡충 뛰다","pos":"동","emoji":"🐇","ex":"The frog can hop."},{"en":"nap","ko":"낮잠","pos":"명","emoji":"😴","ex":"The cat takes a nap."}]},{"no":"3-1","title":"Whose Hat Is It?","words":[{"en":"hat","ko":"모자","pos":"명","emoji":"🎩","ex":"Whose hat is it?"},{"en":"wind","ko":"바람","pos":"명","emoji":"🌬️","ex":"The wind is strong."},{"en":"turtle","ko":"거북이","pos":"명","emoji":"🐢","ex":"The turtle is slow."},{"en":"mouse","ko":"쥐","pos":"명","emoji":"🐭","ex":"The mouse is small."},{"en":"rabbit","ko":"토끼","pos":"명","emoji":"🐰","ex":"The rabbit can hop."},{"en":"beaver","ko":"비버","pos":"명","emoji":"🦫","ex":"The beaver is brown."},{"en":"crocodile","ko":"악어","pos":"명","emoji":"🐊","ex":"The crocodile is big."},{"en":"elephant","ko":"코끼리","pos":"명","emoji":"🐘","ex":"The elephant is huge."},{"en":"find","ko":"찾다","pos":"동","emoji":"🔍","ex":"I find my hat."}]},{"no":"3-2","title":"Mine's the Best","words":[{"en":"best","ko":"최고의","pos":"형","emoji":"🏆","ex":"This is the best."},{"en":"bigger","ko":"더 큰","pos":"형","emoji":"🐘","ex":"My ball is bigger."},{"en":"stand up","ko":"일어서다","pos":"구","emoji":"🧍","ex":"Please stand up."},{"en":"sit","ko":"앉다","pos":"동","emoji":"🪑","ex":"Sit down."},{"en":"head","ko":"머리","pos":"명","emoji":"🙂","ex":"Touch your head."},{"en":"ride","ko":"타다","pos":"동","emoji":"🚲","ex":"I ride a bike."},{"en":"sick","ko":"아픈","pos":"형","emoji":"🤒","ex":"I feel sick."},{"en":"dead","ko":"죽은","pos":"형","emoji":"🥀","ex":"The flower is dead."},{"en":"fault","ko":"잘못","pos":"명","emoji":"🙇","ex":"It is my fault."},{"en":"pants","ko":"바지","pos":"명","emoji":"👖","ex":"I wear pants."},{"en":"hat","ko":"모자","pos":"명","emoji":"🎩","ex":"I have a hat."},{"en":"think","ko":"생각하다","pos":"동","emoji":"🤔","ex":"I think so."},{"en":"smart","ko":"똑똑한","pos":"형","emoji":"🧠","ex":"She is smart."},{"en":"hate","ko":"미워하다","pos":"동","emoji":"😠","ex":"I hate spiders."},{"en":"balloon","ko":"풍선","pos":"명","emoji":"🎈","ex":"I have a balloon."}]},{"no":"4-1","title":"Max Has a Fish","words":[{"en":"boy","ko":"소년","pos":"명","emoji":"👦","ex":"The boy is Max."},{"en":"bubbles","ko":"방울들","pos":"명","emoji":"🫧","ex":"I see bubbles."},{"en":"fish","ko":"물고기","pos":"명","emoji":"🐟","ex":"Max has a fish."},{"en":"arms","ko":"팔","pos":"명","emoji":"💪","ex":"I have two arms."},{"en":"legs","ko":"다리","pos":"명","emoji":"🦵","ex":"I have two legs."},{"en":"butt","ko":"엉덩이","pos":"명","emoji":"🍑","ex":"The fish wiggles its butt."},{"en":"bear","ko":"곰","pos":"명","emoji":"🐻","ex":"The bear is big."},{"en":"swim","ko":"수영하다","pos":"동","emoji":"🏊","ex":"Fish swim."},{"en":"eat","ko":"먹다","pos":"동","emoji":"🍽️","ex":"I eat lunch."},{"en":"hide","ko":"숨다","pos":"동","emoji":"🙈","ex":"The fish can hide."},{"en":"blow","ko":"불다","pos":"동","emoji":"💨","ex":"Blow the bubbles."},{"en":"dance","ko":"춤추다","pos":"동","emoji":"💃","ex":"I can dance."},{"en":"shake","ko":"흔들다","pos":"동","emoji":"🥶","ex":"Shake your arms."},{"en":"wiggle","ko":"꿈틀거리다","pos":"동","emoji":"🪱","ex":"The fish can wiggle."}]},{"no":"4-2","title":"Max Finds an Egg","words":[{"en":"find","ko":"찾다","pos":"동","emoji":"🔍","ex":"Max can find an egg."},{"en":"egg","ko":"알","pos":"명","emoji":"🥚","ex":"I see an egg."},{"en":"dinosaur","ko":"공룡","pos":"명","emoji":"🦖","ex":"A dinosaur is big."},{"en":"make","ko":"만들다","pos":"동","emoji":"🛠️","ex":"Let's make a nest."},{"en":"nest","ko":"둥지","pos":"명","emoji":"🪺","ex":"The egg is in the nest."},{"en":"put","ko":"놓다","pos":"동","emoji":"📍","ex":"Put the egg here."},{"en":"light","ko":"빛","pos":"명","emoji":"💡","ex":"The light is warm."},{"en":"wait","ko":"기다리다","pos":"동","emoji":"⏳","ex":"Wait for the egg."},{"en":"peck","ko":"쪼다","pos":"동","emoji":"🐤","ex":"The chick will peck."},{"en":"crack","ko":"금이 가다","pos":"동","emoji":"💔","ex":"The egg can crack."},{"en":"pop","ko":"펑 터지다","pos":"동","emoji":"💥","ex":"The chick will pop out."},{"en":"chicken","ko":"닭","pos":"명","emoji":"🐔","ex":"A chicken is in the egg."}]},{"no":"5-1","title":"How Many Fish?","words":[{"en":"fish","ko":"물고기","pos":"명","emoji":"🐠","ex":"I see a fish."},{"en":"bay","ko":"만(바다)","pos":"명","emoji":"🌊","ex":"The fish swim in the bay."},{"en":"feet","ko":"발","pos":"명","emoji":"🦶","ex":"I have two feet."},{"en":"pail","ko":"양동이","pos":"명","emoji":"🪣","ex":"The pail is red."},{"en":"yellow","ko":"노란색","pos":"형","emoji":"🟡","ex":"The fish is yellow."},{"en":"poor","ko":"불쌍한","pos":"형","emoji":"🥺","ex":"The poor fish is lost."},{"en":"red","ko":"빨간색","pos":"형","emoji":"🔴","ex":"The pail is red."},{"en":"dash away","ko":"쏜살같이 달아나다","pos":"구","emoji":"💨","ex":"The fish dash away."},{"en":"happy","ko":"행복한","pos":"형","emoji":"😊","ex":"I am happy."},{"en":"lost","ko":"길 잃은","pos":"형","emoji":"🧭","ex":"The fish is lost."},{"en":"little","ko":"작은","pos":"형","emoji":"🐁","ex":"A little fish."},{"en":"way","ko":"길","pos":"명","emoji":"🛣️","ex":"Which way?"}]},{"no":"5-2","title":"Bubble Trouble","words":[{"en":"bubble","ko":"방울","pos":"명","emoji":"🫧","ex":"I blow a bubble."},{"en":"air","ko":"공기","pos":"명","emoji":"🌬️","ex":"A bubble is full of air."},{"en":"hair","ko":"머리카락","pos":"명","emoji":"💇","ex":"I have long hair."},{"en":"round","ko":"둥근","pos":"형","emoji":"⚪","ex":"The bubble is round."},{"en":"listen","ko":"듣다","pos":"동","emoji":"👂","ex":"Listen to the sound."},{"en":"sound","ko":"소리","pos":"명","emoji":"🔔","ex":"I hear a sound."},{"en":"sink","ko":"가라앉다","pos":"동","emoji":"⚓","ex":"The stone will sink."},{"en":"drink","ko":"마시다","pos":"동","emoji":"🥤","ex":"I drink water."},{"en":"bubble gum","ko":"풍선껌","pos":"명","emoji":"🍬","ex":"I chew bubble gum."},{"en":"fishbowl","ko":"어항","pos":"명","emoji":"🐟","ex":"The fish is in the fishbowl."},{"en":"sorry","ko":"미안한","pos":"형","emoji":"🙏","ex":"I am sorry."},{"en":"trouble","ko":"문제","pos":"명","emoji":"⚠️","ex":"We are in trouble."}]},{"no":"6-1","title":"We Play on a Rainy Day","words":[{"en":"skate","ko":"스케이트 타다","pos":"동","emoji":"⛸️","ex":"I can skate."},{"en":"run","ko":"달리다","pos":"동","emoji":"🏃","ex":"I run in the rain."},{"en":"have fun","ko":"재미있게 놀다","pos":"구","emoji":"🎉","ex":"We have fun."},{"en":"sun","ko":"해","pos":"명","emoji":"☀️","ex":"The sun is hot."},{"en":"ride","ko":"타다","pos":"동","emoji":"🚲","ex":"I ride my bike."},{"en":"slide","ko":"미끄럼 타다","pos":"동","emoji":"🛝","ex":"I slide down."},{"en":"swing","ko":"그네 타다","pos":"동","emoji":"🪁","ex":"I swing high."},{"en":"sing","ko":"노래하다","pos":"동","emoji":"🎤","ex":"We sing a song."},{"en":"cloud","ko":"구름","pos":"명","emoji":"☁️","ex":"I see a gray cloud."},{"en":"rain","ko":"비","pos":"명","emoji":"🌧️","ex":"The rain is cold."},{"en":"pour","ko":"퍼붓다","pos":"동","emoji":"🌧️","ex":"The rain will pour."},{"en":"pout","ko":"뾰로통하다","pos":"동","emoji":"😒","ex":"Do not pout."},{"en":"shout","ko":"소리치다","pos":"동","emoji":"📣","ex":"I shout, Hooray!"},{"en":"wear","ko":"입다","pos":"동","emoji":"🧥","ex":"I wear a coat."},{"en":"coat","ko":"코트","pos":"명","emoji":"🧥","ex":"My coat is blue."},{"en":"boots","ko":"부츠","pos":"명","emoji":"🥾","ex":"I wear boots."},{"en":"boat","ko":"배","pos":"명","emoji":"⛵","ex":"The boat can float."},{"en":"float","ko":"뜨다","pos":"동","emoji":"🛟","ex":"The boat can float."},{"en":"mud","ko":"진흙","pos":"명","emoji":"🟤","ex":"The mud is wet."},{"en":"bake","ko":"굽다","pos":"동","emoji":"🍪","ex":"We bake a cake."},{"en":"puddle","ko":"웅덩이","pos":"명","emoji":"💦","ex":"I jump in a puddle."},{"en":"splash","ko":"첨벙거리다","pos":"동","emoji":"💧","ex":"I splash in the puddle."},{"en":"rainy","ko":"비 오는","pos":"형","emoji":"☔","ex":"It is a rainy day."}]},{"no":"6-2","title":"Monster Math Picnic","words":[{"en":"picnic","ko":"소풍","pos":"명","emoji":"🧺","ex":"We have a picnic."},{"en":"land","ko":"땅, 착륙하다","pos":"명","emoji":"🏞️","ex":"The boat will land."},{"en":"mud","ko":"진흙","pos":"명","emoji":"🟤","ex":"The mud is brown."},{"en":"sand","ko":"모래","pos":"명","emoji":"🏖️","ex":"I play in the sand."},{"en":"squirrels","ko":"다람쥐들","pos":"명","emoji":"🐿️","ex":"The squirrels eat nuts."},{"en":"benches","ko":"벤치들","pos":"명","emoji":"🪑","ex":"The benches are wet."},{"en":"chairs","ko":"의자들","pos":"명","emoji":"💺","ex":"The chairs are red."},{"en":"eat","ko":"먹다","pos":"동","emoji":"🍽️","ex":"We eat lunch."},{"en":"bread","ko":"빵","pos":"명","emoji":"🍞","ex":"I eat bread."},{"en":"cheese","ko":"치즈","pos":"명","emoji":"🧀","ex":"I like cheese."},{"en":"flies","ko":"파리들","pos":"명","emoji":"🪰","ex":"The flies come."},{"en":"bees","ko":"벌들","pos":"명","emoji":"🐝","ex":"Bees like flowers."},{"en":"float","ko":"뜨다","pos":"동","emoji":"🛟","ex":"The boat can float."},{"en":"surf","ko":"파도타기하다","pos":"동","emoji":"🏄","ex":"I surf the waves."},{"en":"sail","ko":"항해하다","pos":"동","emoji":"⛵","ex":"We sail the sea."},{"en":"boat","ko":"배","pos":"명","emoji":"🚤","ex":"The boat is red."},{"en":"rest","ko":"쉬다","pos":"동","emoji":"😌","ex":"Let's rest."}]},{"no":"7-1","title":"Here Comes the Snow","words":[{"en":"coat","ko":"코트","pos":"명","emoji":"🧥","ex":"I wear a coat."},{"en":"boots","ko":"부츠","pos":"명","emoji":"🥾","ex":"I wear boots."},{"en":"snow","ko":"눈(내리는 눈)","pos":"명","emoji":"❄️","ex":"I love snow."},{"en":"mittens","ko":"벙어리장갑","pos":"명","emoji":"🧤","ex":"My mittens are warm."},{"en":"wind","ko":"바람","pos":"명","emoji":"🌬️","ex":"The wind is cold."},{"en":"howl","ko":"울부짖다","pos":"동","emoji":"🐺","ex":"The wind can howl."},{"en":"sway and bend","ko":"흔들리고 휘다","pos":"구","emoji":"🌲","ex":"The trees sway and bend."},{"en":"flake","ko":"눈송이","pos":"명","emoji":"🌨️","ex":"A flake fell down."},{"en":"cold","ko":"추운","pos":"형","emoji":"🥶","ex":"It is cold."},{"en":"slip","ko":"미끄러지다","pos":"동","emoji":"🧊","ex":"Do not slip."},{"en":"slide","ko":"쭉 타고 내려가다","pos":"동","emoji":"🛷","ex":"We slide down the hill."},{"en":"wave","ko":"손을 흔들다","pos":"동","emoji":"👋","ex":"I wave to Mom."},{"en":"angel","ko":"천사","pos":"명","emoji":"😇","ex":"I make a snow angel."},{"en":"snowball","ko":"눈덩이","pos":"명","emoji":"⚪","ex":"I throw a snowball."},{"en":"duck and hide","ko":"몸을 숙여 숨다","pos":"구","emoji":"🫣","ex":"Duck and hide!"},{"en":"pat and roll","ko":"토닥이며 굴리다","pos":"구","emoji":"⛄","ex":"Pat and roll the snow."},{"en":"snowman","ko":"눈사람","pos":"명","emoji":"⛄","ex":"We make a snowman."},{"en":"cocoa","ko":"코코아","pos":"명","emoji":"☕","ex":"I drink hot cocoa."},{"en":"arms","ko":"팔","pos":"명","emoji":"💪","ex":"Wave your arms."},{"en":"ear","ko":"귀","pos":"명","emoji":"👂","ex":"My ear is cold."},{"en":"hand","ko":"손","pos":"명","emoji":"✋","ex":"My hand is warm."},{"en":"eyes","ko":"눈(신체)","pos":"명","emoji":"👀","ex":"Close your eyes."},{"en":"nose","ko":"코","pos":"명","emoji":"👃","ex":"The snowman has a nose."}]},{"no":"7-2","title":"Turtle and Snake Go Camping","words":[{"en":"turtle","ko":"거북이","pos":"명","emoji":"🐢","ex":"The turtle is slow."},{"en":"snake","ko":"뱀","pos":"명","emoji":"🐍","ex":"The snake is long."},{"en":"tent","ko":"텐트","pos":"명","emoji":"⛺","ex":"We sleep in a tent."},{"en":"brook","ko":"개울","pos":"명","emoji":"🏞️","ex":"The brook is clear."},{"en":"food","ko":"음식","pos":"명","emoji":"🍲","ex":"We pack food."},{"en":"sleeping bags","ko":"침낭","pos":"명","emoji":"🛌","ex":"We have sleeping bags."},{"en":"pond","ko":"연못","pos":"명","emoji":"🪷","ex":"The frog is in the pond."},{"en":"go camping","ko":"캠핑 가다","pos":"구","emoji":"🏕️","ex":"Let's go camping."},{"en":"pack","ko":"짐을 싸다","pos":"동","emoji":"🎒","ex":"I pack my bag."},{"en":"march","ko":"행진하다","pos":"동","emoji":"🚶","ex":"We march in a line."},{"en":"row","ko":"노를 젓다","pos":"동","emoji":"🚣","ex":"We row the boat."},{"en":"splash","ko":"첨벙거리다","pos":"동","emoji":"💦","ex":"I splash in the pond."}]},{"no":"8-1","title":"Muddy, Mud, Bud","words":[{"en":"car","ko":"자동차","pos":"명","emoji":"🚗","ex":"The car is dirty."},{"en":"muddy","ko":"진흙투성이의","pos":"형","emoji":"🟤","ex":"The car is muddy."},{"en":"jump","ko":"뛰다","pos":"동","emoji":"🤸","ex":"I jump in the mud."},{"en":"mud","ko":"진흙","pos":"명","emoji":"🐷","ex":"The mud is wet."},{"en":"rub","ko":"문지르다","pos":"동","emoji":"🧽","ex":"Rub the car."},{"en":"more","ko":"더, 더 많은","pos":"형","emoji":"➕","ex":"I want more."},{"en":"scrub","ko":"문질러 씻다","pos":"동","emoji":"🧼","ex":"Scrub the car."},{"en":"wet","ko":"젖은","pos":"형","emoji":"💧","ex":"My socks are wet."},{"en":"clean","ko":"깨끗한","pos":"형","emoji":"✨","ex":"The car is clean."},{"en":"suds","ko":"비누 거품","pos":"명","emoji":"🫧","ex":"I see white suds."},{"en":"tip","ko":"기울이다","pos":"동","emoji":"🪣","ex":"Tip the bucket."},{"en":"spill","ko":"쏟다","pos":"동","emoji":"🥛","ex":"Do not spill the milk."}]},{"no":"8-2","title":"Biscuit","words":[{"en":"bed","ko":"침대","pos":"명","emoji":"🛏️","ex":"It is time for bed."},{"en":"snack","ko":"간식","pos":"명","emoji":"🍪","ex":"I eat a snack."},{"en":"drink","ko":"마시다","pos":"동","emoji":"🥛","ex":"I drink milk."},{"en":"hear","ko":"듣다","pos":"동","emoji":"👂","ex":"I hear a story."},{"en":"story","ko":"이야기","pos":"명","emoji":"📖","ex":"Mom reads a story."},{"en":"blanket","ko":"담요","pos":"명","emoji":"🧣","ex":"The blanket is soft."},{"en":"doll","ko":"인형","pos":"명","emoji":"🪆","ex":"I hug my doll."},{"en":"hug","ko":"안다, 포옹하다","pos":"동","emoji":"🤗","ex":"I hug my puppy."},{"en":"kiss","ko":"뽀뽀하다","pos":"동","emoji":"😘","ex":"Kiss me good night."},{"en":"light","ko":"불빛","pos":"명","emoji":"💡","ex":"Turn off the light."},{"en":"be tucked in","ko":"이불을 덮다","pos":"구","emoji":"🛌","ex":"I am tucked in."},{"en":"curl up","ko":"웅크리다","pos":"동","emoji":"🐕","ex":"The puppy will curl up."},{"en":"sleepy","ko":"졸린","pos":"형","emoji":"🥱","ex":"I am sleepy."},{"en":"puppy","ko":"강아지","pos":"명","emoji":"🐶","ex":"The puppy is little."}]}];
+
+const BOOK_DISPLAY = {"1-1":{"t":"A New Friend","e":"🐶🐱"},"1-2":{"t":"Clara and Clem Take a Ride","e":"🚂🚗"},"2-1":{"t":"Go to Bed, Blue","e":"🛏️👽"},"2-2":{"t":"Cat Days","e":"🐱☀️"},"3-1":{"t":"Whose Hat Is It?","e":"🎩❓"},"3-2":{"t":"Mine's the Best","e":"🎈🏆"},"4-1":{"t":"Max Has a Fish","e":"🐟🫧"},"4-2":{"t":"Max Finds an Egg","e":"🥚🦖"},"5-1":{"t":"How Many Fish?","e":"🐠🔢"},"5-2":{"t":"Bubble Trouble","e":"🫧😬"},"6-1":{"t":"We Play on a Rainy Day","e":"☔🥾"},"6-2":{"t":"Monster Math Picnic","e":"🧺👾"},"7-1":{"t":"Here Comes the Snow","e":"❄️⛄"},"7-2":{"t":"Turtle and Snake Go Camping","e":"🐢🐍⛺"},"8-1":{"t":"Muddy, Mud, Bud","e":"🚗🟤"},"8-2":{"t":"Biscuit","e":"🐶🌙"}};
+function setLabel(no) { return no.startsWith('review') ? '복습' : ('SET ' + no); }
+
+// ---- sound effects (no audio files — generated tones) ----
+let soundEnabled = true;
+try { soundEnabled = localStorage.getItem('b_quiz_sound') !== 'off'; } catch (e) {}
+
+function updateSoundToggleUI() {
+  const btn = document.getElementById('soundToggleBtn');
+  btn.textContent = soundEnabled ? '🔊' : '🔇';
+  btn.classList.toggle('muted', !soundEnabled);
+}
+document.getElementById('soundToggleBtn').addEventListener('click', () => {
+  soundEnabled = !soundEnabled;
+  try { localStorage.setItem('b_quiz_sound', soundEnabled ? 'on' : 'off'); } catch (e) {}
+  updateSoundToggleUI();
+});
+updateSoundToggleUI();
+
+// ---- TTS pronunciation (browser Web Speech API — no audio files needed) ----
+// voices load asynchronously and the browser's default voice is often the OS
+// language (Korean here), so we must explicitly pick + attach an English voice
+// rather than rely on utterance.lang alone.
+let ttsVoices = [];
+function loadTtsVoices() {
+  ttsVoices = window.speechSynthesis ? window.speechSynthesis.getVoices() : [];
+}
+if (window.speechSynthesis) {
+  loadTtsVoices();
+  window.speechSynthesis.onvoiceschanged = loadTtsVoices;
+  // onvoiceschanged doesn't fire reliably in every browser/embedded webview,
+  // so also poll for a few seconds — the voice list usually populates async
+  // shortly after the page loads even when that event never comes.
+  let ttsPollCount = 0;
+  const ttsPoll = setInterval(() => {
+    loadTtsVoices();
+    ttsPollCount++;
+    if (ttsVoices.length || ttsPollCount > 20) clearInterval(ttsPoll);
+  }, 200);
+}
+// native English voices only: prefer natural/neural and well-known US voices, never novelty voices
+const TTS_BAD = /(eddy|flo|grandma|grandpa|reed|rocko|sandy|shelley|albert|bad news|bahh|bells|boing|bubbles|cellos|fred|good news|hysterical|junior|kathy|organ|princess|ralph|superstar|trinoids|whisper|wobble|zarvox|jester|compact)/i;
+function ttsVoiceScore(v) {
+  const lang = (v.lang || '').toLowerCase().replace('_', '-');
+  if (!lang.startsWith('en')) return -1;
+  if (TTS_BAD.test(v.name || '')) return -1;
+  let s = 0;
+  if (lang === 'en-us') s += 30; else if (lang === 'en-gb') s += 20; else if (lang === 'en-au' || lang === 'en-ca') s += 12; else s += 5;
+  if (/natural|neural|online/i.test(v.name || '')) s += 50;
+  if (/google/i.test(v.name || '')) s += 25;
+  if (/(samantha|ava|allison|aria|jenny|guy|zira|david|mark|daniel|karen|moira|serena|susan|alex|siri)/i.test(v.name || '')) s += 10;
+  if (v.localService === false) s += 3;
+  return s;
+}
+function pickEnglishVoice() {
+  if (!ttsVoices.length) loadTtsVoices();
+  let best = null, bestScore = -1;
+  ttsVoices.forEach(v => { const s = ttsVoiceScore(v); if (s > bestScore) { best = v; bestScore = s; } });
+  return best;
+}
+function showTtsNotice() {
+  const el = document.getElementById('ttsNotice');
+  if (!el) return;
+  el.hidden = false;
+  clearTimeout(showTtsNotice._t);
+  showTtsNotice._t = setTimeout(() => { el.hidden = true; }, 4000);
+}
+// on first use in a session the voice list can still be loading asynchronously even
+// though a language pack is installed, so wait for it briefly before giving up —
+// and even if no *exact* match turns up in getVoices(), still try speaking with
+// lang='en-US' and let the OS/browser resolve it (some setups don't expose voices in
+// enumeration correctly but can still speak them). Only show the "not installed"
+// notice if an actual speech error comes back on that final attempt.
+function speak(text, attempt) {
+  if (!soundEnabled) return;
+  if (attempt === undefined) attempt = 0;
+  try {
+    if (!window.speechSynthesis) { showTtsNotice(); return; }
+    const voice = pickEnglishVoice();
+    if (!voice && !ttsVoices.length && attempt < 8) {
+      setTimeout(() => speak(text, attempt + 1), 200);
+      return;
+    }
+    if (!voice) { showTtsNotice(); return; }
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.voice = voice; u.lang = voice.lang;
+    u.rate = 0.9;
+    u.onerror = () => { showTtsNotice(); };
+    window.speechSynthesis.speak(u);
+  } catch (e) { showTtsNotice(); }
+}
+
+let audioCtx = null;
+function getAudioCtx() {
+  if (!audioCtx) {
+    const AC = window.AudioContext || window.webkitAudioContext;
+    if (!AC) return null;
+    audioCtx = new AC();
+  }
+  if (audioCtx.state === 'suspended') audioCtx.resume();
+  return audioCtx;
+}
+function playTone(freq, duration, startTime, type, gainPeak) {
+  if (!soundEnabled) return;
+  const ctx = getAudioCtx();
+  if (!ctx) return;
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+  osc.type = type || 'sine';
+  osc.frequency.value = freq;
+  const t0 = ctx.currentTime + (startTime || 0);
+  gain.gain.setValueAtTime(0.0001, t0);
+  gain.gain.linearRampToValueAtTime(gainPeak || 0.15, t0 + 0.01);
+  gain.gain.exponentialRampToValueAtTime(0.0001, t0 + duration);
+  osc.connect(gain); gain.connect(ctx.destination);
+  osc.start(t0);
+  osc.stop(t0 + duration + 0.02);
+}
+function playCorrectSound() {
+  try { playTone(587.33, 0.11, 0, 'sine', 0.14); playTone(880, 0.16, 0.09, 'sine', 0.14); } catch (e) {}
+}
+function playWrongSound() {
+  try { playTone(196, 0.28, 0, 'sawtooth', 0.09); } catch (e) {}
+}
+function playCelebrationSound() {
+  try {
+    playTone(523.25, 0.14, 0, 'sine', 0.16);
+    playTone(659.25, 0.14, 0.11, 'sine', 0.16);
+    playTone(783.99, 0.14, 0.22, 'sine', 0.16);
+    playTone(1046.5, 0.3, 0.33, 'sine', 0.19);
+  } catch (e) {}
+}
+
+function launchConfetti() {
+  const colors = ['#3C6E58', '#A9782F', '#A85340', '#264A3A', '#DBAD5F', '#73B393'];
+  const container = document.createElement('div');
+  container.className = 'confetti-container';
+  document.body.appendChild(container);
+  for (let i = 0; i < 70; i++) {
+    const piece = document.createElement('div');
+    piece.className = 'confetti-piece';
+    piece.style.left = (Math.random() * 100) + 'vw';
+    piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+    piece.style.animationDelay = (Math.random() * 0.4) + 's';
+    piece.style.animationDuration = (2 + Math.random() * 1.5) + 's';
+    piece.style.transform = `rotate(${Math.random() * 360}deg)`;
+    container.appendChild(piece);
+  }
+  setTimeout(() => container.remove(), 4200);
+}
+
+function celebrateSetComplete() {
+  playCelebrationSound();
+  launchConfetti();
+  const banner = document.getElementById('celebrateBanner');
+  banner.hidden = false;
+  clearTimeout(celebrateSetComplete._t);
+  celebrateSetComplete._t = setTimeout(() => { banner.hidden = true; }, 3200);
+}
+
+// once every set's quiz+match+spell are all passed, show a bigger one-time trophy
+// celebration instead of the regular per-set one (per student, per device)
+function checkGrandComplete() {
+  const allDone = QUIZZES.every(q => isSetComplete(q.no, studentProgress[q.no]));
+  if (!allDone) return false;
+  const key = `b_quiz_grand_${currentName}`;
+  try { if (localStorage.getItem(key) === '1') return false; } catch (e) {}
+  try { localStorage.setItem(key, '1'); } catch (e) {}
+  showGrandCelebrate();
+  return true;
+}
+
+function showGrandCelebrate() {
+  playCelebrationSound();
+  setTimeout(() => playCelebrationSound(), 350);
+  launchConfetti();
+  setTimeout(() => launchConfetti(), 400);
+  const el = document.getElementById('grandCelebrate');
+  document.getElementById('grandCelebrateSub').textContent = `${currentName} · SET ${QUIZZES.length}개 전부 정복!`;
+  el.hidden = false;
+  clearTimeout(showGrandCelebrate._t);
+  showGrandCelebrate._t = setTimeout(() => { el.hidden = true; }, 4500);
+}
+
+// 깃허브(온라인) 버전에서만 RELAY_URL 이 채워진다. 비어 있으면 아티팩트 버전으로 동작한다
+const RELAY_URL = 'https://script.google.com/macros/s/AKfycbzVuoGbwxRDZ90_5TNyjQ-EknVG4GThIVZXoCGr8KhMhx-zrlcT7JXLopduOneSaa0yKw/exec';
+const LEVEL_CODE = 'B';
+const ONLINE = !!RELAY_URL;
+
+const TEACHER_PIN = '';
+let TEACHER_MODE = !ONLINE && new URLSearchParams(location.search).get('teacher') === '1';
+if (TEACHER_MODE) document.getElementById('teacherPanel').hidden = false;
+(function setupTeacherGate() {
+  const openBtn = document.getElementById('teacherGateBtn');
+  const box = document.getElementById('teacherGateBox');
+  const input = document.getElementById('teacherGateInput');
+  const err = document.getElementById('teacherGateErr');
+  if (TEACHER_MODE || ONLINE) { openBtn.hidden = true; return; }
+  openBtn.addEventListener('click', () => { box.hidden = !box.hidden; if (!box.hidden) input.focus(); });
+  function tryUnlock() {
+    if (input.value.trim() === TEACHER_PIN) {
+      TEACHER_MODE = true;
+      document.getElementById('teacherPanel').hidden = false;
+      box.hidden = true; openBtn.hidden = true; err.hidden = true; input.value = '';
+      loadTeacherDashboard();
+      window.scrollTo(0, 0);
+    } else { err.hidden = false; input.value = ''; }
+  }
+  document.getElementById('teacherGateOk').addEventListener('click', tryUnlock);
+  input.addEventListener('keydown', e => { if (e.key === 'Enter') tryUnlock(); });
+})();
+const STUDENT_PARAM = new URLSearchParams(location.search).get('student');
+
+let db = null;
+(ONLINE ? Promise.resolve(null) : claude.use('db')).then(d => { db = d; if (db) loadTeacherDashboard(); });
+
+const ROSTER = ['Guest'];
+const NAME_ICON = {};
+function nameWithIcon(n) { return (NAME_ICON[n] ? NAME_ICON[n] + ' ' : '') + n; }
+
+let mode = 'quiz';
+let currentSet = QUIZZES[0].no;
+let currentName = '';
+let qIndex = 0;
+let score = 0;
+let answered = false;
+let awaitingConfirm = false;
+let wrongWords = [];
+let studentProgress = {};
+
+function hideAllModeCards() {
+  document.getElementById('quizCard').hidden = true;
+  document.getElementById('matchCard').hidden = true;
+  document.getElementById('spellCard').hidden = true;
+}
+
+function showScreen(id) {
+  ['nameScreen', 'setListScreen', 'modeScreen'].forEach(s => {
+    document.getElementById(s).hidden = (s !== id);
+  });
+  document.getElementById('resultCard').hidden = true;
+  document.getElementById('boardCard').hidden = true;
+  hideAllModeCards();
+}
+
+async function fetchStudentProgress(name) {
+  const progress = {};
+  QUIZZES.forEach(q => progress[q.no] = { wordcheck: false, quiz: false, match: false, spell: false });
+  if (!db || !name) return progress;
+  try {
+    const rows = await db.collection('quiz_results').where('name', '==', name).limit(300).get();
+    (rows || []).forEach(r => {
+      if (r.passed && progress[r.setNo] && progress[r.setNo][r.mode] !== undefined) {
+        progress[r.setNo][r.mode] = true;
+      }
+    });
+  } catch (e) {}
+  return progress;
+}
+
+function renderSetList(progress) {
+  const items = QUIZZES.map(q => {
+    const p = progress[q.no] || { wordcheck: false, quiz: false, match: false, spell: false };
+    return { no: q.no, title: q.title, p, complete: isSetComplete(q.no, p) };
+  });
+  items.sort((a, b) => (b.complete ? 1 : 0) - (a.complete ? 1 : 0));
+  const el = document.getElementById('setListItems');
+  el.innerHTML = items.map(s => `
+    <div class="setrow${s.complete ? ' complete' : ''}" data-no="${s.no}">
+      <button class="setrow-preview" data-no="${s.no}" aria-label="${setLabel(s.no)} 시작">
+        <span class="setrow-no">${setLabel(s.no)}</span>
+        <span class="setrow-title">${s.title}</span>
+      </button>
+      <button class="setrow-enter" data-no="${s.no}" aria-label="${setLabel(s.no)} 시작">
+        <span class="setrow-dots">
+          <span class="dot${s.p.wordcheck ? ' pass' : ''}" title="단어 확인"></span>
+          <span class="dot${s.p.quiz ? ' pass' : ''}" title="퀴즈"></span>
+          <span class="dot${s.p.match ? ' pass' : ''}" title="매칭"></span>
+          <span class="dot${s.p.spell ? ' pass' : ''}" title="스펠"></span>
+        </span>
+        ${s.complete ? '<span class="setrow-badge">✓</span>' : ''}
+        <span class="setrow-arrow">›</span>
+      </button>
+    </div>`).join('');
+  el.querySelectorAll('.setrow-preview').forEach(btn => btn.addEventListener('click', () => openModeScreen(btn.dataset.no)));
+  el.querySelectorAll('.setrow-enter').forEach(btn => btn.addEventListener('click', () => openModeScreen(btn.dataset.no)));
+}
+
+function wpMarkerFor(pos) {
+  if (pos.includes('동')) return 'verb';
+  if (pos.includes('명')) return 'noun';
+  return null;
+}
+
+let wordPreviewCurrentSetNo = '';
+
+async function markWordCheckComplete(setNo, unknown) {
+  if (studentProgress[setNo] && studentProgress[setNo].wordcheck) return;
+  recordLast(setNo, 'wordcheck', { passed: true, unknown: unknown ? unknown.length : null, words: unknown || [] });
+  markLocalProgress(setNo, 'wordcheck', true);
+  if (typeof refreshModeLocks === 'function' && currentSet === setNo) refreshModeLocks();
+  if (!document.getElementById('setListScreen').hidden) renderSetList(studentProgress);
+  if (!db) return;
+  try {
+    const id = 'r_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8);
+    await db.doc(`quiz_results/${id}`).set({ name: currentName, mode: 'wordcheck', setNo, ts: Date.now(), passed: true, ...(unknown ? { unknown } : {}) });
+  } catch (e) {}
+}
+
+const WP_PAGE_SIZE = 1000;
+let wpPage = 0;
+let wpSeen = {};
+let wpRunCounted = false;
+
+function wpSetWords() {
+  const set = WORD_SETS.find(w => w.no === wordPreviewCurrentSetNo);
+  return set ? set.words : [];
+}
+function wpPageComplete() {
+  return wpSetWords().slice(wpPage * WP_PAGE_SIZE, (wpPage + 1) * WP_PAGE_SIZE).every(w => wpSeen[w.en]);
+}
+function updateWpNav() {
+  const total = Math.max(1, Math.ceil(wpSetWords().length / WP_PAGE_SIZE));
+  const lbl = document.getElementById('wpPageLbl');
+  if (lbl) lbl.textContent = (wpPage + 1) + ' / ' + total + ' 쪽';
+  const prev = document.getElementById('wpPrev');
+  const next = document.getElementById('wpNext');
+  if (prev) prev.disabled = wpPage === 0;
+  if (next) next.disabled = wpPage >= total - 1 || !wpPageComplete();
+}
+function updateWpProgress() {
+  const el = document.getElementById('wpProgress');
+  const doneBtn = document.getElementById('wordPreviewDoneBtn');
+  const words = wpSetWords();
+  const seen = words.filter(w => wpSeen[w.en]).length;
+  if (el) el.textContent = seen + ' / ' + words.length + '개 확인함';
+  const isComplete = words.length > 0 && seen === words.length;
+  doneBtn.disabled = !isComplete;
+  if (isComplete) {
+    markWordCheckComplete(wordPreviewCurrentSetNo);
+    if (!wpRunCounted) {
+      wpRunCounted = true;
+      const n = bumpReps(wordPreviewCurrentSetNo, 'wordcheck');
+      refreshRepBadges();
+      if (el) el.textContent = '🎉 다 확인했어요!' + (n >= 2 ? '  ' + repLabel(n) : '');
+    }
+  }
+  updateWpNav();
+}
+function wpItemHtml(w, idx) {
+  const num = '<span class="wpnum">' + (idx + 1) + '</span>';
+  const speakBtn = '<span class="wpspeak" data-en="' + w.en + '" aria-label="발음 듣기" title="발음 듣기">🔊</span>';
+  const seen = !!wpSeen[w.en];
+  return '<div class="wpknowitem" data-en="' + w.en + '">' + num +
+    '<div class="wpknowmain"><div class="wpknowtop"><span class="wpemoji">' + (w.emoji || '') + '</span><span class="wpen">' + w.en + '</span>' + speakBtn + '</div>' +
+    '</div>' +
+    '<div class="wpknowbtns">' + (seen ? '<span class="wpmeaning" data-en="' + w.en + '" title="누르면 다시 들려요">' + w.ko + '</span>' : '<button class="wpbtn wpmeanbtn" data-mean="1">👀 뜻 확인</button>') + '</div></div>';
+}
+function renderWpPage() {
+  const words = wpSetWords();
+  const start = wpPage * WP_PAGE_SIZE;
+  document.getElementById('wpItems').innerHTML = words.slice(start, start + WP_PAGE_SIZE).map((w, i) => wpItemHtml(w, start + i)).join('');
+  updateWpNav();
+}
+
+function openWordPreview(setNo) {
+  const set = WORD_SETS.find(w => w.no === setNo);
+  if (!set) return;
+  wordPreviewCurrentSetNo = setNo;
+  wpPage = 0;
+  wpSeen = {};
+  wpRunCounted = false;
+  document.getElementById('wordPreviewTitle').textContent = setLabel(set.no) + ' — ' + set.title + ' (' + set.words.length + '개)';
+  const missions = '<div class="wpmissions"><div class="wpmission">👆 단어마다 <b>뜻 확인</b>을 눌러요. 발음도 들려요 (전체 목록에서 모두 누르면 다음 단계가 열려요)</div><div class="wphint" id="wpProgress"></div></div>';
+  document.getElementById('wordPreviewList').innerHTML = missions + '<div id="wpItems"></div>' +
+    '<div class="wpnav"><button id="wpPrev">‹ 이전</button><span class="wppagelbl" id="wpPageLbl"></span><button id="wpNext">다음 5개 ›</button></div>';
+  renderWpPage();
+  updateWpProgress();
+  document.getElementById('wordPreviewList').scrollTop = 0;
+  document.getElementById('wordPreviewOverlay').hidden = false;
+}
+document.getElementById('wordPreviewList').addEventListener('click', e => {
+  const sp = e.target.closest('.wpspeak');
+  if (sp) { e.stopPropagation(); speak(sp.dataset.en); return; }
+  const mn = e.target.closest('.wpmeaning');
+  if (mn) { speak(mn.dataset.en); return; }
+  if (e.target.id === 'wpPrev' || e.target.id === 'wpNext') {
+    wpPage += e.target.id === 'wpNext' ? 1 : -1;
+    renderWpPage();
+    document.getElementById('wordPreviewList').scrollTop = 0;
+    return;
+  }
+  const mean = e.target.closest('.wpmeanbtn');
+  if (mean) {
+    const en = mean.closest('.wpknowitem').dataset.en;
+    wpSeen[en] = true;
+    speak(en);
+    const words = wpSetWords();
+    const wi = words.findIndex(x => x.en === en);
+    const row = mean.closest('.wpknowitem');
+    if (wi >= 0 && row) row.outerHTML = wpItemHtml(words[wi], wi);
+    updateWpProgress();
+  }
+});
+function closeWordPreview() {
+  document.getElementById('wordPreviewOverlay').hidden = true;
+}
+function enterQuizDirectly(setNo) {
+  openModeScreen(setNo);
+  mode = 'quiz';
+  [...modepicker.children].forEach(c => c.classList.toggle('active', c.dataset.mode === 'quiz'));
+  startBtn.textContent = quizStartLabel();
+  document.getElementById('modeScreen').hidden = true;
+  document.getElementById('resultCard').hidden = true;
+  document.getElementById('boardCard').hidden = true;
+  hideAllModeCards();
+  document.getElementById('quizCard').hidden = false;
+  startQuizRound();
+}
+document.getElementById('wordPreviewCloseBtn').addEventListener('click', closeWordPreview);
+document.getElementById('wordPreviewOverlay').addEventListener('click', e => {
+  if (e.target.id === 'wordPreviewOverlay') closeWordPreview();
+});
+document.getElementById('wordPreviewDoneBtn').addEventListener('click', () => {
+  if (document.getElementById('wordPreviewDoneBtn').disabled) return;
+  const setNo = wordPreviewCurrentSetNo;
+  closeWordPreview();
+  enterQuizDirectly(setNo);
+});
+
+function updateCurrentNameBadge() {
+  const badge = document.getElementById('currentNameBadge');
+  if (currentName) {
+    document.getElementById('currentNameText').textContent = `${nameWithIcon(currentName)} 님으로 진행 중`;
+    badge.hidden = false;
+  } else {
+    badge.hidden = true;
+  }
+}
+
+async function openSetList() {
+  showScreen('setListScreen');
+  document.getElementById('whoamiLabel').textContent = `${nameWithIcon(currentName)} 님`;
+  updateCurrentNameBadge();
+  const fetched = await fetchStudentProgress(currentName);
+  const cached = loadLocalProgressCache(currentName);
+  const fromServer = ONLINE ? await onlineProgress() : null;
+  studentProgress = mergeProgress(studentProgress, cached, fetched, fromServer);
+  saveLocalProgressCache(currentName, studentProgress);
+  renderSetList(studentProgress);
+  if (ONLINE) onlineAfterSetList();
+}
+
+// once a mission's green light is earned it must never go dark again — at least on this
+// device: merge whatever the DB currently reports with what we already knew locally
+// (handles DB read lag/eventual-consistency) and back the merged result with localStorage
+// so a later session on the same device/browser can't lose it either.
+function loadLocalProgressCache(name) {
+  try { return JSON.parse(localStorage.getItem('b_quiz_progress_' + name) || '{}'); } catch (e) { return {}; }
+}
+function saveLocalProgressCache(name, progress) {
+  try { localStorage.setItem('b_quiz_progress_' + name, JSON.stringify(progress)); } catch (e) {}
+}
+function mergeProgress(...sources) {
+  const merged = {};
+  QUIZZES.forEach(q => {
+    merged[q.no] = { wordcheck: false, quiz: false, match: false, spell: false };
+    sources.forEach(src => {
+      const p = src && src[q.no];
+      if (!p) return;
+      ['wordcheck', 'quiz', 'match', 'spell'].forEach(k => { if (p[k]) merged[q.no][k] = true; });
+    });
+  });
+  return merged;
+}
+
+function currentQuiz() { return QUIZZES.find(q => q.no === currentSet); }
+
+const modepicker = document.getElementById('modepicker');
+const startBtn = document.getElementById('startBtn');
+
+// review6(과거형)은 스펠쓰기 없이 퀴즈·매칭 2개만으로 완료 처리한다
+function isSetComplete(setNo, p) {
+  if (!p) return false;
+  if (setNo === 'review6') return !!(p.wordcheck && p.quiz && p.match);
+  return !!(p.wordcheck && p.quiz && p.match && p.spell);
+}
+
+
+
+// ---- 반복 도전 표시: 단어확인·단어퀴즈를 다시 하면 100% -> 200% -> 300% ----
+function repsKey(name) { return 'b_quiz_reps_' + name; }
+function loadReps() { try { return JSON.parse(localStorage.getItem(repsKey(currentName)) || '{}'); } catch (e) { return {}; } }
+function bumpReps(setNo, m) {
+  try {
+    const all = loadReps();
+    all[setNo] = all[setNo] || {};
+    all[setNo][m] = (all[setNo][m] || 0) + 1;
+    localStorage.setItem(repsKey(currentName), JSON.stringify(all));
+    return all[setNo][m];
+  } catch (e) { return 1; }
+}
+function repLabel(n) { return n >= 2 ? '🔁 ' + (n * 100) + '%' : ''; }
+function refreshRepBadges() {
+  const r = loadReps()[currentSet] || {};
+  const w = document.getElementById('repWord'), q = document.getElementById('repQuiz');
+  if (w) w.textContent = repLabel(r.wordcheck || 0);
+  if (q) q.textContent = repLabel(r.quiz || 0);
+}
+
+// ---- 매칭게임 재미 요소: 가점·감점 팝업과 콤보 응원 문구 ----
+const COMBO_MSGS = ['최고당!', '다 아네?', '천재 아냐?!', '불꽃이다!', '대박~!', '멈추지 마!', '오늘 컨디션 최고!'];
+const OOPS_MSGS = ['앗!', '아이쿠~', '다시 다시!', '괜찮아, 힘내!'];
+let matchWrongStreak = 0;
+let matchNewRank = 0;
+function pickMsg(list) { return list[Math.floor(Math.random() * list.length)]; }
+function showPointPop(anchor, main, sub, cls) {
+  if (!anchor || !anchor.getBoundingClientRect) return;
+  const pop = document.createElement('div');
+  pop.className = 'pointPop ' + (cls || '');
+  pop.innerHTML = '<b>' + main + '</b>' + (sub ? '<span>' + sub + '</span>' : '');
+  const r = anchor.getBoundingClientRect();
+  pop.style.left = (r.left + r.width / 2) + 'px';
+  pop.style.top = r.top + 'px';
+  document.body.appendChild(pop);
+  setTimeout(() => pop.remove(), 1100);
+}
+function matchTopKey(setNo) { return 'b_quiz_matchtop_' + setNo; }
+function loadMatchTop(setNo) { try { return JSON.parse(localStorage.getItem(matchTopKey(setNo)) || '[]'); } catch (e) { return []; } }
+// 점수만 저장 (이름 없음). 이 기기에서 가장 높은 점수 3개만 남기고, 이번 점수의 순위(1~3, 아니면 0)를 돌려준다
+function addMatchTop(setNo, pts) {
+  const list = loadMatchTop(setNo);
+  list.push(pts);
+  list.sort((a, b) => b - a);
+  const top = list.slice(0, 3);
+  try { localStorage.setItem(matchTopKey(setNo), JSON.stringify(top)); } catch (e) {}
+  const idx = top.indexOf(pts);
+  return (pts > 0 && idx >= 0) ? idx + 1 : 0;
+}
+function renderMatchBoard() {
+  const boardCard = document.getElementById('boardCard');
+  const top = loadMatchTop(currentSet);
+  if (!top.length) { boardCard.hidden = true; return; }
+  document.getElementById('boardLabel').textContent = setLabel(currentSet) + ' 매칭게임 최고 점수 TOP 3 (이 기기)';
+  const medals = ['🥇', '🥈', '🥉'];
+  document.getElementById('boardTable').innerHTML = top.map((pts, i) =>
+    '<tr class="' + (i === 0 ? 'top1' : '') + (matchNewRank === i + 1 ? ' me' : '') + '"><td>' + medals[i] + '</td><td>' + (i + 1) + '위</td><td class="score">⭐ ' + pts + '점' + (matchNewRank === i + 1 ? ' 🆕' : '') + '</td></tr>'
+  ).join('');
+  boardCard.hidden = false;
+}
+
+function quizStartLabel() {
+  const q = QUIZZES.find(x => x.no === currentSet);
+  return '퀴즈 시작 (' + (q ? q.questions.length : 15) + '문항)';
+}
+function stageOrder(setNo) { return setNo === 'review6' ? ['wordcheck', 'quiz', 'match'] : ['wordcheck', 'quiz', 'match', 'spell']; }
+// 앞 단계를 통과했거나, 이미 이 단계나 그 뒤 단계를 통과한 기록이 있으면 열려 있다
+function modeUnlocked(setNo, m) {
+  const order = stageOrder(setNo);
+  const idx = order.indexOf(m);
+  if (idx <= 0) return true;
+  const p = studentProgress[setNo] || {};
+  return !!p[order[idx - 1]] || order.slice(idx).some(k => p[k]);
+}
+function firstOpenStage(setNo) {
+  const p = studentProgress[setNo] || {};
+  for (const m of stageOrder(setNo)) { if (!p[m]) return m; }
+  return 'quiz';
+}
+function startLabelFor(m) {
+  return m === 'wordcheck' ? '단어확인 시작 (뜻 확인)' : m === 'quiz' ? quizStartLabel() : m === 'spell' ? '스펠쓰기 시작 (8문항)' : '매칭게임 시작 (80초)';
+}
+const LOCK_TEXT = {
+  quiz: '🔒 단어확인을 먼저 끝내요! 뜻 확인을 모두 누르면 열려요',
+  match: '🔒 단어 퀴즈를 통과하면 매칭게임이 열려요 (70% 이상)',
+  spell: '🔒 매칭게임을 통과하면 스펠쓰기가 열려요 (70% 이상)'
+};
+function wordcheckDone(setNo) {
+  const p = studentProgress[setNo];
+  return !!(p && p.wordcheck);
+}
+function refreshModeLocks() {
+  const wc = wordcheckDone(currentSet);
+  [...modepicker.children].forEach(c => {
+    const locked = !modeUnlocked(currentSet, c.dataset.mode);
+    c.classList.toggle('locked', locked);
+    c.setAttribute('aria-disabled', locked ? 'true' : 'false');
+  });
+  const pp = studentProgress[currentSet] || {};
+  [['Word', 'wordcheck'], ['Quiz', 'quiz'], ['Match', 'match'], ['Spell', 'spell']].forEach(([id, k]) => { const c = document.getElementById('done' + id); if (c) c.hidden = !pp[k]; });
+  const dot = document.getElementById('modeDotWord');
+  if (dot) dot.className = 'dot' + (wc ? ' pass' : '');
+  refreshRepBadges();
+}
+let modeLockTimer = null;
+function showModeLockNote(m) {
+  const n = document.getElementById('modeLockNote');
+  if (!n) return;
+  n.textContent = LOCK_TEXT[m] || LOCK_TEXT.quiz;
+  n.hidden = false;
+  clearTimeout(modeLockTimer);
+  modeLockTimer = setTimeout(() => { n.hidden = true; }, 2800);
+}
+
+function openModeScreen(setNo) {
+  currentSet = setNo;
+  const quiz = currentQuiz();
+  showScreen('modeScreen');
+  document.getElementById('modeSetTitle').textContent = '';
+  const bd = BOOK_DISPLAY[quiz.no] || {};
+  document.getElementById('mhsub').textContent = setLabel(quiz.no);
+  document.getElementById('mhemoji').textContent = bd.e || '';
+  document.getElementById('mhtitle').textContent = bd.t || quiz.title;
+  mode = firstOpenStage(setNo);
+  [...modepicker.children].forEach(c => c.classList.toggle('active', c.dataset.mode === mode));
+  startBtn.textContent = startLabelFor(mode);
+  document.getElementById('modeLockNote').hidden = true;
+  const spellBtnEl = [...modepicker.children].find(c => c.dataset.mode === 'spell');
+  spellBtnEl.hidden = (setNo === 'review6');
+  const p = studentProgress[setNo] || { wordcheck: false, quiz: false, match: false, spell: false };
+  document.getElementById('modeDotQuiz').className = 'dot' + (p.quiz ? ' pass' : '');
+  document.getElementById('modeDotMatch').className = 'dot' + (p.match ? ' pass' : '');
+  document.getElementById('modeDotSpell').className = 'dot' + (p.spell ? ' pass' : '');
+  refreshModeLocks();
+  if (ONLINE) renderHallForSet(setNo);
+  loadBoard();
+  renderWarmup();
+}
+
+// each roster name has a 4-digit PIN so a student can't casually pick a classmate's name;
+// once entered correctly on a device it's remembered there (per name) and never asked again
+const PINS = {};
+
+function getVerifiedNames() {
+  try { return JSON.parse(localStorage.getItem('b_quiz_verified_names') || '[]'); } catch (e) { return []; }
+}
+function markVerified(name) {
+  try {
+    const list = getVerifiedNames();
+    if (!list.includes(name)) { list.push(name); localStorage.setItem('b_quiz_verified_names', JSON.stringify(list)); }
+  } catch (e) {}
+}
+
+let pendingName = '';
+function hidePinPrompt() {
+  document.getElementById('pinPrompt').hidden = true;
+  document.getElementById('pinErr').style.display = 'none';
+  document.getElementById('pinInput').value = '';
+  pendingName = '';
+}
+function showPinPrompt(name) {
+  pendingName = name;
+  document.getElementById('pinPromptLabel').textContent = `${name}의 번호를 입력하세요`;
+  document.getElementById('pinInput').value = '';
+  document.getElementById('pinErr').style.display = 'none';
+  document.getElementById('pinPrompt').hidden = false;
+  document.getElementById('pinInput').focus();
+}
+function confirmPin() {
+  if (ONLINE) { confirmPinOnline(); return; }
+  const typed = document.getElementById('pinInput').value.trim();
+  if (PINS[pendingName] && typed === PINS[pendingName]) {
+    markVerified(pendingName);
+    currentName = pendingName;
+    hidePinPrompt();
+    openSetList();
+  } else {
+    document.getElementById('pinErr').style.display = 'block';
+  }
+}
+
+const namepicker = document.getElementById('namepicker');
+namepicker.innerHTML = ROSTER.map(n => `<button class="setbtn" data-name="${n}">${nameWithIcon(n)}</button>`).join('');
+namepicker.addEventListener('click', e => {
+  const btn = e.target.closest('.setbtn');
+  if (!btn) return;
+  const name = btn.dataset.name;
+  if (!ONLINE && getVerifiedNames().includes(name)) {
+    currentName = name;
+    openSetList();
+  } else {
+    showPinPrompt(name);
+  }
+});
+document.getElementById('pinConfirmBtn').addEventListener('click', confirmPin);
+document.getElementById('pinCancelBtn').addEventListener('click', hidePinPrompt);
+document.getElementById('pinInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') { e.preventDefault(); confirmPin(); }
+});
+
+// ?student=Ian style link: skip the name grid and go straight to that student —
+// still gated by their PIN the first time on a given device.
+if (STUDENT_PARAM && ROSTER.includes(STUDENT_PARAM)) {
+  if (!ONLINE && getVerifiedNames().includes(STUDENT_PARAM)) {
+    currentName = STUDENT_PARAM;
+    openSetList();
+  } else {
+    showPinPrompt(STUDENT_PARAM);
+  }
+}
+
+document.getElementById('nameBackBtn').addEventListener('click', () => {
+  currentName = '';
+  updateCurrentNameBadge();
+  hidePinPrompt();
+  showScreen('nameScreen');
+});
+
+document.getElementById('setBackBtn').addEventListener('click', () => {
+  openSetList();
+});
+
+modepicker.addEventListener('click', e => {
+  const btn = e.target.closest('.setbtn');
+  if (!btn) return;
+  if (btn.classList.contains('locked')) { showModeLockNote(btn.dataset.mode); return; }
+  document.getElementById('modeLockNote').hidden = true;
+  mode = btn.dataset.mode;
+  [...modepicker.children].forEach(c => c.classList.toggle('active', c === btn));
+  startBtn.textContent = mode === 'wordcheck' ? '단어확인 시작 (뜻 확인)' : mode === 'quiz' ? quizStartLabel() : mode === 'spell' ? '스펠쓰기 시작 (8문항)' : '매칭게임 시작 (80초)';
+  loadBoard();
+});
+
+startBtn.addEventListener('click', () => {
+  if (mode === 'wordcheck') { openWordPreview(currentSet); return; }
+  if (!modeUnlocked(currentSet, mode)) { showModeLockNote(mode); return; }
+  document.getElementById('resultCard').hidden = true;
+  document.getElementById('boardCard').hidden = true;
+  document.getElementById('modeScreen').hidden = true;
+  hideAllModeCards();
+  if (mode === 'quiz') {
+    startQuizRound();
+  } else if (mode === 'spell') {
+    document.getElementById('spellCard').hidden = false;
+    startSpell();
+  } else {
+    document.getElementById('matchCard').hidden = false;
+    startMatch();
+  }
+});
+
+const nextBtn = document.getElementById('nextBtn');
+
+// ---- quiz round state: round 1 asks every question once; any missed word
+// then loops in a "복습 라운드" (retest) until answered correctly, before finishQuiz() ----
+let quizRoundQuestions = [];
+let inRetest = false;
+let retestQueue = [];
+let wrongQuestions = [];
+
+function startQuizRound() {
+  quizRoundQuestions = currentQuiz().questions;
+  inRetest = false;
+  retestQueue = [];
+  wrongQuestions = [];
+  qIndex = 0; score = 0; answered = false; awaitingConfirm = false; wrongWords = [];
+  document.getElementById('quizCard').hidden = false;
+  renderQuestion();
+}
+
+function currentRoundQuestion() {
+  return inRetest ? retestQueue[0] : quizRoundQuestions[qIndex];
+}
+
+function renderQuestion() {
+  const q = currentRoundQuestion();
+  answered = false;
+  awaitingConfirm = false;
+  nextBtn.hidden = true;
+  const banner = document.getElementById('retestBanner');
+  if (inRetest) {
+    banner.hidden = false;
+    document.getElementById('progressBar').style.width = '100%';
+    document.getElementById('qnum').textContent = `복습 라운드 · 남은 단어 ${retestQueue.length}개`;
+  } else {
+    banner.hidden = true;
+    document.getElementById('progressBar').style.width = (qIndex / quizRoundQuestions.length * 100) + '%';
+    document.getElementById('qnum').textContent = `${qIndex + 1} / ${quizRoundQuestions.length}`;
+  }
+  document.getElementById('qdir').textContent = q.direction === 'en2ko' ? '영어 → 한글 뜻' : '한글 뜻 → 영어';
+  document.getElementById('qemoji').textContent = q.direction === 'en2ko' ? '' : wordEmoji(q.correct);
+  document.getElementById('qprompt').textContent = q.prompt;
+  const choicesEl = document.getElementById('choices');
+  choicesEl.innerHTML = q.choices.map((c, i) => `<button class="choice" data-val="${c}"><span class="cnum">${i + 1}</span><span>${c}</span></button>`).join('');
+  [...choicesEl.children].forEach(btn => btn.addEventListener('click', onChoose));
+}
+
+function onChoose(e) {
+  const btn = e.target.closest('.choice');
+  if (!btn) return;
+  const q = currentRoundQuestion();
+
+  if (awaitingConfirm) {
+    if (btn.dataset.val !== q.correct) return;
+    awaitingConfirm = false;
+    advanceQuizFlow(false);
+    return;
+  }
+  if (answered) return;
+  answered = true;
+
+  const chosen = btn.dataset.val;
+  const correct = chosen === q.correct;
+  const choicesEl = document.getElementById('choices');
+
+  if (correct) {
+    if (!inRetest) score++;
+    playCorrectSound();
+    [...choicesEl.children].forEach(b => {
+      b.disabled = true;
+      if (b.dataset.val === q.correct) b.classList.add('correct');
+    });
+    nextBtn.hidden = false;
+    nextBtn.innerHTML = (inRetest ? retestQueue.length > 1 : qIndex + 1 < quizRoundQuestions.length) ? '다음 <i class="arrow">→</i>' : '결과 보기 <i class="arrow">→</i>';
+    nextBtn.focus();
+  } else {
+    playWrongSound();
+    if (!inRetest) {
+      const enWord = q.direction === 'en2ko' ? q.prompt : q.correct;
+      wrongWords.push(enWord);
+      wrongQuestions.push(q);
+    }
+    [...choicesEl.children].forEach(b => {
+      if (b.dataset.val === q.correct) {
+        b.classList.add('correct', 'needclick');
+      } else {
+        b.disabled = true;
+        if (b === btn) b.classList.add('wrong');
+      }
+    });
+    document.getElementById('qdir').textContent = '정답(초록, 깜빡이는 버튼)을 클릭하면 다음으로 넘어가요';
+    awaitingConfirm = true;
+  }
+}
+
+function advanceQuizFlow(wasCorrect) {
+  if (!inRetest) {
+    qIndex++;
+    if (qIndex < quizRoundQuestions.length) {
+      renderQuestion();
+    } else if (wrongQuestions.length > 0) {
+      inRetest = true;
+      retestQueue = wrongQuestions.slice();
+      renderQuestion();
+    } else {
+      finishQuiz();
+    }
+  } else {
+    const current = retestQueue.shift();
+    if (!wasCorrect) retestQueue.push(current);
+    if (retestQueue.length === 0) finishQuiz();
+    else renderQuestion();
+  }
+}
+
+nextBtn.addEventListener('click', () => advanceQuizFlow(true));
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' && !nextBtn.hidden) { e.preventDefault(); advanceQuizFlow(true); }
+});
+
+async function saveResult(extra) {
+  if (!db) return;
+  try {
+    const id = 'r_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8);
+    await db.doc(`quiz_results/${id}`).set({ name: currentName, mode, setNo: currentSet, ts: Date.now(), ...extra });
+  } catch (e) {}
+}
+
+const PASS_PCT = 70;
+
+// ---- quiz → match → spell auto-chain ----
+function configureNextModeBtn(fromMode) {
+  const btn = document.getElementById('nextModeBtn');
+  // review6 (과거형) has no spelling mode, so match is its last step
+  const chain = currentSet === 'review6' ? { quiz: 'match' } : { quiz: 'match', match: 'spell' };
+  const next = chain[fromMode];
+  if (!next || !modeUnlocked(currentSet, next)) { btn.hidden = true; return; }
+  const labels = { match: '다음: 매칭게임 →', spell: '다음: 스펠쓰기 →' };
+  btn.textContent = labels[next];
+  btn.hidden = false;
+  btn.onclick = () => {
+    document.getElementById('resultCard').hidden = true;
+    hideAllModeCards();
+    mode = next;
+    [...modepicker.children].forEach(c => c.classList.toggle('active', c.dataset.mode === next));
+    if (next === 'match') {
+      document.getElementById('matchCard').hidden = false;
+      startMatch();
+    } else {
+      document.getElementById('spellCard').hidden = false;
+      startSpell();
+    }
+  };
+}
+
+function markLocalProgress(setNo, m, passed) {
+  if (!studentProgress[setNo]) studentProgress[setNo] = { wordcheck: false, quiz: false, match: false, spell: false };
+  if (passed) {
+    studentProgress[setNo][m] = true;
+    saveLocalProgressCache(currentName, studentProgress);
+  }
+}
+
+// ---- submit-to-teacher: only shown once a set's quiz+match+spell are all passed.
+// Each submit writes a NEW record (never overwrites) so a 2nd/3rd attempt accumulates. ----
+async function fetchSubmissions(name, setNo) {
+  if (!db) return [];
+  try {
+    const rows = await db.collection('submissions').where('name', '==', name).where('setNo', '==', setNo).limit(50).get();
+    return (rows || []).sort((a, b) => b.ts - a.ts);
+  } catch (e) { return []; }
+}
+
+const autoSubmitted = {};
+async function submitToTeacher() {
+  const set = currentQuiz();
+  const btn = document.querySelector('#submitBanner button');
+  if (btn) btn.disabled = true;
+  try {
+    const id = 'sub_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8);
+    await db.doc(`submissions/${id}`).set({
+      name: currentName, setNo: currentSet, setTitle: set.title, ts: Date.now(),
+    });
+  } catch (e) {}
+  await renderSubmitBanner();
+}
+
+async function renderSubmitBanner() {
+  if (ONLINE) return onlineRenderSubmit();
+  const wrap = document.getElementById('submitBanner');
+  const p = studentProgress[currentSet];
+  const complete = isSetComplete(currentSet, p);
+  if (!complete) { wrap.hidden = true; wrap.innerHTML = ''; return; }
+  let subs = await fetchSubmissions(currentName, currentSet);
+  // the moment a set is first fully complete (quiz+match+spell all passed),
+  // submit to the teacher automatically — no manual click needed
+  // 한 세트당 자동 제출은 이 화면에서 딱 한 번만 (읽기가 늦어도 무한 반복·중복 제출 방지)
+  const autoKey = currentName + '|' + currentSet;
+  if (db && subs.length === 0 && !autoSubmitted[autoKey]) {
+    autoSubmitted[autoKey] = true;
+    await submitToTeacher();
+    return;
+  }
+  const set = currentQuiz();
+  const historyHtml = subs.length
+    ? `<div class="submitdone">✅ 선생님께 자동 제출됨 · 지금까지 <b>${subs.length}번</b> · 최근 ${new Date(subs[0].ts).toLocaleString('ko-KR', { month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</div>`
+    : '';
+  wrap.innerHTML = `
+    <div class="submitcard">
+      <div class="submittitle">🎉 ${setLabel(set.no)} 퀴즈·매칭·스펠 모두 통과!</div>
+      <button class="secondary" id="submitTeacherBtn" style="width:100%;">다시 제출하기</button>
+      ${historyHtml}
+    </div>`;
+  wrap.hidden = false;
+  document.getElementById('submitTeacherBtn').addEventListener('click', submitToTeacher);
+}
+
+async function finishQuiz() {
+  document.getElementById('quizCard').hidden = true;
+  document.getElementById('retestBanner').hidden = true;
+  document.getElementById('progressBar').style.width = '100%';
+  const quiz = currentQuiz();
+  document.getElementById('scoreNum').textContent = `${score} / ${quiz.questions.length}`;
+  const pct = Math.round(score / quiz.questions.length * 100);
+  const passed = pct >= PASS_PCT;
+  document.getElementById('scoreLbl').textContent = `${currentName} · ${setLabel(quiz.no)} ${quiz.title} · ${pct}%`;
+  const badge = document.getElementById('passBadge');
+  badge.textContent = passed ? `✓ 통과 (${PASS_PCT}% 이상)` : `↻ 재시도 필요 (${PASS_PCT}% 미만)`;
+  badge.className = 'passbadge ' + (passed ? 'pass' : 'fail');
+  badge.hidden = false;
+  document.getElementById('resultCard').hidden = false;
+  recordLast(currentSet, 'quiz', { score, total: quiz.questions.length, pct, passed, wrong: [...new Set(wrongWords)], reps: bumpReps(currentSet, 'quiz') });
+  markLocalProgress(currentSet, 'quiz', passed);
+  configureNextModeBtn('quiz');
+  await saveResult({ setTitle: quiz.title, score, total: quiz.questions.length, pct, passed, wrong: [...new Set(wrongWords)] });
+  loadBoard();
+  loadTeacherDashboard();
+  renderSubmitBanner();
+  checkGrandComplete();
+}
+
+// ---- matching game (board stays at 4 pairs; every 2 matches, 2 fresh cards slide in) ----
+const BOARD_SIZE = 4;
+const REFILL_AT = 2;
+let matchTimerId = null;
+const MATCH_ROUND_SECONDS = 80;
+let matchSecondsLeft = MATCH_ROUND_SECONDS;
+let matchPairs = 0;
+let matchStreak = 0;
+let matchAllWords = [];
+let matchActiveWords = [];
+let matchSelEn = null;
+let matchSelKo = null;
+let matchLocked = false;
+let matchRunning = false;
+let pendingEnTiles = [];
+let pendingKoTiles = [];
+let matchPoints = 0;
+let matchLastActionTime = 0;
+let matchIdleTimerId = null;
+let matchTimeWarned = false;
+const MATCH_IDLE_MS = 8000;
+
+function seededShuffleRuntime(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+// true random draw each time (not a fixed pre-shuffled sequence) — never repeats a word already on the board
+function drawRandomWords(n) {
+  const activeEn = new Set(matchActiveWords.map(w => w.en));
+  const pool = matchAllWords.filter(w => !activeEn.has(w.en));
+  const source = pool.length >= n ? pool : matchAllWords.slice();
+  const picked = [];
+  const copy = source.slice();
+  for (let i = 0; i < n && copy.length > 0; i++) {
+    const idx = Math.floor(Math.random() * copy.length);
+    picked.push(copy[idx]);
+    copy.splice(idx, 1);
+  }
+  return picked;
+}
+
+function startMatch() {
+  const set = WORD_SETS.find(w => w.no === currentSet);
+  matchAllWords = set.words;
+  matchActiveWords = [];
+  matchPairs = 0;
+  matchStreak = 0;
+  document.getElementById('streakRow').hidden = true;
+  matchSelEn = null; matchSelKo = null; matchLocked = false;
+  pendingEnTiles = []; pendingKoTiles = [];
+  matchSecondsLeft = MATCH_ROUND_SECONDS;
+  matchPoints = 0;
+  matchWrongStreak = 0;
+  matchNewRank = 0;
+  matchTimeWarned = false;
+  matchLastActionTime = Date.now();
+  hideSiren();
+  document.getElementById('timeWarnBanner').hidden = true;
+  matchRunning = true;
+  loadBoard_();
+  updateMatchHud();
+  resetMatchIdleTimer();
+  clearInterval(matchTimerId);
+  matchTimerId = setInterval(() => {
+    matchSecondsLeft--;
+    updateMatchHud();
+    if (matchSecondsLeft === 20 && !matchTimeWarned) {
+      matchTimeWarned = true;
+      showTimeWarning();
+    }
+    if (matchSecondsLeft <= 0) finishMatch();
+  }, 1000);
+}
+
+// ---- tension mechanics: reward speed & combos, penalize wrong answers, nag on idle ----
+let matchSirenCount = 0;
+function resetMatchIdleTimer() {
+  clearTimeout(matchIdleTimerId);
+  hideSiren();
+  matchSirenCount = 0;
+  if (!matchRunning) return;
+  matchIdleTimerId = setTimeout(triggerSiren, MATCH_IDLE_MS);
+}
+function triggerSiren() {
+  if (!matchRunning) return;
+  showSiren();
+  playSirenSound();
+  matchSirenCount++;
+  // still stuck after a few nags — stop just pressuring them and show a hint instead
+  if (matchSirenCount >= 3) {
+    showMatchHint();
+    matchSirenCount = 0;
+  }
+  matchIdleTimerId = setTimeout(triggerSiren, 2000);
+}
+function showMatchHint() {
+  const enTiles = [...document.querySelectorAll('.tile.en:not(.done)')];
+  const koTiles = [...document.querySelectorAll('.tile.ko:not(.done)')];
+  for (const enTile of enTiles) {
+    const w = matchActiveWords.find(w => matchLeftVal(w) === enTile.dataset.en);
+    if (!w) continue;
+    const koTile = koTiles.find(t => t.dataset.ko === matchRightVal(w));
+    if (koTile) {
+      enTile.classList.add('hint');
+      koTile.classList.add('hint');
+      setTimeout(() => { enTile.classList.remove('hint'); koTile.classList.remove('hint'); }, 1800);
+      break;
+    }
+  }
+}
+function showSiren() {
+  const banner = document.getElementById('sirenBanner');
+  if (banner) banner.hidden = false;
+  const grid = document.getElementById('matchGrid');
+  if (grid) grid.classList.add('siren');
+}
+function hideSiren() {
+  const banner = document.getElementById('sirenBanner');
+  if (banner) banner.hidden = true;
+  const grid = document.getElementById('matchGrid');
+  if (grid) grid.classList.remove('siren');
+}
+function playSirenSound() {
+  try { playTone(880, 0.15, 0, 'square', 0.12); playTone(660, 0.15, 0.15, 'square', 0.12); } catch (e) {}
+}
+function showTimeWarning() {
+  try { playTone(659.25, 0.15, 0, 'triangle', 0.14); playTone(659.25, 0.15, 0.22, 'triangle', 0.14); } catch (e) {}
+  const banner = document.getElementById('timeWarnBanner');
+  if (!banner) return;
+  banner.hidden = false;
+  clearTimeout(showTimeWarning._t);
+  showTimeWarning._t = setTimeout(() => { banner.hidden = true; }, 3000);
+}
+function showComboToast(streak, bonus) {
+  const toast = document.createElement('div');
+  toast.className = 'comboToast';
+  toast.innerHTML = '🔥 ' + streak + ' COMBO! +' + (bonus || 15) + '<div style="font-size:.6em;margin-top:2px;">' + pickMsg(COMBO_MSGS) + '</div>';
+  document.body.appendChild(toast);
+  setTimeout(() => toast.remove(), 1100);
+}
+
+// review6 (과거형) matches present-tense <-> past-tense English instead of English <-> Korean —
+// everything else about the match game stays the same, so this is the only branch point needed.
+function matchLeftVal(w) { return currentSet === 'review6' ? w.present : w.en; }
+function matchRightVal(w) { return currentSet === 'review6' ? w.en : w.ko; }
+
+function loadBoard_() {
+  const pairs = drawRandomWords(BOARD_SIZE);
+  matchActiveWords = pairs;
+  const ens = seededShuffleRuntime(pairs.map(w => ({ en: matchLeftVal(w), emoji: w.emoji })));
+  const kos = seededShuffleRuntime(pairs.map(w => matchRightVal(w)));
+  const grid = document.getElementById('matchGrid');
+  grid.innerHTML = `
+    <div class="col-en">${ens.map(o => `<button class="tile en" data-en="${o.en}">${o.en}</button>`).join('')}</div>
+    <div class="col-ko">${kos.map(ko => `<button class="tile ko" data-ko="${ko}">${ko}</button>`).join('')}</div>
+  `;
+  [...grid.querySelectorAll('.tile.en')].forEach(t => t.addEventListener('click', onTileEn));
+  [...grid.querySelectorAll('.tile.ko')].forEach(t => t.addEventListener('click', onTileKo));
+}
+
+function updateMatchHud() {
+  const m = Math.floor(matchSecondsLeft / 60), s = matchSecondsLeft % 60;
+  const timerEl = document.getElementById('matchTimer');
+  timerEl.textContent = `${m}:${String(s).padStart(2,'0')}`;
+  timerEl.classList.toggle('low', matchSecondsLeft <= 20);
+  document.getElementById('matchScoreLive').textContent = `⭐ ${matchPoints}점`;
+  document.getElementById('matchPairsRow').textContent = `맞힌 쌍: ${matchPairs}`;
+}
+
+function updateStreak() {
+  const row = document.getElementById('streakRow');
+  if (matchStreak >= 2) {
+    document.getElementById('streakNum').textContent = matchStreak;
+    row.hidden = false;
+  } else {
+    row.hidden = true;
+  }
+}
+
+function onTileEn(e) {
+  if (!matchRunning || matchLocked || e.target.classList.contains('done')) return;
+  if (matchSelEn) matchSelEn.classList.remove('sel');
+  matchSelEn = e.target;
+  matchSelEn.classList.add('sel');
+  tryMatch();
+}
+function onTileKo(e) {
+  if (!matchRunning || matchLocked || e.target.classList.contains('done')) return;
+  if (matchSelKo) matchSelKo.classList.remove('sel');
+  matchSelKo = e.target;
+  matchSelKo.classList.add('sel');
+  tryMatch();
+}
+function tryMatch() {
+  if (!matchSelEn || !matchSelKo) return;
+  resetMatchIdleTimer();
+  const now = Date.now();
+  const elapsed = matchLastActionTime ? (now - matchLastActionTime) / 1000 : 0;
+  matchLastActionTime = now;
+  const set = WORD_SETS.find(w => w.no === currentSet);
+  const pair = set.words.find(w => matchLeftVal(w) === matchSelEn.dataset.en);
+  if (pair && matchRightVal(pair) === matchSelKo.dataset.ko) {
+    matchLocked = true;
+    playCorrectSound();
+    matchSelEn.classList.remove('sel'); matchSelKo.classList.remove('sel');
+    matchSelEn.classList.add('correctflash'); matchSelKo.classList.add('correctflash');
+    matchPairs++;
+    matchStreak++;
+    // speed bonus: the faster the pair after the previous action, the more it's worth
+    let gained = 10;
+    let speedMsg = '';
+    if (elapsed <= 2) { gained += 15; speedMsg = '⚡ 번개! +15'; }
+    else if (elapsed <= 4) { gained += 8; speedMsg = '🏃 빨라요! +8'; }
+    else if (elapsed <= 6) { gained += 3; speedMsg = '👍 좋아요 +3'; }
+    matchWrongStreak = 0;
+    // every 3rd match in a row is a combo — extra points + a big on-screen toast with a cheer
+    let comboBonus = 0;
+    if (matchStreak % 3 === 0) {
+      comboBonus = Math.min(40, 15 + 5 * (Math.floor(matchStreak / 3) - 1));
+      gained += comboBonus;
+      showComboToast(matchStreak, comboBonus);
+    }
+    showPointPop(matchSelKo, '+' + gained, (comboBonus ? '🔥 콤보 +' + comboBonus : speedMsg), comboBonus || gained >= 25 ? 'great' : 'good');
+    matchPoints += gained;
+    updateMatchHud();
+    updateStreak();
+    const doneEn = matchSelEn, doneKo = matchSelKo;
+    matchSelEn = null; matchSelKo = null;
+    setTimeout(() => {
+      doneEn.classList.remove('correctflash');
+      doneKo.classList.remove('correctflash');
+      pendingEnTiles.push(doneEn);
+      pendingKoTiles.push(doneKo);
+      if (pendingEnTiles.length >= REFILL_AT && matchRunning) {
+        refillTiles();
+      } else {
+        doneEn.classList.add('done'); doneEn.disabled = true;
+        doneKo.classList.add('done'); doneKo.disabled = true;
+      }
+      matchLocked = false;
+    }, 500);
+  } else {
+    matchLocked = true;
+    playWrongSound();
+    matchStreak = 0;
+    const lost = Math.min(matchPoints, matchWrongStreak >= 1 ? 8 : 5);
+    const hadCombo = matchStreak >= 3;
+    matchWrongStreak++;
+    matchPoints -= lost;
+    showPointPop(matchSelKo, lost ? '-' + lost : '0', hadCombo ? '콤보가 끊겼어요 💦' : pickMsg(OOPS_MSGS), 'bad');
+    updateMatchHud();
+    updateStreak();
+    matchSelEn.classList.add('wrongflash'); matchSelKo.classList.add('wrongflash');
+    setTimeout(() => {
+      matchSelEn.classList.remove('sel','wrongflash'); matchSelKo.classList.remove('sel','wrongflash');
+      matchSelEn = null; matchSelKo = null; matchLocked = false;
+    }, 450);
+  }
+}
+
+function refillTiles() {
+  const matchedEn = pendingEnTiles.map(t => t.dataset.en);
+  matchActiveWords = matchActiveWords.filter(w => !matchedEn.includes(matchLeftVal(w)));
+  const words = drawRandomWords(REFILL_AT);
+  matchActiveWords = matchActiveWords.concat(words);
+  const enTiles = pendingEnTiles.splice(0, REFILL_AT);
+  const koTiles = pendingKoTiles.splice(0, REFILL_AT);
+  enTiles.forEach((tile, i) => {
+    tile.dataset.en = matchLeftVal(words[i]);
+    tile.textContent = matchLeftVal(words[i]);
+    tile.classList.remove('done'); tile.disabled = false;
+  });
+  koTiles.forEach((tile, i) => {
+    tile.dataset.ko = matchRightVal(words[i]);
+    tile.textContent = matchRightVal(words[i]);
+    tile.classList.remove('done'); tile.disabled = false;
+  });
+}
+
+async function finishMatch() {
+  matchRunning = false;
+  clearInterval(matchTimerId);
+  document.getElementById('matchCard').hidden = true;
+  document.getElementById('scoreNum').textContent = `${matchPairs}`;
+  const elapsed = MATCH_ROUND_SECONDS;
+  const set = WORD_SETS.find(w => w.no === currentSet);
+  const total = set.words.length;
+  const pct = Math.min(100, Math.round(matchPairs / total * 100));
+  const passed = pct >= PASS_PCT;
+  document.getElementById('scoreLbl').textContent = `${currentName} · ${setLabel(set.no)} ${set.title} · ${MATCH_ROUND_SECONDS}초간 맞힌 쌍 ${matchPairs}개 (세트 단어 ${total}개 중 ${pct}%) · ⭐${matchPoints}점`;
+  const badge = document.getElementById('passBadge');
+  badge.textContent = passed ? `✓ 통과 (${PASS_PCT}% 이상)` : `↻ 재도전 필요 (${PASS_PCT}% 미만)`;
+  badge.className = 'passbadge ' + (passed ? 'pass' : 'fail');
+  badge.hidden = false;
+  document.getElementById('resultCard').hidden = false;
+  recordLast(currentSet, 'match', { score: matchPairs, total, pct, passed, points: matchPoints });
+  matchNewRank = addMatchTop(currentSet, matchPoints);
+  if (matchNewRank) document.getElementById('scoreLbl').textContent += ' · 🏆 TOP' + matchNewRank + '!';
+  markLocalProgress(currentSet, 'match', passed);
+  configureNextModeBtn('match');
+  await saveResult({ setTitle: set.title, score: matchPairs, seconds: elapsed, total, pct, passed, points: matchPoints });
+  loadBoard();
+  loadTeacherDashboard();
+  renderSubmitBanner();
+  checkGrandComplete();
+}
+
+// ---- spelling mode (8 words drawn from the set, first letter given as a hint) ----
+// same round/retest shape as the quiz: a wrong word reveals the correct spelling right away
+// and must be copied correctly before moving on; missed words then loop in a retest round.
+let spellRoundQuestions = [];
+let spellIndex = 0;
+let spellScore = 0;
+let spellAnswered = false;
+let spellCorrectionMode = false;
+let spellHadWrongThisQuestion = false;
+let spellInRetest = false;
+let spellRetestQueue = [];
+let spellWrongQuestions = [];
+let spellDifficulty = 'easy';
+let easySlots = [];
+let easyTiles = [];
+let easyPlaced = [];
+
+function spellHintText(en) {
+  const first = en[0].toLowerCase();
+  // regular spaces collapse when rendered as text, so a word-gap is marked with
+  // non-breaking spaces (U+00A0) instead — those don't collapse, so the gap actually shows
+  const rest = en.slice(1).split('').map(c => c === ' ' ? '   ' : '_').join(' ');
+  return rest ? `${first} ${rest}` : first;
+}
+
+function setSpellDifficulty(diff) {
+  spellDifficulty = diff;
+  document.getElementById('diffEasyBtn').classList.toggle('active', diff === 'easy');
+  document.getElementById('diffHardBtn').classList.toggle('active', diff === 'hard');
+  if (spellRoundQuestions.length) renderSpellQuestion();
+}
+document.getElementById('diffEasyBtn').addEventListener('click', () => setSpellDifficulty('easy'));
+document.getElementById('diffHardBtn').addEventListener('click', () => setSpellDifficulty('hard'));
+
+function startSpell() {
+  const set = WORD_SETS.find(w => w.no === currentSet);
+  const pool = set.words.slice();
+  for (let i = pool.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [pool[i], pool[j]] = [pool[j], pool[i]];
+  }
+  spellRoundQuestions = pool.slice(0, Math.min(8, pool.length));
+  spellIndex = 0; spellScore = 0;
+  spellInRetest = false; spellRetestQueue = []; spellWrongQuestions = [];
+  document.getElementById('diffEasyBtn').classList.toggle('active', spellDifficulty === 'easy');
+  document.getElementById('diffHardBtn').classList.toggle('active', spellDifficulty === 'hard');
+  renderSpellQuestion();
+}
+
+function currentSpellQuestion() {
+  return spellInRetest ? spellRetestQueue[0] : spellRoundQuestions[spellIndex];
+}
+
+function renderSpellQuestion() {
+  const q = currentSpellQuestion();
+  spellAnswered = false;
+  spellCorrectionMode = false;
+  spellHadWrongThisQuestion = false;
+  const banner = document.getElementById('spellRetestBanner');
+  if (spellInRetest) {
+    banner.hidden = false;
+    document.getElementById('spellProgressBar').style.width = '100%';
+    document.getElementById('spellQnum').textContent = `복습 라운드 · 남은 단어 ${spellRetestQueue.length}개`;
+  } else {
+    banner.hidden = true;
+    document.getElementById('spellProgressBar').style.width = (spellIndex / spellRoundQuestions.length * 100) + '%';
+    document.getElementById('spellQnum').textContent = `${spellIndex + 1} / ${spellRoundQuestions.length}`;
+  }
+  document.getElementById('spellEmoji').textContent = q.emoji || '';
+  document.getElementById('spellPrompt').textContent = q.ko;
+  document.getElementById('spellCorrectReveal').hidden = true;
+  document.getElementById('spellFeedback').hidden = true;
+  document.getElementById('spellNextBtn').hidden = true;
+
+  const isHard = spellDifficulty === 'hard';
+  document.getElementById('spellQdir').textContent = isHard ? '뜻을 보고 영단어를 타이핑하세요' : '뜻을 보고 글자를 순서대로 눌러 완성하세요';
+  document.getElementById('spellHint').hidden = !isHard;
+  document.getElementById('spellInput').hidden = !isHard;
+  document.getElementById('spellCheckBtn').hidden = !isHard;
+  document.getElementById('spellEasyArea').hidden = isHard;
+
+  if (isHard) {
+    document.getElementById('spellHint').textContent = `힌트: ${spellHintText(q.en)}`;
+    const input = document.getElementById('spellInput');
+    input.disabled = false;
+    input.className = 'spellinput';
+    input.value = q.en[0].toLowerCase();
+    input.focus();
+    setTimeout(() => input.setSelectionRange(input.value.length, input.value.length), 0);
+  } else {
+    renderEasyQuestion(q);
+  }
+}
+
+// ---- easy mode: tap shuffled letter tiles in order to spell the word ----
+function renderEasyQuestion(q) {
+  const chars = q.en.toLowerCase().split('');
+  easySlots = chars.map(c => ({ ch: c, isSpace: c === ' ' }));
+  const shuffled = chars.filter(c => c !== ' ').map((c, i) => ({ id: i, ch: c }));
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  easyTiles = shuffled.map(t => ({ ...t, used: false }));
+  easyPlaced = [];
+  renderEasyBlanks();
+  renderEasyTiles();
+}
+function renderEasyBlanks() {
+  const wrap = document.getElementById('easyBlanks');
+  let letterIdx = 0;
+  wrap.innerHTML = easySlots.map(slot => {
+    if (slot.isSpace) return `<div class="easyBlank gap"></div>`;
+    const tileId = easyPlaced[letterIdx];
+    letterIdx++;
+    if (tileId !== undefined) {
+      const tile = easyTiles.find(t => t.id === tileId);
+      return `<div class="easyBlank filled" data-idx="${letterIdx - 1}" role="button" title="누르면 취소돼요">${tile.ch}</div>`;
+    }
+    return `<div class="easyBlank"></div>`;
+  }).join('');
+}
+function renderEasyTiles() {
+  const wrap = document.getElementById('easyTiles');
+  wrap.innerHTML = easyTiles.map(t => `<button class="easyTile${t.used ? ' used' : ''}" data-id="${t.id}">${t.ch}</button>`).join('');
+  [...wrap.querySelectorAll('.easyTile')].forEach(btn => {
+    btn.addEventListener('click', () => placeEasyLetter(parseInt(btn.dataset.id, 10)));
+  });
+}
+function placeEasyLetter(tileId) {
+  const tile = easyTiles.find(t => t.id === tileId);
+  if (!tile || tile.used) return;
+  const totalLetterSlots = easySlots.filter(s => !s.isSpace).length;
+  let at = -1;
+  for (let i = 0; i < totalLetterSlots; i++) { if (easyPlaced[i] === undefined) { at = i; break; } }
+  if (at < 0) return;
+  tile.used = true;
+  easyPlaced[at] = tileId;
+  renderEasyBlanks();
+  renderEasyTiles();
+  if (easyPlacedCount() === totalLetterSlots) checkEasyAnswer();
+}
+function easyPlacedCount() { return easyPlaced.filter(x => x !== undefined).length; }
+// tap an already placed letter to take it back (fix a slip without wiping the whole word)
+document.getElementById('easyBlanks').addEventListener('click', e => {
+  const cell = e.target.closest('.easyBlank.filled');
+  if (!cell || spellAnswered) return;
+  const idx = parseInt(cell.dataset.idx, 10);
+  const id = easyPlaced[idx];
+  if (id === undefined) return;
+  const tile = easyTiles.find(t => t.id === id);
+  if (tile) tile.used = false;
+  easyPlaced[idx] = undefined;
+  renderEasyBlanks();
+  renderEasyTiles();
+});
+document.getElementById('easyUndoBtn').addEventListener('click', () => {
+  if (spellAnswered) return;
+  let last = -1;
+  for (let i = easyPlaced.length - 1; i >= 0; i--) { if (easyPlaced[i] !== undefined) { last = i; break; } }
+  if (last < 0) return;
+  const lastId = easyPlaced[last];
+  easyPlaced[last] = undefined;
+  const tile = easyTiles.find(t => t.id === lastId);
+  if (tile) tile.used = false;
+  renderEasyBlanks();
+  renderEasyTiles();
+});
+function resetEasyPlacement() {
+  easyTiles.forEach(t => t.used = false);
+  easyPlaced = [];
+  renderEasyBlanks();
+  renderEasyTiles();
+}
+function checkEasyAnswer() {
+  const q = currentSpellQuestion();
+  const built = easyPlaced.map(id => easyTiles.find(t => t.id === id).ch).join('');
+  const correctWord = q.en.replace(/ /g, '').toLowerCase();
+  const fb = document.getElementById('spellFeedback');
+
+  if (spellCorrectionMode) {
+    if (built !== correctWord) {
+      playWrongSound();
+      setTimeout(resetEasyPlacement, 400);
+      return;
+    }
+    spellCorrectionMode = false;
+    document.getElementById('spellCorrectReveal').hidden = true;
+    fb.textContent = '✓ 다시 잘 만들었어요!';
+    fb.className = 'spellfeedback correct';
+    fb.hidden = false;
+    showSpellNextBtn();
+    return;
+  }
+
+  if (spellAnswered) return;
+  spellAnswered = true;
+  if (built === correctWord) {
+    if (!spellInRetest) spellScore++;
+    playCorrectSound();
+    fb.textContent = '✓ 정답!';
+    fb.className = 'spellfeedback correct';
+    fb.hidden = false;
+    showSpellNextBtn();
+  } else {
+    playWrongSound();
+    spellHadWrongThisQuestion = true;
+    if (!spellInRetest) spellWrongQuestions.push(q);
+    spellCorrectionMode = true;
+    document.getElementById('spellCorrectReveal').textContent = `정답: ${q.en}`;
+    document.getElementById('spellCorrectReveal').hidden = false;
+    fb.textContent = '오잉? 😮 힌트 줄게요! 위 정답을 보고 아래 칸에 다시 써보세요';
+    fb.className = 'spellfeedback wrong';
+    fb.hidden = false;
+    document.getElementById('spellEasyArea').hidden = true;
+    const retypeInput = document.getElementById('spellInput');
+    retypeInput.hidden = false; retypeInput.value = ''; retypeInput.className = 'spellinput'; retypeInput.disabled = false;
+    document.getElementById('spellCheckBtn').hidden = false;
+    retypeInput.focus();
+  }
+}
+function showSpellNextBtn() {
+  const nb = document.getElementById('spellNextBtn');
+  nb.hidden = false;
+  nb.innerHTML = (spellInRetest ? spellRetestQueue.length > 1 : spellIndex + 1 < spellRoundQuestions.length) ? '다음 <i class="arrow">→</i>' : '결과 보기 <i class="arrow">→</i>';
+  nb.focus();
+}
+
+function checkSpell() {
+  const q = currentSpellQuestion();
+  const input = document.getElementById('spellInput');
+  const typed = input.value.trim().toLowerCase();
+  const correctWord = q.en.toLowerCase();
+  const fb = document.getElementById('spellFeedback');
+
+  if (spellCorrectionMode) {
+    if (typed !== correctWord) {
+      input.className = 'spellinput wrong';
+      playWrongSound();
+      return;
+    }
+    spellCorrectionMode = false;
+    document.getElementById('spellCorrectReveal').hidden = true;
+    input.disabled = true;
+    input.className = 'spellinput correct';
+    fb.textContent = '✓ 다시 잘 썼어요!';
+    fb.className = 'spellfeedback correct';
+    document.getElementById('spellCheckBtn').hidden = true;
+    showSpellNextBtn();
+    return;
+  }
+
+  if (spellAnswered) return;
+  spellAnswered = true;
+  const correct = typed === correctWord;
+  if (correct) {
+    if (!spellInRetest) spellScore++;
+    playCorrectSound();
+    input.disabled = true;
+    input.className = 'spellinput correct';
+    fb.textContent = '✓ 정답!';
+    fb.className = 'spellfeedback correct';
+    fb.hidden = false;
+    document.getElementById('spellCheckBtn').hidden = true;
+    showSpellNextBtn();
+  } else {
+    playWrongSound();
+    spellHadWrongThisQuestion = true;
+    if (!spellInRetest) spellWrongQuestions.push(q);
+    spellCorrectionMode = true;
+    document.getElementById('spellCorrectReveal').textContent = `정답: ${q.en}`;
+    document.getElementById('spellCorrectReveal').hidden = false;
+    fb.textContent = '위 정답을 보고 그대로 입력해보세요';
+    fb.className = 'spellfeedback wrong';
+    fb.hidden = false;
+    input.value = '';
+    input.className = 'spellinput';
+    input.disabled = false;
+    input.focus();
+  }
+}
+
+function spellGoNext() {
+  const hadWrong = spellHadWrongThisQuestion;
+  if (!spellInRetest) {
+    spellIndex++;
+    if (spellIndex < spellRoundQuestions.length) {
+      renderSpellQuestion();
+    } else if (spellWrongQuestions.length > 0) {
+      spellInRetest = true;
+      spellRetestQueue = spellWrongQuestions.slice();
+      renderSpellQuestion();
+    } else {
+      finishSpell();
+    }
+  } else {
+    const current = spellRetestQueue.shift();
+    if (hadWrong) spellRetestQueue.push(current);
+    if (spellRetestQueue.length === 0) finishSpell();
+    else renderSpellQuestion();
+  }
+}
+
+document.getElementById('spellCheckBtn').addEventListener('click', checkSpell);
+document.getElementById('spellNextBtn').addEventListener('click', spellGoNext);
+document.getElementById('spellInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    if (!spellAnswered || spellCorrectionMode) checkSpell(); else spellGoNext();
+  }
+});
+
+function celebrateHardSpellPass() {
+  const toast = document.createElement('div');
+  toast.className = 'comboToast';
+  toast.textContent = '🏆 하드 모드 통과! 완벽해요! 🌟';
+  document.body.appendChild(toast);
+  setTimeout(() => toast.remove(), 1400);
+}
+
+async function finishSpell() {
+  document.getElementById('spellCard').hidden = true;
+  document.getElementById('spellRetestBanner').hidden = true;
+  const total = spellRoundQuestions.length;
+  const pct = Math.round(spellScore / total * 100);
+  const passed = pct >= PASS_PCT;
+  const set = WORD_SETS.find(w => w.no === currentSet);
+  const diffLabel = spellDifficulty === 'hard' ? '하드' : '이지';
+  document.getElementById('scoreNum').textContent = `${spellScore} / ${total}`;
+  document.getElementById('scoreLbl').textContent = `${currentName} · ${setLabel(set.no)} ${set.title} · 스펠쓰기(${diffLabel}) ${pct}%`;
+  const badge = document.getElementById('passBadge');
+  badge.textContent = passed ? `✓ 통과 (${PASS_PCT}% 이상)` : `↻ 재도전 필요 (${PASS_PCT}% 미만)`;
+  badge.className = 'passbadge ' + (passed ? 'pass' : 'fail');
+  badge.hidden = false;
+  document.getElementById('resultCard').hidden = false;
+  // 이지·하드 어느 쪽을 통과해도 미션 완료(초록불)로 인정
+  recordLast(currentSet, 'spell', { score: spellScore, total, pct, passed, diff: spellDifficulty, wrong: [...new Set(spellWrongQuestions.map(q => q.en))], clean: spellWrongQuestions.length === 0 && spellScore === total });
+  markLocalProgress(currentSet, 'spell', passed);
+  configureNextModeBtn('spell');
+  // 단, DB 기록(순위표·교사 대시보드)과 축하 연출은 하드 통과에서만 남긴다
+  if (spellDifficulty === 'hard') {
+    await saveResult({ setTitle: set.title, score: spellScore, total, pct, passed, difficulty: 'hard' });
+  }
+  loadBoard();
+  loadTeacherDashboard();
+  renderSubmitBanner();
+  if (passed) {
+    const grand = checkGrandComplete();
+    if (spellDifficulty === 'hard' && !grand) {
+      celebrateSetComplete();
+      celebrateHardSpellPass();
+    }
+  }
+}
+
+function wordKoLookup(en) {
+  const set = WORD_SETS.find(w => w.no === currentSet);
+  if (!set) return '';
+  const hit = set.words.find(w => w.en.toLowerCase() === en.toLowerCase());
+  return hit ? hit.ko : '';
+}
+
+function wordKoLookupAny(en) {
+  for (const set of WORD_SETS) {
+    const hit = set.words.find(w => w.en.toLowerCase() === en.toLowerCase());
+    if (hit) return hit.ko;
+  }
+  return '';
+}
+
+function wordEmoji(en) {
+  for (const set of WORD_SETS) {
+    const hit = set.words.find(w => w.en.toLowerCase() === en.toLowerCase());
+    if (hit && hit.emoji) return hit.emoji;
+  }
+  return '';
+}
+
+async function renderWarmup() {
+  const wrap = document.getElementById('warmupWrap');
+  wrap.innerHTML = '';
+  if (!db || !currentName) return;
+  try {
+    const rows = await db.collection('quiz_results').where('name', '==', currentName).where('mode', '==', 'quiz').limit(100).get();
+    const allWrong = new Set();
+    (rows || []).forEach(r => (r.wrong || []).forEach(w => allWrong.add(w)));
+    if (allWrong.size === 0) return;
+    const pool = [...allWrong];
+    for (let i = pool.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [pool[i], pool[j]] = [pool[j], pool[i]];
+    }
+    const picks = pool.slice(0, 3);
+    wrap.innerHTML = `
+      <div class="warmupcard">
+        <div class="warmtitle">🔍 시작 전 복습 워밍업 — 예전에 틀렸던 단어</div>
+        <div class="warmupchips">${picks.map(w => `<span class="warmupchip"><span class="wen">${w}</span><span class="wko">${wordKoLookupAny(w)}</span></span>`).join('')}</div>
+      </div>
+    `;
+  } catch (e) {}
+}
+
+async function generateExportText() {
+  if (!db) return '';
+  const [quizRows, matchRows, spellRows, submitRows] = await Promise.all([
+    db.collection('quiz_results').where('setNo', '==', currentSet).where('mode', '==', 'quiz').limit(200).get(),
+    db.collection('quiz_results').where('setNo', '==', currentSet).where('mode', '==', 'match').limit(200).get(),
+    db.collection('quiz_results').where('setNo', '==', currentSet).where('mode', '==', 'spell').limit(200).get(),
+    db.collection('submissions').where('setNo', '==', currentSet).limit(200).get(),
+  ]);
+  function statText(rows, name) {
+    const mine = (rows || []).filter(r => r.name === name);
+    if (mine.length === 0) return '-';
+    const passes = mine.filter(r => r.passed).length;
+    return `${passes}/${mine.length}`;
+  }
+  const submitCount = {}, submitLast = {};
+  (submitRows || []).forEach(r => {
+    submitCount[r.name] = (submitCount[r.name] || 0) + 1;
+    if (!submitLast[r.name] || r.ts > submitLast[r.name]) submitLast[r.name] = r.ts;
+  });
+  const set = currentQuiz();
+  const lines = [`${setLabel(currentSet)} ${set.title} 결과 (${new Date().toLocaleString('ko-KR')} 기준, 숫자는 통과/시도)`];
+  lines.push(['이름', '퀴즈', '매칭', '스펠', '제출횟수', '최근제출'].join('\t'));
+  ROSTER.forEach(n => {
+    lines.push([
+      n,
+      statText(quizRows, n),
+      statText(matchRows, n),
+      statText(spellRows, n),
+      submitCount[n] || 0,
+      submitLast[n] ? new Date(submitLast[n]).toLocaleString('ko-KR') : '-',
+    ].join('\t'));
+  });
+  return lines.join('\n');
+}
+
+document.getElementById('exportBtn').addEventListener('click', async () => {
+  const area = document.getElementById('exportArea');
+  area.value = '불러오는 중...';
+  area.hidden = false;
+  document.getElementById('exportSelectBtn').hidden = false;
+  area.value = await generateExportText();
+});
+document.getElementById('exportSelectBtn').addEventListener('click', () => {
+  const area = document.getElementById('exportArea');
+  area.focus();
+  area.select();
+});
+
+const OVERVIEW_MODES = ['wordcheck', 'quiz', 'match', 'spell'];
+const OVERVIEW_MODE_LABEL = { wordcheck: '단어확인', quiz: '퀴즈', match: '매칭', spell: '스펠' };
+
+async function loadTeacherOverview() {
+  const wrap = document.getElementById('teacherOverviewWrap');
+  if (!wrap || !db) return;
+  let rows = [];
+  try {
+    rows = await db.collection('quiz_results').limit(2000).get();
+  } catch (e) { return; }
+
+  // name -> setNo -> Set(modes passed)
+  const grid = new Map();
+  ROSTER.forEach(n => grid.set(n, new Map()));
+  (rows || []).forEach(r => {
+    if (!r || !r.passed || !r.name) return;
+    if (!grid.has(r.name)) grid.set(r.name, new Map());
+    const perSet = grid.get(r.name);
+    if (!perSet.has(r.setNo)) perSet.set(r.setNo, new Set());
+    if (OVERVIEW_MODES.indexOf(r.mode) >= 0) perSet.get(r.setNo).add(r.mode);
+  });
+
+  const names = [...grid.keys()];
+  const body = names.map(n => {
+    const perSet = grid.get(n);
+    let doneSets = 0;
+    const cells = QUIZZES.map(q => {
+      const modes = perSet.get(q.no) || new Set();
+      const c = modes.size;
+      if (c === 4) doneSets++;
+      const cls = c === 0 ? '' : (c === 4 ? ' full' : ' partial');
+      const tip = c === 0 ? '아직 없음' : OVERVIEW_MODES.filter(m => modes.has(m)).map(m => OVERVIEW_MODE_LABEL[m]).join(', ');
+      return `<td><span class="ovcell${cls}" title="${n} · ${setLabel(q.no)} — ${tip}">${c}/4</span></td>`;
+    }).join('');
+    return `<tr><td>${n}</td>${cells}<td><span class="ovtotal">${doneSets}/${QUIZZES.length}</span></td></tr>`;
+  }).join('');
+
+  wrap.innerHTML = `
+    <h2 style="margin:0;">전체 요약표</h2>
+    <div class="hint" style="margin-top:2px;">칸의 숫자는 그 세트에서 통과한 미션 수 (단어확인·퀴즈·매칭·스펠 4개 중). 마지막 칸은 4개 다 끝낸 세트 수.</div>
+    <div class="overviewwrap"><div class="overviewscroll">
+      <table class="overviewtable">
+        <tr><th>이름</th>${QUIZZES.map(q => `<th>${q.no.startsWith('review') ? '복습' : q.no}</th>`).join('')}<th>완주</th></tr>
+        ${body}
+      </table>
+    </div></div>`;
+}
+
+async function loadTeacherDashboard() {
+  if (!TEACHER_MODE || !db) return;
+  loadTeacherOverview();
+  document.getElementById('teacherSetNo').textContent = currentSet;
+  try {
+    const [quizRows, matchRows, spellRows, submitRows] = await Promise.all([
+      db.collection('quiz_results').where('setNo', '==', currentSet).where('mode', '==', 'quiz').limit(200).get(),
+      db.collection('quiz_results').where('setNo', '==', currentSet).where('mode', '==', 'match').limit(200).get(),
+      db.collection('quiz_results').where('setNo', '==', currentSet).where('mode', '==', 'spell').limit(200).get(),
+      db.collection('submissions').where('setNo', '==', currentSet).limit(200).get(),
+    ]);
+    function statCell(rows, name) {
+      const mine = (rows || []).filter(r => r.name === name);
+      if (mine.length === 0) return '<span class="dot"></span>';
+      const passes = mine.filter(r => r.passed).length;
+      return `<span class="statcell${passes > 0 ? ' pass' : ''}">${passes}/${mine.length}</span>`;
+    }
+    document.getElementById('teacherRosterTable').innerHTML = `
+      <tr><th>이름</th><th>퀴즈</th><th>매칭</th><th>스펠</th></tr>
+      ${ROSTER.map(n => `
+      <tr>
+        <td>${n}</td>
+        <td class="rstat">${statCell(quizRows, n)}</td>
+        <td class="rstat">${statCell(matchRows, n)}</td>
+        <td class="rstat">${statCell(spellRows, n)}</td>
+      </tr>`).join('')}
+    `;
+    document.getElementById('teacherRosterCaption').textContent = '숫자는 통과횟수/시도횟수';
+
+    const submitList = (submitRows || []).sort((a, b) => b.ts - a.ts);
+    document.getElementById('teacherSubmitWrap').innerHTML = submitList.length === 0 ? '' : `
+      <div class="passsub">제출 기록 — 날짜순, 2차 이상 시도도 모두 누적 표시</div>
+      <table class="rostertable submittable">
+        <tr><th>이름</th><th>제출일시</th></tr>
+        ${submitList.map(r => `<tr><td>${r.name}</td><td class="rstat" style="text-align:right;">${new Date(r.ts).toLocaleString('ko-KR', { month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</td></tr>`).join('')}
+      </table>
+    `;
+
+    // wrong words accumulate across every quiz attempt (never cleared, only added to)
+    const wrongByName = new Map();
+    ROSTER.forEach(n => wrongByName.set(n, { attempted: false, wrong: new Set() }));
+    (quizRows || []).forEach(r => {
+      if (!wrongByName.has(r.name)) wrongByName.set(r.name, { attempted: false, wrong: new Set() });
+      const rec = wrongByName.get(r.name);
+      rec.attempted = true;
+      (r.wrong || []).forEach(w => rec.wrong.add(w));
+    });
+    document.getElementById('teacherWrongWrap').innerHTML = `
+      <div class="passsub">오답노트 — 퀴즈에서 틀린 단어 (누적)</div>
+      <div class="teachercards">
+        ${[...wrongByName.keys()].map(n => {
+          const rec = wrongByName.get(n);
+          if (!rec.attempted) return `<div class="teachercard empty"><div class="tname">${n}</div><div class="tnote">아직 응시 안 함</div></div>`;
+          if (rec.wrong.size === 0) return `<div class="teachercard perfect"><div class="tname">${n}</div><div class="tnote">🎉 오답 없음</div></div>`;
+          const words = [...rec.wrong];
+          return `<div class="teachercard"><div class="tname">${n}<span class="tcount">${words.length}개</span></div><div class="wrongchips">${words.map(w => `<span class="wrongchip">${w}<span class="wko">${wordKoLookup(w)}</span></span>`).join('')}</div></div>`;
+        }).join('')}
+      </div>
+    `;
+  } catch (e) {}
+}
+
+async function loadBoard() {
+  const boardCard = document.getElementById('boardCard');
+  if (mode === 'match') { renderMatchBoard(); return; }
+  if (!db) return;
+  try {
+    const rows = await db.collection('quiz_results')
+      .where('setNo', '==', currentSet)
+      .where('mode', '==', mode)
+      .orderBy('ts', 'desc')
+      .limit(100)
+      .get();
+    if (!rows || rows.length === 0) { boardCard.hidden = true; return; }
+    const rankVal = r => mode === 'match' ? r.score : r.pct;
+    // keep each person's best attempt only
+    const bestByName = new Map();
+    for (const r of rows) {
+      const prev = bestByName.get(r.name);
+      if (!prev || rankVal(r) > rankVal(prev) || (rankVal(r) === rankVal(prev) && r.ts < prev.ts)) {
+        bestByName.set(r.name, r);
+      }
+    }
+    const best = [...bestByName.values()].sort((a, b) => rankVal(b) - rankVal(a));
+    const modeLabel = mode === 'quiz' ? '퀴즈' : mode === 'spell' ? '스펠쓰기' : '매칭게임';
+    document.getElementById('boardLabel').textContent = `${setLabel(currentSet)} 최고 기록 (${modeLabel}) · 1인 1기록`;
+    document.getElementById('boardTable').innerHTML = `
+      <tr><th></th><th>이름</th><th>점수</th><th>날짜</th></tr>
+      ${best.map((r, i) => {
+        const scoreText = mode === 'match' ? (r.score + '쌍') : (r.score + '/' + r.total + ' (' + r.pct + '%)');
+        const isMe = r.name === currentName;
+        const nameText = isMe ? `${r.name} (나)` : r.name;
+        const dateText = new Date(r.ts).toLocaleDateString('ko-KR');
+        if (i === 0) return `<tr class="top1${isMe ? ' me' : ''}"><td>🏆</td><td>${nameText}</td><td class="score">${scoreText}</td><td>${dateText}</td></tr>`;
+        if (isMe) return `<tr class="me"><td>⭐</td><td>${nameText}</td><td class="score">${scoreText}</td><td>${dateText}</td></tr>`;
+        return `<tr><td></td><td>${r.name}</td><td class="score done-check">✓ 참여</td><td>${dateText}</td></tr>`;
+      }).join('')}
+    `;
+    boardCard.hidden = false;
+  } catch (e) { boardCard.hidden = true; }
+}
+
+document.getElementById('retryBtn').addEventListener('click', () => {
+  document.getElementById('resultCard').hidden = true;
+  hideAllModeCards();
+  if (mode === 'quiz') {
+    document.getElementById('quizCard').hidden = false;
+    startQuizRound();
+  } else if (mode === 'spell') {
+    document.getElementById('spellCard').hidden = false;
+    startSpell();
+  } else {
+    document.getElementById('matchCard').hidden = false;
+    startMatch();
+  }
+});
+document.getElementById('backBtn').addEventListener('click', () => {
+  matchRunning = false;
+  clearInterval(matchTimerId);
+  openSetList();
+});
+
+document.getElementById('matchExitBtn').addEventListener('click', () => {
+  matchRunning = false;
+  clearInterval(matchTimerId);
+  showScreen('modeScreen');
+  loadBoard();
+});
+
+document.getElementById('quizExitBtn').addEventListener('click', () => {
+  showScreen('modeScreen');
+  loadBoard();
+});
+
+document.getElementById('spellExitBtn').addEventListener('click', () => {
+  showScreen('modeScreen');
+  loadBoard();
+});
+
+document.addEventListener('keydown', e => {
+  if (e.ctrlKey || e.metaKey || e.altKey) return;
+  const n = parseInt(e.key, 10);
+  if (!(n >= 1 && n <= 4)) return;
+  if (document.getElementById('quizCard').hidden) return;
+  const t = e.target;
+  if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA')) return;
+  const btn = document.querySelectorAll('#choices .choice')[n - 1];
+  if (btn) btn.click();
+});
+
+// ===== 숙제 결과 카드 (캡처용) =====
+function hwLastKey(name) { return 'b_quiz_last_' + name; }
+function hwLoadLast(name) { try { return JSON.parse(localStorage.getItem(hwLastKey(name)) || '{}'); } catch (e) { return {}; } }
+function recordLast(setNo, m, data) {
+  try {
+    const all = hwLoadLast(currentName);
+    all[setNo] = all[setNo] || {};
+    all[setNo][m] = Object.assign({ at: Date.now() }, data);
+    localStorage.setItem(hwLastKey(currentName), JSON.stringify(all));
+  } catch (e) {}
+}
+function hwStatusRow(label, cls, text) {
+  return '<div class="hwrow ' + cls + '"><span class="hwstep">' + label + '</span><span class="hwres">' + text + '</span></div>';
+}
+function hwScoreRow(label, rec, prog, fmt) {
+  if (rec) return hwStatusRow(label, rec.passed ? 'ok' : 'retry', (rec.passed ? '✓ 통과 · ' : '↻ 다시 도전 · ') + fmt(rec));
+  if (prog) return hwStatusRow(label, 'ok', '✓ 통과 (이전 기록)');
+  return hwStatusRow(label, 'todo', '– 아직 안 했어요');
+}
+function openHwCard() {
+  const set = WORD_SETS.find(w => w.no === currentSet);
+  if (!set) return;
+  const last = hwLoadLast(currentName)[currentSet] || {};
+  const prog = studentProgress[currentSet] || {};
+  const noSpell = currentSet === 'review6';
+  const reps = loadReps()[currentSet] || {};
+  const repTxt = m => (reps[m] >= 2 ? ' · ' + repLabel(reps[m]) : '');
+  const rows = [];
+  if (last.wordcheck) rows.push(hwStatusRow('1 단어확인 (뜻 확인)', 'ok', '✓ 완료' + repTxt('wordcheck')));
+  else if (prog.wordcheck) rows.push(hwStatusRow('1 단어확인 (뜻 확인)', 'ok', '✓ 완료 (이전 기록)' + repTxt('wordcheck')));
+  else rows.push(hwStatusRow('1 단어확인 (뜻 확인)', 'todo', '– 아직 안 했어요'));
+  rows.push(hwScoreRow('2 단어 퀴즈', last.quiz, prog.quiz, r => r.score + ' / ' + r.total + ' (' + r.pct + '%)' + repTxt('quiz')));
+  rows.push(hwScoreRow('3 매칭게임', last.match, prog.match, r => r.score + (r.total ? ' / ' + r.total : '') + '쌍 (' + r.pct + '%)' + (r.points != null ? ' · ⭐' + r.points + '점' : '')));
+  if (!noSpell) rows.push(hwScoreRow('4 스펠쓰기', last.spell, prog.spell, r => r.score + ' / ' + r.total + ' (' + r.pct + '%) · ' + (r.diff === 'hard' ? '하드' : '이지')));
+  const done = isSetComplete(currentSet, prog);
+  // 오답 노트: 마지막 시도에서 틀린 단어(퀴즈/스펠)와 몰라요로 표시한 단어를 영어-한글 뜻과 함께 모은다
+  const tagOf = {};
+  const addTag = (en, t) => { const k = String(en).toLowerCase(); (tagOf[k] = tagOf[k] || { en, tags: [] }); if (tagOf[k].tags.indexOf(t) < 0) tagOf[k].tags.push(t); };
+  ((last.quiz && last.quiz.wrong) || []).forEach(w => addTag(w, '퀴즈'));
+  ((last.spell && last.spell.wrong) || []).forEach(w => addTag(w, '스펠'));
+  ((last.wordcheck && last.wordcheck.words) || []).forEach(w => addTag(w, '몰라요'));
+  const koOf = en => {
+    const key = String(en).toLowerCase();
+    const pools = [set.words].concat(WORD_SETS.map(s => s.words));
+    for (const ws of pools) { const f = ws.find(w => w.en.toLowerCase() === key); if (f) return f.ko; }
+    return '';
+  };
+  const wrongItems = Object.keys(tagOf).map(k => tagOf[k]);
+  const wrongHtml = wrongItems.length
+    ? '<div class="hwwrongtitle">📝 다시 볼 단어 ' + wrongItems.length + '개</div>' + wrongItems.map(it => '<div class="hwwrong"><span class="hwen">' + it.en + '</span><span class="hwko">' + koOf(it.en) + '</span><span class="hwtag">' + it.tags.join('·') + '</span></div>').join('')
+    : '';
+  const d = new Date();
+  const pad = n => (n < 10 ? '0' : '') + n;
+  const when = d.getFullYear() + '.' + pad(d.getMonth() + 1) + '.' + pad(d.getDate()) + ' ' + pad(d.getHours()) + ':' + pad(d.getMinutes());
+  document.getElementById('hwBody').innerHTML =
+    '<div class="hwhead"><div class="hwname">' + nameWithIcon(currentName) + '</div><div class="hwset">' + setLabel(set.no) + ' · ' + (typeof BOOK_DISPLAY !== 'undefined' && BOOK_DISPLAY[set.no] ? BOOK_DISPLAY[set.no].t : set.title) + '</div><div class="hwdate">' + when + '</div></div>' +
+    rows.join('') +
+    (done ? '<div class="hwfinal done">🎉 숙제 완료!</div>' : '<div class="hwfinal notyet">아직 남은 단계가 있어요</div>') +
+    wrongHtml +
+    '<div class="hwnote">마지막으로 푼 결과예요</div>';
+  document.getElementById('hwOverlay').hidden = false;
+}
+function hwPlainText() {
+  const b = document.getElementById('hwBody');
+  const t = s => (b.querySelector(s) ? b.querySelector(s).textContent.trim() : '');
+  const lines = ['[ERC 단어숙제] ' + t('.hwname') + ' · ' + t('.hwset'), t('.hwdate')];
+  b.querySelectorAll('.hwrow').forEach(r => lines.push(r.querySelector('.hwstep').textContent + ' ' + r.querySelector('.hwres').textContent));
+  lines.push(t('.hwfinal'));
+  const wr = [...b.querySelectorAll('.hwwrong')].map(r => r.querySelector('.hwen').textContent + ' ' + r.querySelector('.hwko').textContent + '(' + r.querySelector('.hwtag').textContent + ')');
+  if (wr.length) lines.push('다시 볼 단어: ' + wr.join(', '));
+  return lines.join('\n');
+}
+function copyHwText() {
+  const text = hwPlainText();
+  const btn = document.getElementById('hwCopyBtn');
+  const box = document.getElementById('hwCopyBox');
+  const done = () => { btn.textContent = '복사됐어요 ✓ 붙여넣기 하세요'; setTimeout(() => { btn.textContent = '📋 결과를 글자로 복사'; }, 2200); };
+  const manual = () => { box.value = text; box.hidden = false; box.focus(); box.select(); btn.textContent = '아래 글자를 길게 눌러 복사하세요'; };
+  const fallback = () => {
+    try { box.value = text; box.hidden = false; box.select(); const ok = document.execCommand('copy'); box.hidden = !!ok; if (ok) done(); else manual(); } catch (e) { manual(); }
+  };
+  try { navigator.clipboard.writeText(text).then(done, fallback); } catch (e) { fallback(); }
+}
+document.getElementById('hwBtn').addEventListener('click', openHwCard);
+document.getElementById('hwBtn2').addEventListener('click', openHwCard);
+document.getElementById('hwCloseBtn').addEventListener('click', () => { document.getElementById('hwOverlay').hidden = true; });
+document.getElementById('hwOverlay').addEventListener('click', e => { if (e.target.id === 'hwOverlay') document.getElementById('hwOverlay').hidden = true; });
+
+// ===== 온라인 버전: 중계(Apps Script) 연결 =====
+let onlinePin = '';
+let onlineTrial = false;
+let pinBusy = false;
+let onlineHomework = [];
+let hallCache = { at: 0, items: [] };
+
+function escHtml(s) {
+  return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+function relayPost(body) {
+  return fetch(RELAY_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(body) })
+    .then(r => r.json());
+}
+function fmtDue(d) {
+  const t = new Date(d + 'T12:00:00');
+  if (isNaN(t)) return d;
+  return (t.getMonth() + 1) + '/' + t.getDate() + '(' + ['일', '월', '화', '수', '목', '금', '토'][t.getDay()] + ')';
+}
+function fmtShort(d) {
+  const p = String(d || '').split('-');
+  return p.length === 3 ? (+p[1]) + '/' + (+p[2]) : '';
+}
+
+// --- 명단: 노션 학생 명단에서 재원 중인 학생 이름만 받아 온다 (PIN은 받지 않는다)
+function renderNamePicker() {
+  namepicker.innerHTML = '';
+  ROSTER.forEach(n => {
+    const b = document.createElement('button');
+    b.className = 'setbtn';
+    b.dataset.name = n;
+    b.textContent = nameWithIcon(n);
+    namepicker.appendChild(b);
+  });
+}
+async function loadOnlineRoster() {
+  try {
+    const r = await relayPost({ action: 'roster', level: LEVEL_CODE });
+    if (!r.ok || !r.items || !r.items.length) return;
+    ROSTER.splice(0, ROSTER.length);
+    r.items.slice().sort((x, y) => (x.trial ? 1 : 0) - (y.trial ? 1 : 0) || x.name.localeCompare(y.name)).forEach(i => { ROSTER.push(i.name); if (i.icon) NAME_ICON[i.name] = i.icon; });
+    renderNamePicker();
+  } catch (e) {}
+}
+
+// --- 로그인: PIN은 중계가 확인하고, 5번 틀리면 5분 잠근다. PIN은 이 화면의 메모리에만 둔다
+async function confirmPinOnline() {
+  if (pinBusy) return;
+  const input = document.getElementById('pinInput');
+  const typed = input.value.trim();
+  const err = document.getElementById('pinErr');
+  const btn = document.getElementById('pinConfirmBtn');
+  const say = t => { err.textContent = t; err.style.display = 'block'; };
+  if (!/^[0-9]{4}$/.test(typed)) { say('숫자 4자리를 입력해요.'); return; }
+  pinBusy = true; btn.disabled = true; btn.textContent = '확인 중…';
+  try {
+    const r = await relayPost({ action: 'login', level: LEVEL_CODE, name: pendingName, pin: typed });
+    if (r.ok) {
+      onlinePin = typed;
+      onlineTrial = !!r.trial;
+      if (r.icon) NAME_ICON[r.name] = r.icon;
+      currentName = r.name;
+      hidePinPrompt();
+      resetIdle();
+      flushOutbox();
+      openSetList();
+    } else if (r.locked) {
+      const mins = Math.max(1, Math.ceil((new Date(r.until) - new Date()) / 60000));
+      say('번호를 5번 틀려서 잠겼어요. 약 ' + mins + '분 뒤에 다시 해요.');
+      input.value = '';
+    } else if (r.wrong) {
+      say('번호가 달라요. 남은 기회 ' + r.left + '번');
+      input.value = '';
+    } else {
+      say('이름을 찾을 수 없어요. 선생님께 알려 주세요.');
+    }
+  } catch (e) {
+    say('인터넷이 연결되지 않았어요. 연결한 뒤 다시 해요.');
+  } finally {
+    pinBusy = false; btn.disabled = false; btn.textContent = '확인';
+  }
+}
+
+// --- 다른 기기에서 끝낸 세트도 초록 체크로 보이게
+async function onlineProgress() {
+  if (!onlinePin) return null;
+  try {
+    const r = await relayPost({ action: 'progress', level: LEVEL_CODE, name: currentName, pin: onlinePin });
+    if (!r.ok) return null;
+    const p = {};
+    (r.complete || []).forEach(s => { p[s] = { wordcheck: true, quiz: true, match: true, spell: true }; });
+    return p;
+  } catch (e) { return null; }
+}
+
+// --- 이번 주 숙제 (노션 '이번 주 숙제' 표)
+async function onlineAfterSetList() {
+  try {
+    const r = await relayPost({ action: 'homework', level: LEVEL_CODE });
+    onlineHomework = r.ok ? (r.items || []) : [];
+  } catch (e) { onlineHomework = []; }
+  renderHomeworkBanner();
+}
+function renderHomeworkBanner() {
+  let box = document.getElementById('hwBanner');
+  if (!box) {
+    box = document.createElement('div');
+    box.id = 'hwBanner';
+    box.className = 'hwbanner';
+    const list = document.getElementById('setListItems');
+    list.parentNode.insertBefore(box, list);
+  }
+  document.querySelectorAll('#setListItems .setrow').forEach(r => {
+    r.classList.toggle('assigned', onlineHomework.some(h => h.sets.indexOf(r.dataset.no) >= 0));
+  });
+  if (!onlineHomework.length) { box.hidden = true; return; }
+  box.hidden = false;
+  const rows = onlineHomework.slice().sort((x, y) => String(x.title).localeCompare(String(y.title)));
+  box.innerHTML = '<div class="hwbtitle">📌 이번 주 숙제</div>' + rows.map(h =>
+    '<div class="hwbrow">' + (h.title ? escHtml(h.title) + ' <span class="hwbdue">(' + escHtml(h.sets.map(s => setLabel(s)).join(', ')) + ')</span>' : escHtml(h.sets.map(s => setLabel(s)).join(', '))) +
+    (h.due ? ' <span class="hwbdue">· 마감 ' + escHtml(fmtDue(h.due)) + ' 23:59</span>' : '') + '</div>').join('');
+}
+
+// --- 명예의 전당: 이 책에서 스펠 8문제를 한 번도 안 틀린 친구들 (영문명·난이도·날짜만)
+async function renderHallForSet(setNo) {
+  let box = document.getElementById('hallBox');
+  if (!box) {
+    box = document.createElement('div');
+    box.id = 'hallBox';
+    box.className = 'hallbox';
+    const w = document.getElementById('warmupWrap');
+    w.parentNode.insertBefore(box, w);
+  }
+  try {
+    if (Date.now() - hallCache.at > 60000) {
+      const r = await relayPost({ action: 'hall', level: LEVEL_CODE });
+      if (r.ok) hallCache = { at: Date.now(), items: r.items || [] };
+    }
+  } catch (e) {}
+  if (currentSet !== setNo) return;
+  const items = hallCache.items.filter(i => i.set === setNo);
+  box.innerHTML = '<div class="hallttl">🌟 이 책의 Word Stars' + (items.length ? ' <span class="hallcnt">' + items.length + '</span>' : '') + '</div>' +
+    (items.length
+      ? '<div class="hallchips">' + items.map(i => '<span class="hallchip">' + escHtml(nameWithIcon(i.name)) + ' ' + (i.diff === '하드' ? '🔥' : '🐣') + ' <small>' + escHtml(fmtShort(i.date)) + '</small></span>').join('') + '</div>'
+      : '<div class="hallnone">스펠 8문제를 한 번도 안 틀리고 맞히면 여기에 이름이 올라가요! ✨</div>');
+}
+
+// --- 제출: 네 단계를 이 기기에서 모두 통과하면 자동 제출. 인터넷이 끊기면 모아 두었다가 다시 보낸다
+function outboxLoad() { try { return JSON.parse(localStorage.getItem('b_quiz_outbox') || '[]'); } catch (e) { return []; } }
+function outboxSave(list) { try { localStorage.setItem('b_quiz_outbox', JSON.stringify(list)); } catch (e) {} }
+
+function buildOnlinePayload(setNo) {
+  const last = hwLoadLast(currentName)[setNo] || {};
+  const reps = loadReps()[setNo] || {};
+  const noSpell = setNo === 'review6';
+  if (!last.quiz || !last.match || (!noSpell && !last.spell)) return null;
+  if (!last.quiz.passed || !last.match.passed || (!noSpell && !last.spell.passed)) return null;
+  const wrong = [];
+  (last.quiz.wrong || []).forEach(w => wrong.push(w + ' ' + wordKoLookupAny(w) + '(퀴즈)'));
+  if (!noSpell) (last.spell.wrong || []).forEach(w => wrong.push(w + ' ' + wordKoLookupAny(w) + '(스펠)'));
+  return {
+    action: 'submit', level: LEVEL_CODE, name: currentName, set: setNo,
+    submitId: LEVEL_CODE + '-' + currentName + '-' + setNo + '-' + Date.now() + '-' + Math.random().toString(36).slice(2, 8),
+    wordcheckReps: reps.wordcheck || 1, noSpell: noSpell,
+    quiz: { score: last.quiz.score, pct: last.quiz.pct, reps: last.quiz.reps || reps.quiz || 1 },
+    match: { pairs: last.match.score, pct: last.match.pct, points: last.match.points },
+    spell: noSpell ? {} : { score: last.spell.score, pct: last.spell.pct, diff: last.spell.diff, clean: !!last.spell.clean },
+    wrong: wrong
+  };
+}
+
+function showSubmitResult(wrap, r, payload) {
+  const lines = ['<div class="submittitle">✅ 선생님께 제출됐어요' + (r.attempt ? ' (' + r.attempt + '번째)' : '') + '</div>'];
+  if (r.late) lines.push('<div class="submitnote">⏰ 마감 시간이 지나서 늦게 낸 숙제로 기록됐어요.</div>');
+  if (payload.spell && payload.spell.clean) lines.push('<div class="submitnote">🌟 스펠을 한 번도 안 틀렸어요! Word Stars에 이름이 올라가요.</div>');
+  if (r.trial) lines.push('<div class="submitnote">체험 계정이라 선생님 표에는 체험으로 표시돼요.</div>');
+  wrap.innerHTML = '<div class="submitcard">' + lines.join('') + '</div>';
+  wrap.hidden = false;
+  hallCache.at = 0;
+}
+
+async function onlineRenderSubmit() {
+  const wrap = document.getElementById('submitBanner');
+  const payload = isSetComplete(currentSet, studentProgress[currentSet]) ? buildOnlinePayload(currentSet) : null;
+  if (!payload) { wrap.hidden = true; wrap.innerHTML = ''; return; }
+  wrap.hidden = false;
+  wrap.innerHTML = '<div class="submitcard"><div class="submittitle">📤 선생님께 보내는 중…</div></div>';
+  let r;
+  try {
+    r = await relayPost(Object.assign({ pin: onlinePin }, payload));
+  } catch (e) {
+    const box = outboxLoad();
+    box.push({ name: currentName, payload: payload });
+    outboxSave(box);
+    wrap.innerHTML = '<div class="submitcard"><div class="submittitle">📡 아직 못 보냈어요</div><div class="submitnote">인터넷이 연결되면 자동으로 다시 보낼게요. 이 화면을 캡처해 두어도 좋아요.</div></div>';
+    return;
+  }
+  if (r && r.ok) { showSubmitResult(wrap, r, payload); return; }
+  wrap.innerHTML = '<div class="submitcard"><div class="submittitle">⚠️ 제출이 안 됐어요</div><div class="submitnote">' +
+    (r && (r.locked || r.wrong) ? '번호 확인이 안 됐어요. 처음 화면에서 다시 들어와 주세요.' : '선생님께 결과 카드를 캡처해서 보내 주세요.') + '</div></div>';
+}
+
+let outboxBusy = false;
+async function flushOutbox() {
+  if (outboxBusy || !onlinePin || !currentName) return;
+  outboxBusy = true;
+  try {
+    let box = outboxLoad();
+    for (const item of box.filter(i => i.name === currentName)) {
+      try {
+        const r = await relayPost(Object.assign({ pin: onlinePin }, item.payload));
+        if (r && (r.ok || r.error)) box = box.filter(i => i !== item && i.payload.submitId !== item.payload.submitId);
+        outboxSave(box);
+      } catch (e) { break; }
+    }
+  } finally { outboxBusy = false; }
+}
+
+// --- 30분 동안 아무 입력이 없으면 처음 화면으로 (공용 기기에서 다른 학생으로 남지 않게)
+const IDLE_MS = 30 * 60 * 1000;
+let idleTimer = null;
+function resetIdle() {
+  clearTimeout(idleTimer);
+  if (!ONLINE || !currentName) return;
+  idleTimer = setTimeout(() => { location.reload(); }, IDLE_MS);
+}
+
+if (ONLINE) {
+  loadOnlineRoster();
+  ['pointerdown', 'keydown', 'touchstart'].forEach(ev => document.addEventListener(ev, resetIdle, { passive: true }));
+  window.addEventListener('online', flushOutbox);
+  setInterval(flushOutbox, 60000);
+  document.getElementById('nameBackBtn').addEventListener('click', () => { onlinePin = ''; clearTimeout(idleTimer); });
+}
+</script>
+
+</body></html>
+</body>
+</html>
