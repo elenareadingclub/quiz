@@ -91,6 +91,15 @@
   .hallchip small{font-weight:500; color:var(--ink-faint); font-size:11px;}
   .hallnone{font-size:12.5px; color:var(--ink-soft);}
   .submitnote{font-size:13px; color:var(--ink-soft); margin-top:4px;}
+  .netcard{max-width:460px;}
+  .netlead{font-size:14.5px; line-height:1.6; margin:0 0 10px;}
+  .netbad{font-size:14.5px; color:var(--danger); margin:0 0 8px;}
+  .netlist{margin:6px 0 12px; padding-left:20px; font-size:14px; line-height:1.7;}
+  .netnone{font-size:13.5px; color:var(--ink-soft); margin:6px 0 12px;}
+  .netrisk{background:var(--surface-2); border:1px dashed var(--line); border-radius:12px; padding:10px 12px; font-size:13px; line-height:1.6; color:var(--ink-soft);}
+  .netrisk ul{margin:4px 0 6px; padding-left:18px;}
+  .netbtns{display:flex; gap:8px; justify-content:flex-end; flex-wrap:wrap;}
+  .nettoast{position:fixed; left:50%; bottom:calc(24px + env(safe-area-inset-bottom, 0px)); transform:translateX(-50%); z-index:3000; background:var(--ink); color:var(--surface); padding:10px 16px; border-radius:12px; font-weight:700; font-size:14px; box-shadow:0 6px 20px rgba(0,0,0,.25); max-width:90vw; text-align:center;}
   .setbtn.locked{opacity:.4; filter:grayscale(1); cursor:not-allowed;}
   .wpbtn.wpmeanbtn.on{border-color:var(--accent); background:var(--accent-soft); color:var(--accent-strong);}
   .wpnav{display:none !important;}
@@ -2007,6 +2016,7 @@ function refillTiles() {
   matchActiveWords = matchActiveWords.concat(words);
   const enTiles = pendingEnTiles.splice(0, REFILL_AT);
   const koTiles = pendingKoTiles.splice(0, REFILL_AT);
+  shuffleInPlace(koTiles); // 새 영어 카드와 한글 카드가 같은 짝 자리에 들어가지 않게 섞는다
   enTiles.forEach((tile, i) => {
     tile.dataset.en = matchLeftVal(words[i]);
     tile.textContent = tileLabel(matchLeftVal(words[i]), 'en');
@@ -2016,6 +2026,19 @@ function refillTiles() {
     tile.dataset.ko = matchRightVal(words[i]);
     tile.textContent = tileLabel(matchRightVal(words[i]), 'ko');
     tile.classList.remove('done'); tile.disabled = false;
+  });
+  shuffleColumnOrder();
+}
+function shuffleInPlace(a) {
+  for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; }
+  return a;
+}
+// 두 열의 카드 위치를 무작위로 다시 섞는다 (새 카드가 어디에 생겼는지, 짝이 어디에 있는지 규칙을 찾지 못하게)
+function shuffleColumnOrder() {
+  ['.col-en', '.col-ko'].forEach(sel => {
+    const col = document.querySelector('#matchGrid ' + sel);
+    if (!col) return;
+    shuffleInPlace([...col.children]).forEach(k => col.appendChild(k));
   });
 }
 
@@ -2705,6 +2728,7 @@ function recordLast(setNo, m, data) {
     all[setNo][m] = Object.assign({ at: Date.now() }, data);
     localStorage.setItem(hwLastKey(currentName), JSON.stringify(all));
   } catch (e) {}
+  if (ONLINE) queueStage(setNo, m, data);
 }
 function hwStatusRow(label, cls, text) {
   return '<div class="hwrow ' + cls + '"><span class="hwstep">' + label + '</span><span class="hwres">' + text + '</span></div>';
@@ -2847,6 +2871,7 @@ async function confirmPinOnline() {
       onlineClass = r.cls || '';
       if (r.icon) NAME_ICON[r.name] = r.icon;
       currentName = r.name;
+      lastLoggedName = r.name;
       hidePinPrompt();
       resetIdle();
       flushOutbox();
@@ -2876,6 +2901,7 @@ async function onlineProgress() {
     if (!r.ok) return null;
     const p = {};
     (r.complete || []).forEach(s => { p[s] = { wordcheck: true, quiz: true, match: true, spell: true }; });
+    Object.keys(r.stages || {}).forEach(s => { p[s] = Object.assign(p[s] || {}, r.stages[s]); });
     return p;
   } catch (e) { return null; }
 }
@@ -2932,28 +2958,158 @@ async function renderHallForSet(setNo) {
       : '<div class="hallnone">스펠 8문제를 한 번도 안 틀리고 맞히면 여기에 이름이 올라가요! ✨</div>');
 }
 
-// --- 제출: 네 단계를 이 기기에서 모두 통과하면 자동 제출. 인터넷이 끊기면 모아 두었다가 다시 보낸다
-function outboxLoad() { try { return JSON.parse(localStorage.getItem('b_quiz_outbox') || '[]'); } catch (e) { return []; } }
-function outboxSave(list) { try { localStorage.setItem('b_quiz_outbox', JSON.stringify(list)); } catch (e) {} }
+// --- 기록 보내기: 단계(단어확인·퀴즈·매칭·스펠)를 끝낼 때마다 먼저 이 기기에 보관하고 바로 보낸다.
+//     서버가 받았다고(ok) 하거나, 다시 보내도 소용없는 오류일 때만 보관함에서 지운다.
+//     인터넷 끊김·서버 바쁨·서버 오류면 남겨 두었다가 다시 보낸다. 네 단계가 모두 통과되면 서버가 숙제 완료를 만든다.
+// 이 기기에 저장할 수 없으면(사생활 보호 모드·저장 공간 부족) 화면이 열려 있는 동안만 메모리에 둔다
+let memOutbox = null;
+let storageBroken = false;
+function outboxLoad() {
+  if (memOutbox) return memOutbox.slice();
+  try { return JSON.parse(localStorage.getItem('b_quiz_outbox') || '[]'); } catch (e) { return []; }
+}
+function outboxSave(list) {
+  try { localStorage.setItem('b_quiz_outbox', JSON.stringify(list)); memOutbox = null; storageBroken = false; return true; }
+  catch (e) { memOutbox = list.slice(); storageBroken = true; return false; }
+}
+const RETRY_ERRORS = ['server_error', 'busy'];
+const stageResults = {};
+const lastEventBySet = {};
+let authProblem = false;
 
-function buildOnlinePayload(setNo) {
-  const last = hwLoadLast(currentName)[setNo] || {};
+// --- 연결 문제 안내 팝업: 무슨 문제인지, 어떤 기록이 보관 중인지, 어떤 경우에 사라지는지
+const STAGE_NAME = { wordcheck: '단어확인', quiz: '단어 퀴즈', match: '매칭게임', spell: '스펠쓰기' };
+let netIncident = '';
+let lastLoggedName = '';
+function pendingMine(name) { const n = name || currentName; return outboxLoad().filter(i => i.name === n); }
+function describePending(i) {
+  const p = i.payload || {};
+  const t = new Date(i.at || Date.now());
+  const hm = (t.getHours() < 10 ? '0' : '') + t.getHours() + ':' + (t.getMinutes() < 10 ? '0' : '') + t.getMinutes();
+  if (p.action === 'submit') return setLabel(p.set) + ' · 숙제 완료 기록 (' + hm + ')';
+  const score = p.stage === 'wordcheck' ? '모두 확인' : (p.score + ' / ' + p.total + (p.stage === 'match' ? '쌍' : ''));
+  return setLabel(p.set) + ' · ' + (STAGE_NAME[p.stage] || p.stage) + ' ' + score + ' (' + hm + ')';
+}
+function ensureNetPopup() {
+  let ov = document.getElementById('netPopup');
+  if (ov) return ov;
+  ov = document.createElement('div');
+  ov.id = 'netPopup';
+  ov.className = 'wordpreview-overlay';
+  ov.hidden = true;
+  ov.setAttribute('role', 'alertdialog');
+  ov.setAttribute('aria-modal', 'true');
+  ov.innerHTML = '<div class="wordpreview-card netcard"><div class="wordpreview-top"><span id="netTitle"></span></div>' +
+    '<div class="wordpreview-list" id="netBody"></div>' +
+    '<div class="wordpreview-footer netbtns"><button class="secondary" id="netRetry">🔄 지금 다시 보내기</button><button class="primary" id="netOk">알겠어요</button></div></div>';
+  document.body.appendChild(ov);
+  document.getElementById('netOk').addEventListener('click', () => { ov.hidden = true; });
+  document.getElementById('netRetry').addEventListener('click', async () => {
+    const btn = document.getElementById('netRetry');
+    btn.disabled = true; btn.textContent = '보내는 중…';
+    await flushOutbox();
+    btn.disabled = false; btn.textContent = '🔄 지금 다시 보내기';
+    if (!pendingMine().length) ov.hidden = true; else showNetProblem(netIncident || 'offline', true);
+  });
+  return ov;
+}
+function showNetProblem(kind, force) {
+  if (!ONLINE) return;
+  if (netIncident === kind && !force) return;      // 같은 문제로 팝업을 계속 띄우지 않는다
+  netIncident = kind;
+  const ov = ensureNetPopup();
+  const items = pendingMine(kind === 'leaving' ? lastLoggedName : '');
+  const list = items.length
+    ? '<ul class="netlist">' + items.map(i => '<li>' + escHtml(describePending(i)) + '</li>').join('') + '</ul>'
+    : '<div class="netnone">지금 보관 중인 기록은 없어요.</div>';
+  const risk = '<div class="netrisk"><b>⚠️ 이럴 때는 보관한 기록이 사라질 수 있어요</b><ul>' +
+    '<li>보내기 전에 이 기기의 인터넷 사용 기록(사이트 데이터)을 지울 때</li>' +
+    '<li>보내기 전에 다른 기기로 바꿔서 이어 할 때 (보관한 기록은 이 기기에만 있어요)</li></ul>' +
+    '<div>걱정되면 결과 카드를 캡처해 두세요.</div></div>';
+  let title = '', body = '';
+  if (kind === 'storage') {
+    title = '⚠️ 이 기기에 기록을 보관할 수 없어요';
+    body = '<p class="netlead">인터넷이 끊겼는데, 이 기기는 기록을 저장할 수 없는 상태예요 (사생활 보호 모드이거나 저장 공간이 꽉 찼어요).</p>' +
+      '<p class="netbad"><b>아래 기록은 이 화면을 닫거나 새로 고치면 사라져요.</b> 화면을 그대로 두면 인터넷이 돌아올 때 보낼게요.</p>' + list +
+      '<p>지금 결과 카드를 캡처해서 선생님께 보내 주세요.</p>';
+  } else if (kind === 'auth') {
+    title = '🔒 번호 확인이 필요해요';
+    body = '<p class="netlead">번호가 맞지 않아서 기록을 보내지 못했어요. <b>기록은 사라지지 않았어요</b> — 이 기기에 보관 중이에요.</p>' + list +
+      '<p>처음 화면에서 내 이름을 누르고 번호를 다시 넣으면 자동으로 보내요. 번호를 모르면 선생님께 물어보세요.</p>' + risk;
+  } else if (kind === 'server') {
+    title = '⏳ 선생님 기록장이 잠깐 대답하지 않아요';
+    body = '<p class="netlead">인터넷은 연결돼 있지만 기록장(서버)이 바쁘거나 잠깐 멈췄어요. <b>기록은 사라지지 않았어요</b> — 이 기기에 보관 중이고 1분마다 다시 보내요.</p>' + list + risk;
+  } else if (kind === 'leaving') {
+    title = '📦 아직 못 보낸 기록이 있어요';
+    body = '<p class="netlead"><b>' + escHtml(lastLoggedName) + '</b>의 기록 ' + items.length + '개가 이 기기에 보관 중이에요. 이 기기에서 <b>같은 이름으로 다시 들어오면</b> 자동으로 보내요.</p>' + list + risk;
+  } else {
+    title = '📡 인터넷이 끊겼어요';
+    body = '<p class="netlead">지금 하던 활동은 계속할 수 있어요. 끝낸 기록은 <b>사라지지 않고</b> 이 기기에 보관했다가, 인터넷이 다시 연결되면 자동으로 선생님께 보내요.</p>' + list + risk;
+  }
+  document.getElementById('netTitle').textContent = title;
+  document.getElementById('netBody').innerHTML = body;
+  document.getElementById('netRetry').hidden = (kind === 'auth' || kind === 'leaving');
+  ov.hidden = false;
+}
+function showNetSent(n) {
+  netIncident = '';
+  const ov = document.getElementById('netPopup');
+  if (ov) ov.hidden = true;
+  const t = document.createElement('div');
+  t.className = 'nettoast';
+  t.textContent = '✅ 보관했던 기록 ' + n + '개를 선생님께 보냈어요';
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 3500);
+}
+
+function queueStage(setNo, m, d) {
+  if (!currentName) return;
   const reps = loadReps()[setNo] || {};
-  const noSpell = setNo === 'review6';
-  if (!last.quiz || !last.match || (!noSpell && !last.spell)) return null;
-  if (!last.quiz.passed || !last.match.passed || (!noSpell && !last.spell.passed)) return null;
-  const wrong = [];
-  (last.quiz.wrong || []).forEach(w => wrong.push(w + ' ' + wordKoLookupAny(w) + '(퀴즈)'));
-  if (!noSpell) (last.spell.wrong || []).forEach(w => wrong.push(w + ' ' + wordKoLookupAny(w) + '(스펠)'));
-  return {
-    action: 'submit', level: LEVEL_CODE, name: currentName, set: setNo,
-    submitId: LEVEL_CODE + '-' + currentName + '-' + setNo + '-' + Date.now() + '-' + Math.random().toString(36).slice(2, 8),
-    wordcheckReps: reps.wordcheck || 1, noSpell: noSpell,
-    quiz: { score: last.quiz.score, pct: last.quiz.pct, reps: last.quiz.reps || reps.quiz || 1 },
-    match: { pairs: last.match.score, pct: last.match.pct, points: last.match.points },
-    spell: noSpell ? {} : { score: last.spell.score, pct: last.spell.pct, diff: last.spell.diff, clean: !!last.spell.clean },
-    wrong: wrong
+  const tag = m === 'spell' ? '(스펠)' : '(퀴즈)';
+  const wrong = (d.wrong || []).map(w => w + ' ' + wordKoLookupAny(w) + tag);
+  const evt = {
+    action: 'stage', level: LEVEL_CODE, name: currentName, set: setNo, stage: m,
+    eventId: LEVEL_CODE + '-' + currentName + '-' + setNo + '-' + m + '-' + Date.now() + '-' + Math.random().toString(36).slice(2, 8),
+    noSpell: setNo === 'review6', score: d.score, total: d.total, diff: d.diff, clean: !!d.clean, points: d.points, wrong: wrong,
+    reps: m === 'wordcheck' ? (reps.wordcheck || 1) : m === 'quiz' ? (d.reps || reps.quiz || 1) : null
   };
+  const box = outboxLoad();
+  box.push({ name: currentName, payload: evt, at: Date.now() });
+  if (!outboxSave(box) && navigator.onLine === false) showNetProblem('storage');
+  lastEventBySet[setNo] = evt.eventId;
+  flushOutbox();
+}
+function outboxItemId(item) { return item.payload.eventId || item.payload.submitId; }
+function outboxDrop(id) { outboxSave(outboxLoad().filter(i => outboxItemId(i) !== id)); }
+
+let outboxRun = null;
+function flushOutbox() {
+  if (!onlinePin || !currentName) return Promise.resolve();
+  if (outboxRun) return outboxRun;
+  const run = (async () => {
+    await null;                                                         // 항상 한 박자 쉬고 시작 (아래 끝남 표시가 먼저 일어나지 않게)
+    const tried = new Set();
+    let sent = 0;
+    {
+      while (true) {
+        const item = outboxLoad().find(i => i.name === currentName && !tried.has(outboxItemId(i)));
+        if (!item) break;
+        const id = outboxItemId(item);
+        tried.add(id);
+        let r;
+        try { r = await relayPost(Object.assign({ pin: onlinePin }, item.payload)); }
+        catch (e) { showNetProblem(storageBroken ? 'storage' : 'offline'); break; }   // 인터넷 끊김: 남겨 두고 다음에
+        if (r && r.ok) { stageResults[id] = r; outboxDrop(id); authProblem = false; sent++; continue; }
+        if (r && (r.wrong || r.locked)) { authProblem = true; showNetProblem('auth'); break; }  // 번호 문제: 남겨 두고, 다시 로그인하면 보낸다
+        if (!r || RETRY_ERRORS.indexOf(r.error) >= 0) { showNetProblem('server'); break; }   // 서버 바쁨·일시 오류: 남겨 두고 다음에
+        stageResults[id] = r; outboxDrop(id);                           // 다시 보내도 소용없는 오류(잘못된 세트 등)
+      }
+      if (netIncident && sent > 0 && !pendingMine().length) showNetSent(sent);
+    }
+  })();
+  outboxRun = run;
+  run.catch(() => {}).then(() => { if (outboxRun === run) outboxRun = null; });
+  return run;
 }
 
 function showSubmitResult(wrap, r, payload) {
@@ -2968,39 +3124,30 @@ function showSubmitResult(wrap, r, payload) {
 
 async function onlineRenderSubmit() {
   const wrap = document.getElementById('submitBanner');
-  const payload = isSetComplete(currentSet, studentProgress[currentSet]) ? buildOnlinePayload(currentSet) : null;
-  if (!payload) { wrap.hidden = true; wrap.innerHTML = ''; return; }
-  wrap.hidden = false;
-  wrap.innerHTML = '<div class="submitcard"><div class="submittitle">📤 선생님께 보내는 중…</div></div>';
-  let r;
-  try {
-    r = await relayPost(Object.assign({ pin: onlinePin }, payload));
-  } catch (e) {
-    const box = outboxLoad();
-    box.push({ name: currentName, payload: payload });
-    outboxSave(box);
-    wrap.innerHTML = '<div class="submitcard"><div class="submittitle">📡 아직 못 보냈어요</div><div class="submitnote">인터넷이 연결되면 자동으로 다시 보낼게요. 이 화면을 캡처해 두어도 좋아요.</div></div>';
+  const set = currentSet;
+  const id = lastEventBySet[set];
+  const hide = () => { wrap.hidden = true; wrap.innerHTML = ''; };
+  if (!id) { hide(); return; }
+  await flushOutbox();
+  if (currentSet !== set) return;
+  const r = stageResults[id];
+  if (r && r.submission && r.submission.complete !== false) {
+    const last = hwLoadLast(currentName)[set] || {};
+    showSubmitResult(wrap, r.submission, { spell: { clean: !!(last.spell && last.spell.clean) } });
     return;
   }
-  if (r && r.ok) { showSubmitResult(wrap, r, payload); return; }
-  wrap.innerHTML = '<div class="submitcard"><div class="submittitle">⚠️ 제출이 안 됐어요</div><div class="submitnote">' +
-    (r && (r.locked || r.wrong) ? '번호 확인이 안 됐어요. 처음 화면에서 다시 들어와 주세요.' : '선생님께 결과 카드를 캡처해서 보내 주세요.') + '</div></div>';
-}
-
-let outboxBusy = false;
-async function flushOutbox() {
-  if (outboxBusy || !onlinePin || !currentName) return;
-  outboxBusy = true;
-  try {
-    let box = outboxLoad();
-    for (const item of box.filter(i => i.name === currentName)) {
-      try {
-        const r = await relayPost(Object.assign({ pin: onlinePin }, item.payload));
-        if (r && (r.ok || r.error)) box = box.filter(i => i !== item && i.payload.submitId !== item.payload.submitId);
-        outboxSave(box);
-      } catch (e) { break; }
-    }
-  } finally { outboxBusy = false; }
+  if (outboxLoad().some(i => outboxItemId(i) === id)) {
+    wrap.innerHTML = '<div class="submitcard"><div class="submittitle">📡 이 기록은 아직 못 보냈어요</div><div class="submitnote">' +
+      (authProblem ? '번호 확인이 안 됐어요. 처음 화면에서 다시 들어오면 자동으로 보내요.' : '인터넷이 연결되면 자동으로 다시 보낼게요. 지우지 않고 이 기기에 보관해요.') + '</div></div>';
+    wrap.hidden = false;
+    return;
+  }
+  if (r && !r.ok) {
+    wrap.innerHTML = '<div class="submitcard"><div class="submittitle">⚠️ 기록이 안 됐어요</div><div class="submitnote">선생님께 결과 카드를 캡처해서 보내 주세요.</div></div>';
+    wrap.hidden = false;
+    return;
+  }
+  hide();
 }
 
 // --- 30분 동안 아무 입력이 없으면 처음 화면으로 (공용 기기에서 다른 학생으로 남지 않게)
@@ -3017,7 +3164,11 @@ if (ONLINE) {
   ['pointerdown', 'keydown', 'touchstart'].forEach(ev => document.addEventListener(ev, resetIdle, { passive: true }));
   window.addEventListener('online', flushOutbox);
   setInterval(flushOutbox, 60000);
-  document.getElementById('nameBackBtn').addEventListener('click', () => { onlinePin = ''; onlineClass = ''; clearTimeout(idleTimer); });
+  document.getElementById('nameBackBtn').addEventListener('click', () => {
+    onlinePin = ''; onlineClass = ''; clearTimeout(idleTimer);
+    if (lastLoggedName && pendingMine(lastLoggedName).length) showNetProblem('leaving', true);
+  });
+  window.addEventListener('offline', () => { if (currentName) showNetProblem(storageBroken ? 'storage' : 'offline'); });
 }
 </script>
 
