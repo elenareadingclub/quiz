@@ -670,6 +670,40 @@
   .jobans .jobtok{border-color:var(--accent); background:var(--accent-soft);}
   .jobtok.shake{animation:phshake .35s;}
   .jobmsg{margin-top:10px; font-size:14px; font-weight:700; text-align:center; min-height:22px;}
+
+  .pksvg{width:100%; height:auto; display:block;}
+  .pksvg .pkbg{fill:#FFFDF4; stroke:var(--line); stroke-width:2;}
+  .pksvg .pkl{fill:#5FB04F; stroke:#2F5D2A; stroke-width:1.6; stroke-linejoin:round;}
+  .pksvg .pkv{fill:none; stroke:#2F5D2A; stroke-width:1.2; stroke-linecap:round;}
+  .pksvg .pkvine{fill:none; stroke:#3E8E3A; stroke-width:3.5; stroke-linecap:round;}
+  .pksvg .pkvine.thin{stroke-width:1.6; stroke:#2F5D2A;}
+  .pksvg .pksoil{fill:#9A5B26;}
+  .pksvg .pkseed{fill:#FFF3C4; stroke:#6B5A2A; stroke-width:1.8;}
+  .pksvg .pkarc{fill:none; stroke:#8A7A5A; stroke-width:1.6; stroke-linecap:round;}
+  .pksvg .pkf{fill:#FFD54A; stroke:#B58900; stroke-width:1;}
+  .pksvg .pkfc{fill:#E8A400;}
+  .pksvg .pkg{fill:#A8CC4E; stroke:#4C6A1C; stroke-width:1.8;}
+  .pksvg .pko{fill:#F39C32; stroke:#9A5A10; stroke-width:2;}
+  .pksvg .pkr{fill:none; stroke:#7A4A10; stroke-width:1.4; stroke-linecap:round;}
+  .pksvg .pks{fill:none; stroke:#5A7A28; stroke-width:3; stroke-linecap:round;}
+  .pksvg .pktin{fill:#C08A5A; stroke:#7A4E2A; stroke-width:2; stroke-linejoin:round;}
+  .pksvg .pkpie{fill:#F0C08A; stroke:#9A5A10; stroke-width:2;}
+  .pksvg .pkpie2{fill:#E8A04C; stroke:#9A5A10; stroke-width:1.4;}
+  .pksvg .pkcrust{fill:#F0C08A; stroke:#9A5A10; stroke-width:1.4;}
+
+  .stgrid{display:grid; grid-template-columns:repeat(2,1fr); gap:10px; margin-top:10px;}
+  .stcard,.stslot{position:relative; border:2px solid var(--line); border-radius:14px; padding:6px; background:var(--surface-2); cursor:pointer; text-align:center; font-family:inherit; color:var(--ink);}
+  .stnum{position:absolute; top:8px; left:8px; z-index:2; width:22px; height:22px; border-radius:50%; background:var(--accent); color:#fff; font:700 12px/22px "IBM Plex Mono",monospace; text-align:center;}
+  .stcap{font-family:"Andika","Baloo 2",sans-serif; font-weight:700; font-size:13.5px; min-height:36px; margin-top:4px; line-height:1.3;}
+  .stko{display:block; font-family:"IBM Plex Sans KR",sans-serif; font-size:11.5px; color:var(--accent-strong); font-weight:600; margin-top:2px;}
+  .stcard.seen,.stslot.ok{border-color:var(--accent); background:var(--accent-soft);}
+  .stslot.over{border-color:var(--gold); background:var(--gold-soft);}
+  .stslot.playing{outline:3px solid var(--gold);}
+  .stchips{display:flex; flex-direction:column; gap:8px; margin-top:14px;}
+  .stchip{font-family:"Andika","Baloo 2",sans-serif; font-weight:700; font-size:16px; padding:10px 14px; border-radius:12px; border:2px solid var(--line); background:var(--surface); color:var(--ink); cursor:grab; touch-action:none; user-select:none; text-align:left;}
+  .stchip.sel{border-color:var(--gold); background:var(--gold-soft);}
+  .stchip.shake{animation:phshake .35s;}
+  .stghost{max-width:80vw; font-size:15px;}
   footer{margin-top:20px; text-align:center; font-size:11px; color:var(--ink-faint);}
 </style>
 
@@ -3048,6 +3082,20 @@ const EXTRAS = {
         { id: 'counselor', en: 'a counselor', ko: '상담사', e: '💬' },
         { id: 'programmer', en: 'a programmer', ko: '프로그래머', e: '💻' },
         { id: 'judge', en: 'a judge', ko: '판사', e: '⚖️' } ]
+    },
+    story: {
+      title: '🎃 그림과 문장 연결하기',
+      hint: 'How a pumpkin grows',
+      lead: '호박이 자라는 8장면을 그림과 문장으로 연결해 봐요.',
+      steps: [
+        { n: 1, s: 'Put a pumpkin seed in the soil.', ko: '호박씨를 흙에 심어요.' },
+        { n: 2, s: 'A little sprout comes up.', ko: '작은 싹이 올라와요.' },
+        { n: 3, s: 'The vine gets longer.', ko: '덩굴이 길어져요.' },
+        { n: 4, s: 'Yellow flowers open on the vine.', ko: '덩굴에 노란 꽃이 피어요.' },
+        { n: 5, s: 'A small green pumpkin begins to grow.', ko: '작고 푸른 호박이 자라기 시작해요.' },
+        { n: 6, s: 'The pumpkin turns orange.', ko: '호박이 주황색이 돼요.' },
+        { n: 7, s: 'The big pumpkin is ready to pick.', ko: '큰 호박을 딸 준비가 됐어요.' },
+        { n: 8, s: 'Bake a pumpkin pie!', ko: '호박 파이를 구워요!' } ]
     }
   }
 };
@@ -3540,6 +3588,222 @@ function jobsMain() {
   if (exPhase === 'j4') { openModeScreen(currentSet); return; }
 }
 
+
+function pkLeaf(x, y, s, r) {
+  return '<g transform="translate(' + x + ' ' + y + ') rotate(' + r + ') scale(' + s + ')"><path class="pkl" d="M0 0 C-15 -9 -15 -27 0 -35 C15 -27 15 -9 0 0 Z"/><path class="pkv" d="M0 -2 L0 -28"/></g>';
+}
+function pkFlower(x, y, s) {
+  let p = '';
+  for (let a = 0; a < 360; a += 72) p += '<ellipse class="pkf" cx="0" cy="-9" rx="5.5" ry="10" transform="rotate(' + a + ')"/>';
+  return '<g transform="translate(' + x + ' ' + y + ') scale(' + s + ')">' + p + '<circle class="pkfc" r="4"/></g>';
+}
+function pkRidges(cx, cy, rx, ry) {
+  const k = [-0.55, -0.2, 0.2, 0.55];
+  return k.map(t => '<path class="pkr" d="M' + (cx + rx * t * 0.35) + ' ' + (cy - ry * 0.92) + ' C' + (cx + rx * t * 1.3) + ' ' + (cy - ry * 0.3) + ' ' + (cx + rx * t * 1.3) + ' ' + (cy + ry * 0.3) + ' ' + (cx + rx * t * 0.35) + ' ' + (cy + ry * 0.92) + '"/>').join('');
+}
+function pkVine(y) {
+  const d = y || 0;
+  return '<path class="pkvine" d="M12 ' + (80 + d) + ' C38 ' + (60 + d) + ' 58 ' + (94 + d) + ' 88 ' + (76 + d) + ' C110 ' + (62 + d) + ' 128 ' + (72 + d) + ' 148 ' + (66 + d) + '"/>' +
+    '<path class="pkvine thin" d="M12 ' + (80 + d) + ' C4 ' + (72 + d) + ' 6 ' + (56 + d) + ' 20 ' + (58 + d) + ' C28 ' + (60 + d) + ' 24 ' + (70 + d) + ' 16 ' + (68 + d) + '"/>';
+}
+function pumpkinScene(n) {
+  const open = '<svg class="pksvg" viewBox="0 0 160 120" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="호박이 자라는 그림 ' + n + '"><rect class="pkbg" x="1" y="1" width="158" height="118" rx="9"/>';
+  let b = '';
+  if (n === 1) {
+    b = '<path class="pksoil" d="M1 94 C20 80 40 78 56 90 C70 100 90 100 104 88 C120 76 140 80 159 90 V111 a8 8 0 0 1 -8 8 H9 a8 8 0 0 1 -8 -8 Z"/>' +
+      '<ellipse class="pkseed" cx="84" cy="44" rx="14" ry="9" transform="rotate(-35 84 44)"/>' +
+      '<path class="pkr" d="M76 49 C82 44 88 40 94 36"/>' +
+      '<path class="pkarc" d="M100 24 C112 14 124 14 134 20 M104 34 C114 28 122 28 130 32"/>';
+  } else if (n === 2) {
+    b = '<path class="pksoil" d="M1 98 C30 92 60 94 90 98 C120 96 140 94 159 96 V111 a8 8 0 0 1 -8 8 H9 a8 8 0 0 1 -8 -8 Z"/>' +
+      '<path class="pks" d="M82 98 V60"/>' + pkLeaf(82, 66, 0.8, -62) + pkLeaf(82, 66, 0.8, 62) + pkLeaf(82, 56, 0.6, 0);
+  } else if (n === 3) {
+    b = pkVine(0) + pkLeaf(36, 68, 1, -55) + pkLeaf(60, 84, 1, 150) + pkLeaf(92, 74, 1.15, -25) + pkLeaf(124, 68, 0.95, 45);
+  } else if (n === 4) {
+    b = pkVine(0) + pkLeaf(34, 70, 0.95, -55) + pkLeaf(62, 86, 0.95, 150) + pkLeaf(124, 70, 0.95, 40) + pkFlower(70, 62, 1.15) + pkFlower(104, 56, 0.9);
+  } else if (n === 5) {
+    b = pkVine(-10) + pkLeaf(34, 58, 0.95, -55) + pkLeaf(66, 74, 0.95, 150) + pkLeaf(132, 56, 0.95, 40) +
+      '<ellipse class="pkg" cx="98" cy="92" rx="14" ry="11"/>' + pkRidges(98, 92, 14, 11) + '<path class="pks" d="M98 82 C98 76 100 72 104 70"/>';
+  } else if (n === 6) {
+    b = pkVine(-14) + pkLeaf(32, 54, 0.95, -55) + pkLeaf(66, 70, 0.95, 150) + pkLeaf(134, 52, 1, 40) +
+      '<ellipse class="pko" cx="100" cy="92" rx="24" ry="19"/>' + pkRidges(100, 92, 24, 19) + '<path class="pks" d="M100 74 C100 68 103 65 107 64"/>';
+  } else if (n === 7) {
+    b = '<path class="pkvine" d="M10 44 C40 34 70 56 100 44 C120 36 136 42 150 38"/>' + pkLeaf(34, 44, 0.95, -55) + pkLeaf(72, 62, 0.85, 150) +
+      '<ellipse class="pko" cx="86" cy="84" rx="40" ry="30"/>' + pkRidges(86, 84, 40, 30) + '<path class="pks" d="M86 55 C86 48 90 44 96 43"/>' + pkLeaf(116, 66, 1.35, 35);
+  } else {
+    let crust = '';
+    for (let i = 0; i < 9; i++) crust += '<circle class="pkcrust" cx="' + (38 + i * 10.5) + '" cy="' + (66 + (i % 2) * 1.5) + '" r="6"/>';
+    b = '<path class="pktin" d="M26 70 L38 104 H122 L134 70 Z"/><path class="pkr" d="M52 76 L56 102 M72 78 L74 102 M92 78 L90 102 M110 76 L106 102"/>' +
+      '<ellipse class="pkpie" cx="80" cy="68" rx="56" ry="19"/>' + crust + '<ellipse class="pkpie2" cx="80" cy="68" rx="42" ry="12"/>' +
+      '<path class="pkr" d="M80 68 L80 62 M80 68 L86 65 M80 68 L74 65 M80 68 L84 73 M80 68 L76 73"/>';
+  }
+  return open + b + '</svg>';
+}
+
+/* ===== 그림과 문장 연결하기 (How a pumpkin grows) ===== */
+let stSeen = new Set(), stSel = null, stPlaced = {}, stMistakes = 0, stDragBound = false, stDrag = null, stTimer = null;
+
+function renderStory() {
+  stSeen = new Set(); stSel = null; stPlaced = {}; stMistakes = 0;
+  clearTimeout(stTimer);
+  exPhase = 's1';
+  phShow();
+  exEl('exStage').textContent = 'STEP 1 · 그림 보고 문장 읽기';
+  exEl('exLead').textContent = '호박이 자라는 이야기예요. 그림을 눌러 문장을 읽어 보세요. 소리도 들려요!';
+  exEl('exLearn').innerHTML = '<div class="stgrid">' + exConf.steps.map(s =>
+    '<button class="stcard" data-n="' + s.n + '"><span class="stnum">' + s.n + '</span>' + pumpkinScene(s.n) + '<div class="stcap">&nbsp;</div></button>').join('') + '</div>';
+  exEl('exLearn').querySelectorAll('.stcard').forEach(card => card.addEventListener('click', () => {
+    const s = exConf.steps.find(x => x.n === parseInt(card.dataset.n, 10));
+    card.classList.add('seen');
+    card.querySelector('.stcap').innerHTML = s.s + '<span class="stko">' + s.ko + '</span>';
+    speak(s.s); stSeen.add(s.n); updateStoryLearn();
+  }));
+  updateStoryLearn();
+}
+
+function updateStoryLearn() {
+  const n = stSeen.size, total = exConf.steps.length;
+  exEl('exCount').textContent = n + ' / ' + total + ' 읽어봄';
+  const b = exEl('exMainBtn');
+  b.hidden = false; b.disabled = n < total;
+  b.textContent = n < total ? '그림을 모두 눌러 보세요 (' + n + '/' + total + ')' : '다음: 문장과 그림 연결하기 →';
+}
+
+function renderStoryMatch() {
+  stSel = null; stPlaced = {}; stMistakes = 0;
+  exPhase = 's2';
+  phShow();
+  exEl('exStage').textContent = 'STEP 2 · 문장과 그림 연결하기';
+  exEl('exLead').textContent = '문장을 끌어서 (또는 눌러서) 알맞은 그림에 놓아요.';
+  exEl('exLearn').innerHTML = '<div class="stgrid">' + exConf.steps.map(s =>
+    '<div class="stslot" data-n="' + s.n + '"><span class="stnum">' + s.n + '</span>' + pumpkinScene(s.n) + '<div class="stcap" id="stCap_' + s.n + '">&nbsp;</div></div>').join('') + '</div>' +
+    '<div class="stchips" id="stChips">' + exShuffle(exConf.steps.slice()).map(s => '<div class="stchip" data-n="' + s.n + '">' + s.s + '</div>').join('') + '</div>' +
+    '<div class="phmsg" id="stMsg"></div>';
+  exEl('exMainBtn').hidden = true;
+  updateStoryCount();
+  exEl('exLearn').querySelectorAll('.stslot').forEach(sl => sl.addEventListener('click', () => {
+    if (stSel) stTryPlace(stSel, parseInt(sl.dataset.n, 10));
+  }));
+  if (!stDragBound) {
+    stDragBound = true;
+    document.addEventListener('pointermove', stPointerMove);
+    document.addEventListener('pointerup', stPointerUp);
+  }
+  exEl('stChips').addEventListener('pointerdown', e => {
+    const chip = e.target.closest('.stchip');
+    if (!chip || chip.classList.contains('placed')) return;
+    stDrag = { chip: chip, sx: e.clientX, sy: e.clientY, moved: false, ghost: null };
+  });
+}
+
+function stPointerMove(e) {
+  if (!stDrag) return;
+  if (!stDrag.moved && Math.hypot(e.clientX - stDrag.sx, e.clientY - stDrag.sy) > 8) {
+    stDrag.moved = true;
+    const g = stDrag.chip.cloneNode(true);
+    g.className = 'stchip phghost stghost';
+    document.body.appendChild(g);
+    stDrag.ghost = g;
+  }
+  if (stDrag.moved && stDrag.ghost) {
+    stDrag.ghost.style.left = e.clientX + 'px';
+    stDrag.ghost.style.top = e.clientY + 'px';
+    const under = document.elementFromPoint ? document.elementFromPoint(e.clientX, e.clientY) : null;
+    document.querySelectorAll('.stslot').forEach(b => b.classList.toggle('over', !!(under && under.closest && under.closest('.stslot') === b)));
+  }
+}
+
+function stPointerUp(e) {
+  if (!stDrag) return;
+  const d = stDrag; stDrag = null;
+  document.querySelectorAll('.stslot').forEach(b => b.classList.remove('over'));
+  if (d.moved) {
+    if (d.ghost) d.ghost.remove();
+    const under = document.elementFromPoint ? document.elementFromPoint(e.clientX, e.clientY) : null;
+    const sl = under && under.closest ? under.closest('.stslot') : null;
+    if (sl) stTryPlace(d.chip, parseInt(sl.dataset.n, 10));
+  } else {
+    const was = d.chip.classList.contains('sel');
+    document.querySelectorAll('.stchip.sel').forEach(c => c.classList.remove('sel'));
+    if (was) { stSel = null; } else {
+      d.chip.classList.add('sel'); stSel = d.chip;
+      const s = exConf.steps.find(x => x.n === parseInt(d.chip.dataset.n, 10));
+      speak(s.s);
+    }
+  }
+}
+
+function updateStoryCount() {
+  exEl('exCount').textContent = '연결한 문장 ' + Object.keys(stPlaced).length + ' / ' + exConf.steps.length;
+}
+
+function stTryPlace(chip, slotN) {
+  if (chip.classList.contains('placed')) return;
+  const n = parseInt(chip.dataset.n, 10);
+  const s = exConf.steps.find(x => x.n === n);
+  const msg = exEl('stMsg');
+  if (n === slotN) {
+    chip.classList.add('placed'); chip.classList.remove('sel'); chip.style.display = 'none';
+    stSel = null;
+    stPlaced[n] = true;
+    const sl = exEl('exLearn').querySelector('.stslot[data-n="' + n + '"]');
+    sl.classList.add('ok');
+    exEl('stCap_' + n).innerHTML = s.s + '<span class="stko">' + s.ko + '</span>';
+    try { playCorrect(); } catch (e) {}
+    speak(s.s);
+    msg.style.color = 'var(--accent-strong)';
+    msg.textContent = '⭕ ' + n + '번 그림과 맞아요!';
+    updateStoryCount();
+    if (Object.keys(stPlaced).length === exConf.steps.length) finishStory();
+  } else {
+    stMistakes++;
+    chip.classList.add('shake'); setTimeout(() => chip.classList.remove('shake'), 400);
+    try { playWrong(); } catch (e) {}
+    msg.style.color = 'var(--danger)';
+    msg.textContent = '❌ 이 문장은 다른 그림이에요. 그림을 다시 살펴봐요!';
+    speak(s.s);
+  }
+}
+
+async function finishStory() {
+  exPhase = 's3';
+  const msg = exEl('stMsg');
+  msg.style.color = 'var(--accent-strong)';
+  msg.textContent = '🎉 이야기가 완성됐어요!' + (stMistakes ? ' (틀린 횟수 ' + stMistakes + ')' : ' 한 번도 안 틀렸어요!');
+  exEl('exLearn').insertAdjacentHTML('beforeend', '<button class="secondary" id="stPlay" style="width:100%;margin-top:12px;">▶ 이야기 처음부터 들려주기</button>');
+  exEl('stPlay').addEventListener('click', playStory);
+  const b = exEl('exMainBtn');
+  b.hidden = false; b.disabled = false; b.textContent = '모드 선택으로 →';
+  try { launchConfetti(); playCelebrationSound(); } catch (e) {}
+  markLocalProgress(currentSet, 'story', true);
+  if (db) {
+    try {
+      const id = 'r_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8);
+      await db.doc('quiz_results/' + id).set({ name: currentName, mode: 'story', setNo: currentSet, ts: Date.now(), passed: true, mistakes: stMistakes });
+    } catch (e) {}
+  }
+}
+
+function playStory() {
+  clearTimeout(stTimer);
+  let i = 0;
+  const step = () => {
+    document.querySelectorAll('.stslot.playing').forEach(x => x.classList.remove('playing'));
+    if (i >= exConf.steps.length) return;
+    const s = exConf.steps[i++];
+    const sl = exEl('exLearn').querySelector('.stslot[data-n="' + s.n + '"]');
+    if (sl) sl.classList.add('playing');
+    speak(s.s);
+    stTimer = setTimeout(step, 2800);
+  };
+  step();
+}
+
+function storyMain() {
+  if (exPhase === 's1') { renderStoryMatch(); return; }
+  if (exPhase === 's3') { clearTimeout(stTimer); openModeScreen(currentSet); return; }
+}
+
 let exKind = null, exConf = null, exPhase = 'learn', exSeen = null;
 let exQs = [], exIdx = 0, exScore = 0, exLocked = false;
 const exEl = id => document.getElementById(id);
@@ -3575,6 +3839,7 @@ function startExtra(kind) {
 function renderExtraLearn() {
   if (exKind === 'phonics') { renderPhonics(); return; }
   if (exKind === 'jobs') { renderJobs(); return; }
+  if (exKind === 'story') { renderStory(); return; }
   exEl('exStage').textContent = 'STEP 1 · 배우기';
   exEl('exTitle').textContent = exConf.title;
   exEl('exLead').textContent = exConf.lead;
@@ -3755,6 +4020,7 @@ document.getElementById('extraExitBtn').addEventListener('click', function () { 
 document.getElementById('exMainBtn').addEventListener('click', function () {
   if (exKind === 'phonics') { phonicsMain(); return; }
   if (exKind === 'jobs') { jobsMain(); return; }
+  if (exKind === 'story') { storyMain(); return; }
   if (exPhase === 'learn') { buildExtraQuiz(); renderExtraQ(); return; }
   if (exPhase === 'quiz') {
     if (exIdx + 1 < exQs.length) { exIdx++; renderExtraQ(); }
