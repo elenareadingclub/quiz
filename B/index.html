@@ -568,6 +568,12 @@
   .hwwrong .hwtag{font-size:11px; color:var(--danger); font-weight:700; white-space:nowrap;}
   .hwcopybox{width:100%; min-height:130px; margin-top:8px; font:13px/1.5 "IBM Plex Sans KR",sans-serif; padding:8px; border:1px solid var(--line); border-radius:10px; background:var(--surface-2); color:var(--ink); resize:none;}
   .hwnote{font-size:12px; color:var(--ink-faint); text-align:center; margin-top:10px;}
+
+  .sentdet{margin-top:10px; text-align:left;}
+  .sentdet summary{cursor:pointer; font-weight:700; font-size:13px; color:var(--accent-strong);}
+  .sentpre{white-space:pre-wrap; word-break:break-word; margin:8px 0 0; font:13px/1.6 "IBM Plex Sans KR",sans-serif; background:var(--surface-2); color:var(--ink); border:1px solid var(--line); border-radius:10px; padding:10px 12px;}
+  .hwsent{margin-top:14px; border:2px solid var(--accent); background:var(--accent-soft); border-radius:12px; padding:10px 12px;}
+  .hwsent .hwsenthead{font-weight:800; font-size:13.5px; color:var(--accent-strong);}
   footer{margin-top:20px; text-align:center; font-size:11px; color:var(--ink-faint);}
 </style>
 
@@ -2768,6 +2774,7 @@ function openHwCard() {
     rows.join('') +
     (done ? '<div class="hwfinal done">🎉 숙제 완료!</div>' : '<div class="hwfinal notyet">아직 남은 단계가 있어요</div>') +
     wrongHtml +
+    sentCardHtml() +
     '<div class="hwnote">마지막으로 푼 결과예요</div>';
   document.getElementById('hwOverlay').hidden = false;
 }
@@ -2970,11 +2977,37 @@ function buildOnlinePayload(setNo) {
   };
 }
 
+
+// 선생님께 간 글을 이 기기에 저장해 두었다가 숙제 결과 카드에서도 보여 준다
+function sentKey() { return hwLastKey(currentName).replace('_last_', '_sent_'); }
+function recordSent(setNo, info) {
+  try {
+    const all = JSON.parse(localStorage.getItem(sentKey()) || '{}');
+    all[setNo] = info;
+    localStorage.setItem(sentKey(), JSON.stringify(all));
+  } catch (e) {}
+}
+function loadSent(setNo) {
+  try { return (JSON.parse(localStorage.getItem(sentKey()) || '{}'))[setNo] || null; } catch (e) { return null; }
+}
+function sentCardHtml() {
+  const s = loadSent(currentSet);
+  if (!s || !s.card) return '';
+  const d = new Date(s.at || Date.now());
+  const pad = n => (n < 10 ? '0' : '') + n;
+  const when = (d.getMonth() + 1) + '/' + d.getDate() + ' ' + pad(d.getHours()) + ':' + pad(d.getMinutes());
+  return '<div class="hwsent"><div class="hwsenthead">✅ 선생님께 제출됨 · ' + (s.attempt ? s.attempt + '번째 · ' : '') + when + '</div><pre class="sentpre">' + escHtml(s.card) + '</pre></div>';
+}
+
 function showSubmitResult(wrap, r, payload) {
   const lines = ['<div class="submittitle">✅ 선생님께 제출됐어요' + (r.attempt ? ' (' + r.attempt + '번째)' : '') + '</div>'];
   if (r.late) lines.push('<div class="submitnote">⏰ 마감 시간이 지나서 늦게 낸 숙제로 기록됐어요.</div>');
   if (payload.spell && payload.spell.clean) lines.push('<div class="submitnote">🌟 스펠을 한 번도 안 틀렸어요!</div>');
   if (r.trial) lines.push('<div class="submitnote">체험 계정이라 선생님 표에는 체험으로 표시돼요.</div>');
+  if (r.card) {
+    recordSent(currentSet, { card: r.card, attempt: r.attempt || 0, late: !!r.late, at: Date.now() });
+    lines.push('<details class="sentdet" open><summary>📋 선생님께 보낸 내용 (선생님 노션에도 같은 글이 쌓여요)</summary><pre class="sentpre">' + escHtml(r.card) + '</pre></details>');
+  }
   wrap.innerHTML = '<div class="submitcard">' + lines.join('') + '</div>';
   wrap.hidden = false;
   hallCache.at = 0;
@@ -3010,6 +3043,7 @@ async function flushOutbox() {
     for (const item of box.filter(i => i.name === currentName)) {
       try {
         const r = await relayPost(Object.assign({ pin: onlinePin }, item.payload));
+        if (r && r.ok && r.card) recordSent(item.payload.set, { card: r.card, attempt: r.attempt || 0, late: !!r.late, at: Date.now() });
         if (r && (r.ok || r.error)) box = box.filter(i => i !== item && i.payload.submitId !== item.payload.submitId);
         outboxSave(box);
       } catch (e) { break; }
