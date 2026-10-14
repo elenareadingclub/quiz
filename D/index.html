@@ -644,6 +644,32 @@
   .phrow input.bad{border-color:var(--danger); background:var(--danger-soft); color:var(--danger);}
   .phhint{margin-top:10px; font-size:12.5px; color:var(--ink-soft); background:var(--gold-soft); border:1px solid var(--gold); border-radius:10px; padding:8px 10px;}
   .phmsg{margin-top:10px; font-size:13.5px; font-weight:700; text-align:center;}
+
+  .jobgrid{display:grid; grid-template-columns:repeat(2,1fr); gap:9px; margin-top:10px;}
+  .jobcard,.jobduelcard{display:flex; flex-direction:column; align-items:center; gap:2px; text-align:center; background:var(--surface-2); border:2px solid var(--line); border-radius:14px; padding:12px 6px; cursor:pointer; color:var(--ink); font-family:inherit;}
+  .jbe{font-size:34px; line-height:1.15;}
+  .jbe.big{font-size:64px;}
+  .jbn{font-family:"Andika","Baloo 2",sans-serif; font-weight:700; font-size:17px;}
+  .jbk{font-size:12.5px; color:var(--ink-faint); min-height:18px;}
+  .jobcard.seen{border-color:var(--accent); background:var(--accent-soft);}
+  .jobcard.seen .jbk{color:var(--accent-strong); font-weight:600;}
+  .jobduel{display:grid; grid-template-columns:1fr auto 1fr; gap:8px; align-items:center; margin-top:14px;}
+  .jobduelcard{padding:24px 8px;}
+  .jobduelcard .jbe{font-size:56px;}
+  .jobduelcard .jbn{font-size:20px;}
+  .jobduelcard.picked{border-color:var(--accent); background:var(--accent-soft); transform:scale(1.04);}
+  .jobvs{font-family:"Baloo 2",sans-serif; font-weight:800; font-size:18px; color:var(--danger);}
+  .jobchamp{text-align:center; border:2px solid var(--gold); background:var(--gold-soft); border-radius:16px; padding:14px 8px; margin-top:8px;}
+  .jobchamp .jbn{font-size:24px;}
+  .jobq{display:flex; align-items:center; justify-content:center; gap:8px; margin:14px 0 4px; font-family:"Andika","Baloo 2",sans-serif; font-weight:700; font-size:19px;}
+  .jobq button{border:1.5px solid var(--line); background:var(--surface); border-radius:10px; font-size:16px; padding:3px 9px; cursor:pointer;}
+  .jobans{display:flex; flex-wrap:wrap; gap:6px; min-height:56px; border-bottom:3px solid var(--accent); padding:8px 2px; margin:10px 0 14px; align-items:center;}
+  .jobtoks{display:flex; flex-wrap:wrap; gap:8px; justify-content:center;}
+  .jobtok{font-family:"Andika","Baloo 2",sans-serif; font-weight:700; font-size:18px; padding:9px 13px; border-radius:11px; border:2px solid var(--line); background:var(--surface); color:var(--ink); cursor:pointer;}
+  .jobtok.used{opacity:.25; pointer-events:none;}
+  .jobans .jobtok{border-color:var(--accent); background:var(--accent-soft);}
+  .jobtok.shake{animation:phshake .35s;}
+  .jobmsg{margin-top:10px; font-size:14px; font-weight:700; text-align:center; min-height:22px;}
   footer{margin-top:20px; text-align:center; font-size:11px; color:var(--ink-faint);}
 </style>
 
@@ -2984,6 +3010,44 @@ const EXTRAS = {
         'u_e': ['mule', 'rule', 'flute'],
         'ue': ['blue', 'glue', 'true'],
         'ui': ['cruise', 'bruise'] }
+    },
+    jobs: {
+      title: '🏆 되고 싶은 직업 월드컵',
+      hint: "What are you going to be?",
+      lead: '직업 이름을 배우고, 월드컵으로 되고 싶은 직업을 골라 대답해 봐요.',
+      items: [
+        { id: 'teacher', en: 'a teacher', ko: '선생님', e: '🧑‍🏫' },
+        { id: 'doctor', en: 'a doctor', ko: '의사', e: '👨‍⚕️' },
+        { id: 'nurse', en: 'a nurse', ko: '간호사', e: '👩‍⚕️' },
+        { id: 'vet', en: 'a vet', ko: '수의사', e: '🐶' },
+        { id: 'scientist', en: 'a scientist', ko: '과학자', e: '🔬' },
+        { id: 'pilot', en: 'a pilot', ko: '조종사', e: '✈️' },
+        { id: 'astronaut', en: 'an astronaut', ko: '우주비행사', e: '🧑‍🚀' },
+        { id: 'police', en: 'a police officer', ko: '경찰관', e: '👮' },
+        { id: 'firefighter', en: 'a firefighter', ko: '소방관', e: '🧑‍🚒' },
+        { id: 'chef', en: 'a chef', ko: '요리사', e: '🧑‍🍳' },
+        { id: 'baker', en: 'a baker', ko: '제빵사', e: '🥐' },
+        { id: 'singer', en: 'a singer', ko: '가수', e: '🎤' },
+        { id: 'dancer', en: 'a dancer', ko: '무용수', e: '💃' },
+        { id: 'actor', en: 'an actor', ko: '배우', e: '🎭' },
+        { id: 'artist', en: 'an artist', ko: '화가', e: '🎨' },
+        { id: 'writer', en: 'a writer', ko: '작가', e: '✍️' },
+        { id: 'designer', en: 'a designer', ko: '디자이너', e: '✏️' },
+        { id: 'soccer', en: 'a soccer player', ko: '축구선수', e: '⚽' },
+        { id: 'swimmer', en: 'a swimmer', ko: '수영선수', e: '🏊' },
+        { id: 'youtuber', en: 'a YouTuber', ko: '유튜버', e: '📹' },
+        { id: 'ballerina', en: 'a ballerina', ko: '발레리나', e: '🩰' },
+        { id: 'fisherman', en: 'a fisherman', ko: '어부', e: '🎣' },
+        { id: 'athlete', en: 'an athlete', ko: '운동선수', e: '🏅' },
+        { id: 'creator', en: 'a content creator', ko: '크리에이터', e: '📱' },
+        { id: 'entertainer', en: 'an entertainer', ko: '연예인', e: '🌟' },
+        { id: 'gamer', en: 'a pro gamer', ko: '프로게이머', e: '🎮' },
+        { id: 'attendant', en: 'a flight attendant', ko: '승무원', e: '🧳' },
+        { id: 'webtoon', en: 'a webtoon artist', ko: '웹툰작가', e: '🖌️' },
+        { id: 'architect', en: 'an architect', ko: '건축가', e: '🏛️' },
+        { id: 'counselor', en: 'a counselor', ko: '상담사', e: '💬' },
+        { id: 'programmer', en: 'a programmer', ko: '프로그래머', e: '💻' },
+        { id: 'judge', en: 'a judge', ko: '판사', e: '⚖️' } ]
     }
   }
 };
@@ -3332,6 +3396,150 @@ function phonicsMain() {
   openModeScreen(currentSet);
 }
 
+
+/* ===== 되고 싶은 직업 월드컵 ===== */
+let jbSeen = new Set(), jbBracket = [], jbWinners = [], jbPair = 0, jbBusy = false, jbChamp = null, jbToks = [], jbPlaced = [];
+
+function jbCard(it, cls) {
+  return '<button class="' + cls + '" data-id="' + it.id + '"><span class="jbe">' + it.e + '</span><span class="jbn">' + it.en + '</span><span class="jbk">' + (cls === 'jobcard' ? '' : it.ko) + '</span></button>';
+}
+
+function renderJobs() {
+  jbSeen = new Set();
+  exPhase = 'j1';
+  phShow();
+  exEl('exStage').textContent = 'STEP 1 · 직업 이름 배우기';
+  exEl('exLead').textContent = '카드를 눌러 직업 이름을 배워요. 뜻이 나오고 소리가 들려요. 모두 눌러 보면 월드컵이 열려요!';
+  exEl('exLearn').innerHTML = '<div class="jobgrid">' + exConf.items.map(it => jbCard(it, 'jobcard')).join('') + '</div>';
+  exEl('exLearn').querySelectorAll('.jobcard').forEach(card => card.addEventListener('click', () => {
+    const it = exConf.items.find(x => x.id === card.dataset.id);
+    card.classList.add('seen');
+    card.querySelector('.jbk').textContent = it.ko;
+    speak(it.en); jbSeen.add(it.id); updateJobsLearn();
+  }));
+  updateJobsLearn();
+}
+
+function updateJobsLearn() {
+  const n = jbSeen.size, total = exConf.items.length;
+  exEl('exCount').textContent = n + ' / ' + total + ' 눌러봄';
+  const b = exEl('exMainBtn');
+  b.hidden = false; b.disabled = n < total;
+  b.textContent = n < total ? '전부 눌러 보세요 (' + n + '/' + total + ')' : '월드컵 시작 🏆';
+}
+
+function startJobCup() {
+  exPhase = 'j2';
+  jbBracket = exShuffle(exConf.items.slice()).slice(0, 16);
+  jbWinners = []; jbPair = 0; jbBusy = false;
+  renderJobDuel();
+}
+
+function renderJobDuel() {
+  phShow();
+  exEl('exMainBtn').hidden = true;
+  const size = jbBracket.length;
+  const roundName = size === 2 ? '결승' : size + '강';
+  const a = jbBracket[jbPair * 2], b = jbBracket[jbPair * 2 + 1];
+  exEl('exStage').textContent = 'STEP 2 · 되고 싶은 직업 월드컵 · ' + roundName;
+  exEl('exLead').textContent = '더 되고 싶은 직업을 눌러요! (' + (jbPair + 1) + ' / ' + (size / 2) + ')';
+  exEl('exCount').textContent = '';
+  exEl('exLearn').innerHTML = '<div class="jobduel">' + jbCard(a, 'jobduelcard') + '<div class="jobvs">VS</div>' + jbCard(b, 'jobduelcard') + '</div>';
+  exEl('exLearn').querySelectorAll('.jobduelcard').forEach(card => card.addEventListener('click', () => {
+    if (jbBusy) return;
+    jbBusy = true;
+    const it = exConf.items.find(x => x.id === card.dataset.id);
+    card.classList.add('picked');
+    speak(it.en);
+    jbWinners.push(it);
+    setTimeout(() => {
+      jbBusy = false;
+      jbPair++;
+      if (jbPair * 2 >= jbBracket.length) {
+        if (jbWinners.length === 1) { renderJobAnswer(jbWinners[0]); return; }
+        jbBracket = jbWinners; jbWinners = []; jbPair = 0;
+      }
+      renderJobDuel();
+    }, 450);
+  }));
+}
+
+function renderJobAnswer(champ) {
+  jbChamp = champ;
+  exPhase = 'j3';
+  phShow();
+  exEl('exMainBtn').hidden = true;
+  exEl('exStage').textContent = 'STEP 3 · 대답하기';
+  exEl('exLead').textContent = '월드컵 우승 직업이에요! 질문에 문장으로 대답해 봐요.';
+  exEl('exCount').textContent = '';
+  const toks = exShuffle(["I'm", 'going', 'to', 'be', champ.en, 'am', 'go']).map((t, i) => ({ id: i, t: t }));
+  jbToks = toks; jbPlaced = [];
+  exEl('exLearn').innerHTML =
+    '<div class="jobchamp"><div class="jbe big">' + champ.e + '</div><div class="jbn">' + champ.en + '</div><div class="jbk">' + champ.ko + '</div></div>' +
+    '<div class="jobq">🗣️ What are you going to be? <button id="jbSay" aria-label="질문 듣기">🔊</button></div>' +
+    '<div class="jobans" id="jbAns"></div><div class="jobtoks" id="jbToks"></div><div class="jobmsg" id="jbMsg"></div>';
+  exEl('jbSay').addEventListener('click', () => speak('What are you going to be?'));
+  speak('What are you going to be?');
+  renderJobToks();
+}
+
+function renderJobToks() {
+  exEl('jbAns').innerHTML = jbPlaced.map(id => '<button class="jobtok" data-id="' + id + '">' + jbToks.find(t => t.id === id).t + '</button>').join('');
+  exEl('jbToks').innerHTML = jbToks.map(t => '<button class="jobtok' + (jbPlaced.indexOf(t.id) >= 0 ? ' used' : '') + '" data-id="' + t.id + '">' + t.t + '</button>').join('');
+  exEl('jbAns').querySelectorAll('.jobtok').forEach(b => b.addEventListener('click', () => {
+    if (exPhase !== 'j3') return;
+    jbPlaced = jbPlaced.filter(id => id !== parseInt(b.dataset.id, 10));
+    renderJobToks();
+  }));
+  exEl('jbToks').querySelectorAll('.jobtok').forEach(b => b.addEventListener('click', () => {
+    if (exPhase !== 'j3') return;
+    const id = parseInt(b.dataset.id, 10);
+    if (jbPlaced.indexOf(id) >= 0 || jbPlaced.length >= 5) return;
+    jbPlaced.push(id);
+    renderJobToks();
+    if (jbPlaced.length === 5) checkJobAnswer();
+  }));
+}
+
+function checkJobAnswer() {
+  const built = jbPlaced.map(id => jbToks.find(t => t.id === id).t).join(' ');
+  const want = "I'm going to be " + jbChamp.en;
+  const msg = exEl('jbMsg');
+  if (built === want) { finishJobs(); return; }
+  try { playWrong(); } catch (e) {}
+  msg.style.color = 'var(--danger)';
+  msg.textContent = '앗! 순서를 다시 생각해 봐요. I\'m going to be ... 로 시작해요.';
+  exEl('jbAns').classList.add('shake');
+  setTimeout(() => { exEl('jbAns').classList.remove('shake'); jbPlaced = []; renderJobToks(); }, 900);
+}
+
+async function finishJobs() {
+  exPhase = 'j4';
+  const sentence = "I'm going to be " + jbChamp.en + '.';
+  exEl('jbToks').innerHTML = '';
+  const msg = exEl('jbMsg');
+  msg.style.color = 'var(--accent-strong)';
+  msg.innerHTML = '🎉 Great! <b>' + sentence + '</b><br><span style="font-weight:500;">→ 나의 장래희망: ' + jbChamp.ko + '</span>';
+  exEl('exLearn').insertAdjacentHTML('beforeend', '<button class="secondary" id="jbAgain" style="width:100%;margin-top:14px;">🏆 월드컵 다시 하기</button>');
+  exEl('jbAgain').addEventListener('click', startJobCup);
+  speak(sentence);
+  const b = exEl('exMainBtn');
+  b.hidden = false; b.disabled = false; b.textContent = '모드 선택으로 →';
+  try { launchConfetti(); playCelebrationSound(); } catch (e) {}
+  markLocalProgress(currentSet, 'jobs', true);
+  if (db) {
+    try {
+      const id = 'r_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8);
+      await db.doc('quiz_results/' + id).set({ name: currentName, mode: 'jobs', setNo: currentSet, ts: Date.now(), passed: true, job: jbChamp.en });
+    } catch (e) {}
+  }
+}
+
+function jobsMain() {
+  if (exPhase === 'j1') { startJobCup(); return; }
+  if (exPhase === 'j4') { openModeScreen(currentSet); return; }
+}
+
 let exKind = null, exConf = null, exPhase = 'learn', exSeen = null;
 let exQs = [], exIdx = 0, exScore = 0, exLocked = false;
 const exEl = id => document.getElementById(id);
@@ -3366,6 +3574,7 @@ function startExtra(kind) {
 
 function renderExtraLearn() {
   if (exKind === 'phonics') { renderPhonics(); return; }
+  if (exKind === 'jobs') { renderJobs(); return; }
   exEl('exStage').textContent = 'STEP 1 · 배우기';
   exEl('exTitle').textContent = exConf.title;
   exEl('exLead').textContent = exConf.lead;
@@ -3545,6 +3754,7 @@ document.getElementById('stepupPicker').addEventListener('click', function (e) {
 document.getElementById('extraExitBtn').addEventListener('click', function () { openModeScreen(currentSet); });
 document.getElementById('exMainBtn').addEventListener('click', function () {
   if (exKind === 'phonics') { phonicsMain(); return; }
+  if (exKind === 'jobs') { jobsMain(); return; }
   if (exPhase === 'learn') { buildExtraQuiz(); renderExtraQ(); return; }
   if (exPhase === 'quiz') {
     if (exIdx + 1 < exQs.length) { exIdx++; renderExtraQ(); }
