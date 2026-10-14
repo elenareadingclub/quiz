@@ -585,6 +585,65 @@
   .dogcaption .dcko{font-size:13.5px; color:var(--accent-strong); font-weight:600;}
   .dogcaption .dcidle{font-size:12.5px; color:var(--ink-faint); padding-top:12px;}
   .extracount{text-align:center; font-size:12px; color:var(--ink-faint); margin-top:10px;}
+
+  .plsvg{width:min(100%,300px); height:auto; display:block; margin:0 auto;}
+  .plsvg .pbg{fill:var(--surface-2); stroke:var(--line); stroke-width:3;}
+  .plsvg .psoil{fill:#D8B98F;}
+  .plsvg .pgrass{fill:#9BD18A;}
+  .plsvg .part{cursor:pointer;}
+  .plsvg .hit{fill:transparent; stroke:none;}
+  .plsvg .sh{stroke:#5D4630; stroke-width:2.5; stroke-linejoin:round; transition:filter .15s;}
+  .plsvg .sh.g{fill:#6FBF5E;}
+  .plsvg .sh.g2{fill:#8FD36B;}
+  .plsvg .sh.b{fill:#B07A4A;}
+  .plsvg .sh.p{fill:#FF9EC4;}
+  .plsvg .sh.d{fill:#B8A27A;}
+  .plsvg .ln{fill:none; stroke:#7A4E2A; stroke-width:11; stroke-linecap:round;}
+  .plsvg .ln.d{stroke:#8B6B3E; stroke-width:8;}
+  .plsvg .arrow{fill:none; stroke:#2F7D32; stroke-width:6; stroke-linecap:round; stroke-linejoin:round;}
+  .plsvg .vein{fill:none; stroke:#3E8E3A; stroke-width:2.5; stroke-linecap:round;}
+  .plsvg .pcenter{fill:#FFD54A; stroke:#5D4630; stroke-width:2.5;}
+  .plsvg .divider{stroke:var(--line); stroke-width:3; stroke-dasharray:6 6;}
+  .plsvg .part:hover .sh, .plsvg .part:hover .ln{filter:brightness(1.12);}
+  .plsvg .part.seen .sh, .plsvg .part.seen .ln, .plsvg .part.seen .arrow{filter:drop-shadow(0 0 4px var(--accent));}
+  .plsvg .part.hl .sh{stroke:var(--gold); stroke-width:5;}
+  .plsvg .part.hl .ln{stroke:var(--gold);}
+  .plsvg .part.hit .sh{stroke:var(--accent); stroke-width:5;}
+  .plsvg .part.hit .ln{stroke:var(--accent);}
+  .plsvg .part.miss .sh{stroke:var(--danger); stroke-width:5;}
+  .plsvg .part.miss .ln{stroke:var(--danger);}
+  .plscenes{display:flex; flex-direction:column; gap:16px; margin-top:12px;}
+  .plcap{font-family:"IBM Plex Mono",monospace; font-size:11px; font-weight:600; letter-spacing:.08em; color:var(--ink-faint); margin:2px 0 6px; text-align:center;}
+  .plcaption{position:sticky; top:8px; z-index:5;}
+
+  .phcards{display:grid; grid-template-columns:repeat(2,1fr); gap:9px; margin-top:10px;}
+  .phcard{display:flex; flex-direction:column; align-items:center; gap:3px; text-align:center; background:var(--surface-2); border:2px solid var(--line); border-radius:14px; padding:14px 6px; cursor:pointer; color:var(--ink); font-family:inherit;}
+  .phcard .phw{font-family:"Andika","Baloo 2",sans-serif; font-weight:700; font-size:26px;}
+  .phcard .phko{font-size:12.5px; color:var(--ink-faint); min-height:18px;}
+  .phcard.seen{border-color:var(--accent); background:var(--accent-soft);}
+  .phcard.seen .phko{color:var(--accent-strong); font-weight:600;}
+  .phl{color:var(--danger); text-decoration:underline; text-decoration-thickness:3px; text-underline-offset:4px;}
+  .phchips{display:flex; flex-wrap:wrap; gap:10px; justify-content:center; margin:14px 0; min-height:58px;}
+  .phchip{font-family:"Andika","Baloo 2",sans-serif; font-weight:700; font-size:22px; padding:10px 16px; border-radius:12px; border:2px solid var(--line); background:var(--surface); color:var(--ink); cursor:grab; user-select:none; touch-action:none;}
+  .phchip.sel{border-color:var(--gold); background:var(--gold-soft);}
+  .phchip.shake{animation:phshake .35s;}
+  @keyframes phshake{0%,100%{transform:translateX(0);} 25%{transform:translateX(-7px);} 75%{transform:translateX(7px);}}
+  .phbuckets{display:grid; grid-template-columns:repeat(2,1fr); gap:8px;}
+  .phbucket{border:2.5px dashed var(--line); border-radius:14px; padding:8px 6px 10px; min-height:120px; background:var(--surface-2); text-align:center; cursor:pointer;}
+  .phbucket .phbl{font-family:"Andika","Baloo 2",sans-serif; font-weight:800; font-size:24px; color:var(--accent-strong);}
+  .phbucket .phbs{font-size:11px; color:var(--ink-faint); margin-bottom:8px;}
+  .phbucket.over{border-color:var(--gold); background:var(--gold-soft);}
+  .phbucket .phdone{display:flex; flex-wrap:wrap; gap:6px; justify-content:center;}
+  .phbucket .phplaced{font-family:"Andika","Baloo 2",sans-serif; font-weight:700; font-size:18px; background:var(--accent-soft); border:1.5px solid var(--accent); border-radius:9px; padding:4px 10px;}
+  .phghost{position:fixed; z-index:10050; pointer-events:none; transform:translate(-50%,-50%); opacity:.92; box-shadow:0 6px 18px rgba(0,0,0,.25);}
+  .phwrite{display:flex; flex-direction:column; gap:12px; margin-top:12px;}
+  .phrow{display:grid; grid-template-columns:64px 1fr 1fr; gap:8px; align-items:center;}
+  .phrow .phrl{font-family:"Andika","Baloo 2",sans-serif; font-weight:800; font-size:21px; color:var(--accent-strong); text-align:center;}
+  .phrow input{width:100%; font-family:"Andika","Baloo 2",sans-serif; font-size:18px; padding:9px 10px; border:1.5px solid var(--line); border-radius:10px; background:var(--surface-2); color:var(--ink);}
+  .phrow input.ok{border-color:var(--accent); background:var(--accent-soft); color:var(--accent-strong);}
+  .phrow input.bad{border-color:var(--danger); background:var(--danger-soft); color:var(--danger);}
+  .phhint{margin-top:10px; font-size:12.5px; color:var(--ink-soft); background:var(--gold-soft); border:1px solid var(--gold); border-radius:10px; padding:8px 10px;}
+  .phmsg{margin-top:10px; font-size:13.5px; font-weight:700; text-align:center;}
   footer{margin-top:20px; text-align:center; font-size:11px; color:var(--ink-faint);}
 </style>
 
@@ -681,10 +740,7 @@
     <button class="primary" id="startBtn">단어확인 시작 (뜻 확인)</button>
     <div id="stepupWrap" hidden>
       <div class="stepuphead">⬆️ Step Up · 추가 코너</div>
-      <div class="setpicker" id="stepupPicker">
-        <button class="setbtn" data-extra="meals">🍽️ 하루 식사와 시간 <span class="dot" id="exDotMeals"></span><br><span class="hint" style="margin:0;">breakfast·lunch·dinner·snack</span></button>
-        <button class="setbtn" data-extra="body">🐾 강아지 몸 <span class="dot" id="exDotBody"></span><br><span class="hint" style="margin:0;">그림에서 찾기</span></button>
-      </div>
+      <div class="setpicker" id="stepupPicker"></div>
     </div>
     <button class="secondary" id="hwBtn" style="width:100%;margin-top:10px;">📋 숙제 결과 카드 보기</button>
   </div>
@@ -2849,6 +2905,7 @@ const EXTRAS = {
   '2-1': {
     meals: {
       title: '🍽️ 하루 식사와 시간',
+      hint: 'breakfast·lunch·dinner·snack',
       lead: '강아지도 사람도 하루 세 끼! 카드를 하나씩 눌러 보고, 다 누르면 퀴즈가 열려요.',
       groups: [
         { cap: '🍴 식사 MEALS', cls: '', items: [
@@ -2863,6 +2920,7 @@ const EXTRAS = {
     },
     body: {
       title: '🐾 강아지 몸',
+      hint: '그림에서 찾기',
       lead: '그림에서 몸의 부분을 눌러 이름을 익혀요. 다 눌러 보면 퀴즈가 열려요.',
       parts: [
         { id: 'ears', en: 'ears', ko: '귀' },
@@ -2871,6 +2929,61 @@ const EXTRAS = {
         { id: 'legs', en: 'legs', ko: '다리' },
         { id: 'paw', en: 'paw', ko: '발' },
         { id: 'tail', en: 'tail', ko: '꼬리' } ]
+    }
+  }, '3-1': {
+    plant: {
+      title: "🌱 식물 이름 맞히기",
+      hint: '그림에서 뿌리·줄기·잎 찾기',
+      lead: "I'm a Seed에 나오는 식물 낱말이에요. 그림을 눌러 이름을 익히고, 다 눌러 보면 퀴즈가 열려요.",
+      scenes: [
+        { id: 'flower', cap: '🌼 꽃 FLOWER' },
+        { id: 'tree', cap: '🌳 나무 TREE' },
+        { id: 'life', cap: '🌱 자라는 순서 LIFE' } ],
+      parts: [
+        { id: 'root', en: 'root', ko: '뿌리', scene: 'flower' },
+        { id: 'stem', en: 'stem', ko: '줄기', scene: 'flower' },
+        { id: 'leaf', en: 'leaf', ko: '잎 (한 장)', scene: 'flower' },
+        { id: 'petal', en: 'petal', ko: '꽃잎', scene: 'flower' },
+        { id: 'trunk', en: 'trunk', ko: '나무 기둥', scene: 'tree' },
+        { id: 'branch', en: 'branch', ko: '나뭇가지', scene: 'tree' },
+        { id: 'leaves', en: 'leaves', ko: '잎들 (여러 장)', scene: 'tree' },
+        { id: 'sprout', en: 'sprout', ko: '싹', scene: 'life' },
+        { id: 'grow', en: 'grow', ko: '자라다', scene: 'life' },
+        { id: 'die', en: 'die', ko: '죽다', scene: 'life' } ]
+    },
+    phonics: {
+      title: '🔊 파닉스 Long U 총정리',
+      hint: 'ew · u_e · ue 모으기',
+      lead: 'Long U 소리를 철자별로 정리해요.',
+      rules: [
+        { id: 'ew', label: 'ew', sub: 'ew 소리' },
+        { id: 'u_e', label: 'u_e', sub: 'u + e (마법의 e)' },
+        { id: 'ue', label: 'ue', sub: 'ue 소리' },
+        { id: 'ui', label: 'ui', sub: 'ui 소리' } ],
+      words: [
+        { w: 'tune', rule: 'u_e', ko: '곡조' },
+        { w: 'dune', rule: 'u_e', ko: '모래 언덕' },
+        { w: 'tube', rule: 'u_e', ko: '관, 튜브' },
+        { w: 'cube', rule: 'u_e', ko: '정육면체' },
+        { w: 'cute', rule: 'u_e', ko: '귀여운' },
+        { w: 'huge', rule: 'u_e', ko: '거대한' },
+        { w: 'flew', rule: 'ew', ko: '날았다 (fly의 과거)' },
+        { w: 'new', rule: 'ew', ko: '새로운' },
+        { w: 'grew', rule: 'ew', ko: '자랐다 (grow의 과거)' },
+        { w: 'cue', rule: 'ue', ko: '신호' },
+        { w: 'juice', rule: 'ui', ko: '주스' },
+        { w: 'fruit', rule: 'ui', ko: '과일' },
+        { w: 'suit', rule: 'ui', ko: '정장' } ],
+      bank: {
+        'ew': ['new', 'flew', 'grew', 'chew', 'few', 'dew', 'blew', 'drew', 'knew', 'stew', 'threw', 'brew', 'crew', 'screw', 'pew'],
+        'u_e': ['tune', 'dune', 'cube', 'cute', 'huge', 'mule', 'rule', 'june', 'tube', 'use', 'fuse', 'flute', 'rude', 'prune', 'duke', 'mute', 'fume', 'plume', 'dude', 'nude'],
+        'ue': ['cue', 'blue', 'glue', 'clue', 'true', 'due', 'sue', 'hue'],
+        'ui': ['juice', 'fruit', 'suit', 'cruise', 'bruise'] },
+      hints: {
+        'ew': ['few', 'dew', 'chew'],
+        'u_e': ['mule', 'rule', 'flute'],
+        'ue': ['blue', 'glue', 'true'],
+        'ui': ['cruise', 'bruise'] }
     }
   }
 };
@@ -2898,6 +3011,327 @@ function dogSvg() {
   '</svg>';
 }
 
+
+function plantScene(id) {
+  const open = '<svg class="plsvg" viewBox="0 0 300 ' + (id === 'life' ? '170' : '340') + '" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="식물 그림">';
+  const bgH = id === 'life' ? 167 : 337;
+  const bg = '<rect class="pbg" x="1.5" y="1.5" width="297" height="' + bgH + '" rx="14"/>';
+  if (id === 'flower') {
+    let petals = '';
+    for (let a = 0; a < 360; a += 60) petals += '<ellipse class="sh p" cx="150" cy="40" rx="14" ry="25" transform="rotate(' + a + ' 150 70)"/>';
+    return open + bg +
+      '<path class="psoil" d="M1.5 190 H298.5 V324 a14 14 0 0 1 -14 14 H15.5 a14 14 0 0 1 -14 -14 Z"/>' +
+      '<g class="part" data-part="root"><rect class="hit" x="70" y="192" width="160" height="136"/>' +
+        '<path class="ln" d="M150 190 C148 230 128 250 108 292"/>' +
+        '<path class="ln" d="M150 190 C152 240 170 262 196 300"/>' +
+        '<path class="ln" d="M150 190 C150 235 146 270 150 318"/>' +
+        '<path class="ln" d="M142 234 C126 234 112 240 98 238"/>' +
+        '<path class="ln" d="M158 246 C176 246 190 250 206 246"/></g>' +
+      '<g class="part" data-part="stem"><rect class="hit" x="126" y="86" width="48" height="104"/>' +
+        '<rect class="sh g" x="141" y="84" width="18" height="110" rx="7"/></g>' +
+      '<g class="part" data-part="leaf"><path class="sh g2" d="M142 158 C112 122 80 132 64 152 C90 178 124 176 142 158 Z"/>' +
+        '<path class="vein" d="M142 158 L82 152"/></g>' +
+      '<g class="part" data-part="petal">' + petals + '</g>' +
+      '<circle class="pcenter" cx="150" cy="70" r="17"/>' +
+    '</svg>';
+  }
+  if (id === 'tree') {
+    let leaves = '';
+    [[92, 130], [212, 114], [150, 96]].forEach(c => {
+      [-55, -18, 18, 55].forEach(a => {
+        leaves += '<ellipse class="sh g" cx="' + c[0] + '" cy="' + (c[1] - 14) + '" rx="13" ry="24" transform="rotate(' + a + ' ' + c[0] + ' ' + c[1] + ')"/>';
+      });
+    });
+    return open + bg +
+      '<path class="pgrass" d="M1.5 292 H298.5 V324 a14 14 0 0 1 -14 14 H15.5 a14 14 0 0 1 -14 -14 Z"/>' +
+      '<g class="part" data-part="trunk"><path class="sh b" d="M114 298 C128 280 132 236 134 188 L166 188 C168 236 172 280 186 298 Z"/></g>' +
+      '<g class="part" data-part="branch">' +
+        '<path class="ln" d="M150 198 L98 144"/>' +
+        '<path class="ln" d="M150 188 L206 128"/>' +
+        '<path class="ln" d="M150 182 L150 114"/></g>' +
+      '<g class="part" data-part="leaves">' + leaves + '</g>' +
+    '</svg>';
+  }
+  // life cycle: sprout -> grow -> die
+  return open + bg +
+    '<path class="psoil" d="M1.5 132 H298.5 V156 a14 14 0 0 1 -14 14 H15.5 a14 14 0 0 1 -14 -14 Z"/>' +
+    '<line class="divider" x1="100" y1="12" x2="100" y2="130"/><line class="divider" x1="200" y1="12" x2="200" y2="130"/>' +
+    '<g class="part" data-part="sprout"><rect class="hit" x="8" y="14" width="86" height="118"/>' +
+      '<rect class="sh g" x="46" y="104" width="8" height="30" rx="3"/>' +
+      '<ellipse class="sh g2" cx="36" cy="100" rx="13" ry="6" transform="rotate(-28 36 100)"/>' +
+      '<ellipse class="sh g2" cx="64" cy="100" rx="13" ry="6" transform="rotate(28 64 100)"/></g>' +
+    '<g class="part" data-part="grow"><rect class="hit" x="108" y="14" width="86" height="118"/>' +
+      '<rect class="sh g" x="142" y="62" width="9" height="72" rx="4"/>' +
+      '<circle class="sh g2" cx="146" cy="56" r="8"/>' +
+      '<ellipse class="sh g2" cx="124" cy="102" rx="18" ry="8" transform="rotate(-25 124 102)"/>' +
+      '<ellipse class="sh g2" cx="168" cy="102" rx="18" ry="8" transform="rotate(25 168 102)"/>' +
+      '<ellipse class="sh g2" cx="127" cy="78" rx="16" ry="7" transform="rotate(-30 127 78)"/>' +
+      '<ellipse class="sh g2" cx="165" cy="78" rx="16" ry="7" transform="rotate(30 165 78)"/>' +
+      '<path class="arrow" d="M184 122 V72 M175 83 L184 72 L193 83"/></g>' +
+    '<g class="part" data-part="die"><rect class="hit" x="208" y="14" width="86" height="118"/>' +
+      '<path class="ln d" d="M250 134 C250 108 252 92 270 88"/>' +
+      '<ellipse class="sh d" cx="268" cy="102" rx="15" ry="6" transform="rotate(72 268 102)"/>' +
+      '<ellipse class="sh d" cx="236" cy="114" rx="14" ry="6" transform="rotate(-62 236 114)"/>' +
+      '<ellipse class="sh d" cx="278" cy="84" rx="12" ry="5" transform="rotate(60 278 84)"/>' +
+      '<ellipse class="sh d" cx="224" cy="134" rx="10" ry="4"/><ellipse class="sh d" cx="280" cy="136" rx="9" ry="4"/></g>' +
+  '</svg>';
+}
+
+function renderPlantLearn() {
+  const L = exEl('exLearn');
+  L.innerHTML = '<div class="dogcaption plcaption" id="plCaption"><div class="dcidle">그림의 한 곳을 눌러 보세요 👆</div></div>' +
+    '<div class="plscenes">' +
+    exConf.scenes.map(s => '<div><div class="plcap">' + s.cap + '</div><div class="dogwrap">' + plantScene(s.id) + '</div></div>').join('') + '</div>';
+  L.querySelectorAll('.part').forEach(g => g.addEventListener('click', () => {
+    const it = exConf.parts.find(x => x.id === g.dataset.part);
+    g.classList.add('seen');
+    exEl('plCaption').innerHTML = '<div class="dcen">' + it.en + '</div><div class="dcko">' + it.ko + '</div>';
+    speak(it.en); exSeen.add(it.id); updateExLearn();
+  }));
+}
+
+function renderPlantQ(q) {
+  const it = q.item;
+  const pic = exEl('exPicture');
+  pic.hidden = false;
+  pic.innerHTML = '<div class="dogwrap">' + plantScene(it.scene) + '</div>';
+  exEl('exQuiz').insertBefore(pic, q.kind === 'name' ? exEl('exChoices') : exEl('exFeedback'));
+  const partEl = pic.querySelector('[data-part="' + it.id + '"]');
+  if (q.kind === 'pick') {
+    exEl('exLead').textContent = '이 뜻에 맞는 그림을 눌러 보세요.';
+    exEl('exPrompt').textContent = it.ko;
+    exEl('exChoices').hidden = true;
+    speak(it.en);
+    pic.querySelectorAll('.part').forEach(g => g.addEventListener('click', () => {
+      if (exLocked) return;
+      const ok = g.dataset.part === it.id;
+      g.classList.add(ok ? 'hit' : 'miss');
+      if (!ok && partEl) partEl.classList.add('hit');
+      answerExtra(ok, q, null);
+    }));
+  } else {
+    exEl('exLead').textContent = '노랗게 빛나는 부분은 영어로 뭘까요?';
+    exEl('exPrompt').textContent = '?';
+    if (partEl) partEl.classList.add('hl');
+    const box = exEl('exChoices');
+    box.hidden = false;
+    box.innerHTML = q.choices.map(c => '<button class="choice">' + c + '</button>').join('');
+    box.querySelectorAll('.choice').forEach(b => b.addEventListener('click', () => {
+      if (exLocked) return;
+      if (partEl) { partEl.classList.remove('hl'); partEl.classList.add('hit'); }
+      answerExtra(b.textContent === q.correct, q, b);
+    }));
+  }
+}
+
+
+/* ===== 파닉스 Long U 총정리 (3단계) ===== */
+let phSeen = new Set(), phSel = null, phPlaced = {}, phMistakes = 0, phFails = 0, phDragBound = false, phDrag = null;
+
+function phHighlight(w, rule) {
+  if (rule === 'u_e') {
+    const i = w.indexOf('u');
+    return w.slice(0, i) + '<span class="phl">u</span>' + w.slice(i + 1, w.length - 1) + '<span class="phl">e</span>';
+  }
+  const i = w.lastIndexOf(rule);
+  return w.slice(0, i) + '<span class="phl">' + rule + '</span>' + w.slice(i + rule.length);
+}
+
+function phShow() {
+  exEl('exProgWrap').hidden = true;
+  exEl('exQuiz').hidden = true;
+  exEl('exDone').hidden = true;
+  exEl('exLearn').hidden = false;
+  exEl('exTitle').textContent = exConf.title;
+}
+
+function renderPhonics() {
+  phSeen = new Set(); phSel = null; phPlaced = {}; phMistakes = 0; phFails = 0;
+  exPhase = 'ph1';
+  phShow();
+  exEl('exStage').textContent = 'STEP 1 · 소리 듣기';
+  exEl('exLead').textContent = 'Long U는 알파벳 U의 이름처럼 소리 나요 (우~ / 유~). 카드를 눌러 소리를 들어 보세요. 빨간 글자가 Long U 철자예요.';
+  exEl('exLearn').innerHTML = '<div class="phcards">' + exConf.words.map(wd =>
+    '<button class="phcard" data-w="' + wd.w + '"><span class="phw">' + wd.w + '</span><span class="phko"></span></button>').join('') + '</div>';
+  exEl('exLearn').querySelectorAll('.phcard').forEach(card => card.addEventListener('click', () => {
+    const wd = exConf.words.find(x => x.w === card.dataset.w);
+    card.classList.add('seen');
+    card.querySelector('.phw').innerHTML = phHighlight(wd.w, wd.rule);
+    card.querySelector('.phko').textContent = wd.ko;
+    speak(wd.w); phSeen.add(wd.w); updatePhStep1();
+  }));
+  updatePhStep1();
+}
+
+function updatePhStep1() {
+  const n = phSeen.size, total = exConf.words.length;
+  exEl('exCount').textContent = n + ' / ' + total + ' 눌러봄';
+  const b = exEl('exMainBtn');
+  b.hidden = false; b.disabled = n < total;
+  b.textContent = n < total ? '전부 눌러 보세요 (' + n + '/' + total + ')' : '다음: 같은 규칙끼리 모으기 →';
+}
+
+function renderPhSort() {
+  phSel = null; phPlaced = {};
+  exPhase = 'ph2';
+  phShow();
+  exEl('exStage').textContent = 'STEP 2 · 같은 규칙끼리 모으기';
+  exEl('exLead').textContent = '같은 철자 규칙의 낱말끼리 모아요. 낱말을 끌어서 (또는 눌러서) 알맞은 상자에 넣어요.';
+  exEl('exLearn').innerHTML = '<div class="phchips" id="phChips">' +
+    exShuffle(exConf.words.slice()).map(wd => '<div class="phchip" data-w="' + wd.w + '">' + wd.w + '</div>').join('') + '</div>' +
+    '<div class="phbuckets">' + exConf.rules.map(r =>
+      '<div class="phbucket" data-rule="' + r.id + '"><div class="phbl">' + r.label + '</div><div class="phbs">' + r.sub + '</div><div class="phdone" id="phDone_' + r.id + '"></div></div>').join('') + '</div>' +
+    '<div class="phmsg" id="phMsg"></div>';
+  exEl('exMainBtn').hidden = true;
+  updatePhSortCount();
+  exEl('exLearn').querySelectorAll('.phbucket').forEach(bk => bk.addEventListener('click', () => {
+    if (phSel) phTryPlace(phSel, bk.dataset.rule);
+  }));
+  if (!phDragBound) {
+    phDragBound = true;
+    document.addEventListener('pointermove', phPointerMove);
+    document.addEventListener('pointerup', phPointerUp);
+  }
+  exEl('phChips').addEventListener('pointerdown', e => {
+    const chip = e.target.closest('.phchip');
+    if (!chip || chip.classList.contains('placed')) return;
+    phDrag = { chip: chip, sx: e.clientX, sy: e.clientY, moved: false, ghost: null };
+  });
+}
+
+function phPointerMove(e) {
+  if (!phDrag) return;
+  const dx = e.clientX - phDrag.sx, dy = e.clientY - phDrag.sy;
+  if (!phDrag.moved && Math.hypot(dx, dy) > 8) {
+    phDrag.moved = true;
+    const g = phDrag.chip.cloneNode(true);
+    g.className = 'phchip phghost';
+    document.body.appendChild(g);
+    phDrag.ghost = g;
+  }
+  if (phDrag.moved && phDrag.ghost) {
+    phDrag.ghost.style.left = e.clientX + 'px';
+    phDrag.ghost.style.top = e.clientY + 'px';
+    const under = document.elementFromPoint ? document.elementFromPoint(e.clientX, e.clientY) : null;
+    document.querySelectorAll('.phbucket').forEach(b => b.classList.toggle('over', !!(under && under.closest && under.closest('.phbucket') === b)));
+  }
+}
+
+function phPointerUp(e) {
+  if (!phDrag) return;
+  const d = phDrag; phDrag = null;
+  document.querySelectorAll('.phbucket').forEach(b => b.classList.remove('over'));
+  if (d.moved) {
+    if (d.ghost) d.ghost.remove();
+    const under = document.elementFromPoint ? document.elementFromPoint(e.clientX, e.clientY) : null;
+    const bk = under && under.closest ? under.closest('.phbucket') : null;
+    if (bk) phTryPlace(d.chip, bk.dataset.rule);
+  } else {
+    const was = d.chip.classList.contains('sel');
+    document.querySelectorAll('.phchip.sel').forEach(c => c.classList.remove('sel'));
+    if (was) { phSel = null; } else { d.chip.classList.add('sel'); phSel = d.chip; speak(d.chip.dataset.w); }
+  }
+}
+
+function updatePhSortCount() {
+  exEl('exCount').textContent = '모은 낱말 ' + Object.keys(phPlaced).length + ' / ' + exConf.words.length;
+}
+
+function phTryPlace(chip, rule) {
+  if (chip.classList.contains('placed')) return;
+  const wd = exConf.words.find(x => x.w === chip.dataset.w);
+  const msg = exEl('phMsg');
+  if (wd.rule === rule) {
+    chip.classList.add('placed'); chip.classList.remove('sel'); chip.style.display = 'none';
+    phSel = null;
+    phPlaced[wd.w] = rule;
+    exEl('phDone_' + rule).insertAdjacentHTML('beforeend', '<div class="phplaced">' + phHighlight(wd.w, wd.rule) + '</div>');
+    try { playCorrect(); } catch (e) {}
+    speak(wd.w);
+    msg.style.color = 'var(--accent-strong)';
+    msg.textContent = '⭕ ' + wd.w + ' → ' + (rule === 'u_e' ? 'u_e' : rule);
+    updatePhSortCount();
+    if (Object.keys(phPlaced).length === exConf.words.length) {
+      msg.textContent = '🎉 다 모았어요!' + (phMistakes ? ' (틀린 횟수 ' + phMistakes + ')' : ' 한 번도 안 틀렸어요!');
+      const b = exEl('exMainBtn');
+      b.hidden = false; b.disabled = false; b.textContent = '다음: 같은 규칙 낱말 쓰기 →';
+    }
+  } else {
+    phMistakes++;
+    chip.classList.add('shake'); setTimeout(() => chip.classList.remove('shake'), 400);
+    try { playWrong(); } catch (e) {}
+    msg.style.color = 'var(--danger)';
+    msg.textContent = '❌ ' + wd.w + '의 Long U 철자는 다른 상자예요. 소리를 다시 들어 보세요!';
+    speak(wd.w);
+  }
+}
+
+function renderPhWrite() {
+  exPhase = 'ph3'; phFails = 0;
+  phShow();
+  exEl('exStage').textContent = 'STEP 3 · 같은 규칙 낱말 쓰기';
+  exEl('exLead').textContent = '상자마다 같은 철자 규칙을 가진 낱말을 2개씩 써 보세요. 배운 낱말도 좋고, 새로 아는 낱말도 좋아요!';
+  exEl('exLearn').innerHTML = '<div class="phwrite">' + exConf.rules.map(r =>
+    '<div class="phrow"><div class="phrl">' + r.label + '</div>' +
+    '<input type="text" data-rule="' + r.id + '" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="낱말 1">' +
+    '<input type="text" data-rule="' + r.id + '" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="낱말 2"></div>').join('') + '</div>' +
+    '<div class="phmsg" id="phMsg"></div><div id="phHint"></div>';
+  exEl('exCount').textContent = '';
+  const b = exEl('exMainBtn');
+  b.hidden = false; b.disabled = false; b.textContent = '확인하기';
+}
+
+function checkPhWrite() {
+  let allOk = true; const bad = [];
+  exConf.rules.forEach(r => {
+    const ins = Array.prototype.slice.call(exEl('exLearn').querySelectorAll('input[data-rule="' + r.id + '"]'));
+    const vals = ins.map(i => i.value.trim().toLowerCase());
+    const valid = vals.map(v => !!v && exConf.bank[r.id].indexOf(v) >= 0);
+    const distinct = vals[0] !== vals[1];
+    ins.forEach((inp, k) => { inp.className = (valid[k] && (k === 0 || distinct)) ? 'ok' : 'bad'; });
+    if (!(valid[0] && valid[1] && distinct)) { allOk = false; bad.push(r); }
+  });
+  const msg = exEl('phMsg');
+  if (allOk) { finishPhonics(); return; }
+  phFails++;
+  try { playWrong(); } catch (e) {}
+  msg.style.color = 'var(--danger)';
+  msg.textContent = '빨간 칸을 다시 확인해 보세요. 상자의 철자 규칙이 같은 낱말을 서로 다르게 2개씩 써요.';
+  exEl('phHint').innerHTML = '<div class="phhint">💡 힌트: ' + bad.map(r => '<b>' + r.label + '</b> → ' + exConf.hints[r.id].join(', ')).join(' &nbsp;·&nbsp; ') + '</div>';
+}
+
+async function finishPhonics() {
+  exPhase = 'done';
+  exEl('exLearn').hidden = true;
+  exEl('exQuiz').hidden = true;
+  exEl('exProgWrap').hidden = true;
+  exEl('exDone').hidden = false;
+  exEl('exStage').textContent = '완료';
+  exEl('exLead').textContent = '';
+  exEl('exScore').textContent = '🎉 완료!';
+  const badge = exEl('exBadge');
+  badge.className = 'passbadge pass';
+  badge.textContent = '✅ Long U 마스터!';
+  exEl('exCount').textContent = '';
+  const b = exEl('exMainBtn');
+  b.hidden = false; b.disabled = false; b.textContent = '모드 선택으로 →';
+  try { launchConfetti(); playCelebrationSound(); } catch (e) {}
+  markLocalProgress(currentSet, 'phonics', true);
+  if (db) {
+    try {
+      const id = 'r_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8);
+      await db.doc('quiz_results/' + id).set({ name: currentName, mode: 'phonics', setNo: currentSet, ts: Date.now(), passed: true, mistakes: phMistakes });
+    } catch (e) {}
+  }
+}
+
+function phonicsMain() {
+  if (exPhase === 'ph1') { renderPhSort(); return; }
+  if (exPhase === 'ph2') { renderPhWrite(); return; }
+  if (exPhase === 'ph3') { checkPhWrite(); return; }
+  openModeScreen(currentSet);
+}
+
 let exKind = null, exConf = null, exPhase = 'learn', exSeen = null;
 let exQs = [], exIdx = 0, exScore = 0, exLocked = false;
 const exEl = id => document.getElementById(id);
@@ -2908,8 +3342,7 @@ function renderStepUp(setNo) {
   wrap.hidden = !conf;
   if (!conf) return;
   const p = studentProgress[setNo] || {};
-  exEl('exDotMeals').className = 'dot' + (p.meals ? ' pass' : '');
-  exEl('exDotBody').className = 'dot' + (p.body ? ' pass' : '');
+  exEl('stepupPicker').innerHTML = Object.keys(conf).map(k => '<button class="setbtn" data-extra="' + k + '">' + conf[k].title + ' <span class="dot' + (p[k] ? ' pass' : '') + '"></span><br><span class="hint" style="margin:0;">' + (conf[k].hint || '') + '</span></button>').join('');
 }
 
 function exItems() {
@@ -2932,6 +3365,7 @@ function startExtra(kind) {
 }
 
 function renderExtraLearn() {
+  if (exKind === 'phonics') { renderPhonics(); return; }
   exEl('exStage').textContent = 'STEP 1 · 배우기';
   exEl('exTitle').textContent = exConf.title;
   exEl('exLead').textContent = exConf.lead;
@@ -2953,6 +3387,8 @@ function renderExtraLearn() {
         speak(it.en); exSeen.add(it.en); updateExLearn();
       });
     });
+  } else if (exKind === 'plant') {
+    renderPlantLearn();
   } else {
     exEl('exLearn').innerHTML = '<div class="dogwrap">' + dogSvg() + '</div>' +
       '<div class="dogcaption" id="dogCaption"><div class="dcidle">그림의 한 곳을 눌러 보세요 👆</div></div>';
@@ -2986,6 +3422,15 @@ function exShuffle(a) {
 
 function buildExtraQuiz() {
   const all = exItems();
+  if (exKind === 'plant') {
+    exQs = exShuffle(all.slice()).map((it, i) => {
+      if (i % 2 === 0) return { kind: 'pick', item: it };
+      const others = exShuffle(all.filter(x => x.id !== it.id)).slice(0, 3).map(x => x.en);
+      return { kind: 'name', item: it, correct: it.en, choices: exShuffle([it.en].concat(others)) };
+    });
+    exIdx = 0; exScore = 0; exPhase = 'quiz';
+    return;
+  }
   const pool = exShuffle(all.slice());
   exQs = pool.map((it, i) => {
     if (exKind === 'body') return { kind: 'pick', item: it };
@@ -3013,6 +3458,7 @@ function renderExtraQ() {
   exEl('exFeedback').hidden = true;
   exEl('exMainBtn').hidden = true;
   exEl('exCount').textContent = '맞힌 개수 ' + exScore;
+  if (exKind === 'plant') { renderPlantQ(q); return; }
   if (q.kind === 'choice') {
     exEl('exPicture').hidden = true;
     exEl('exPrompt').textContent = q.prompt;
@@ -3098,6 +3544,7 @@ document.getElementById('stepupPicker').addEventListener('click', function (e) {
 });
 document.getElementById('extraExitBtn').addEventListener('click', function () { openModeScreen(currentSet); });
 document.getElementById('exMainBtn').addEventListener('click', function () {
+  if (exKind === 'phonics') { phonicsMain(); return; }
   if (exPhase === 'learn') { buildExtraQuiz(); renderExtraQ(); return; }
   if (exPhase === 'quiz') {
     if (exIdx + 1 < exQs.length) { exIdx++; renderExtraQ(); }
