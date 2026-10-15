@@ -1288,7 +1288,7 @@ function renderMatchBoard() {
 
 function quizStartLabel() {
   const q = QUIZZES.find(x => x.no === currentSet);
-  return '퀴즈 시작 (' + (q ? q.questions.length : 15) + '문항)';
+  return '퀴즈 시작 (' + (q ? Math.min(QUIZ_MAX_Q, q.questions.length) : 15) + '문항)';
 }
 function stageOrder(setNo) { return setNo === 'review6' ? ['wordcheck', 'quiz', 'match'] : ['wordcheck', 'quiz', 'match', 'spell']; }
 // 앞 단계를 통과했거나, 이미 이 단계나 그 뒤 단계를 통과한 기록이 있으면 열려 있다
@@ -1481,12 +1481,20 @@ const nextBtn = document.getElementById('nextBtn');
 // ---- quiz round state: round 1 asks every question once; any missed word
 // then loops in a "복습 라운드" (retest) until answered correctly, before finishQuiz() ----
 let quizRoundQuestions = [];
+// 한 번에 풀 퀴즈는 최대 20문항: 단어가 더 많은 책은 풀 때마다 무작위로 20개를 뽑는다
+const QUIZ_MAX_Q = 20;
+function pickQuizQuestions(list) {
+  const a = list.slice();
+  if (a.length <= QUIZ_MAX_Q) return a;
+  for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; }
+  return a.slice(0, QUIZ_MAX_Q);
+}
 let inRetest = false;
 let retestQueue = [];
 let wrongQuestions = [];
 
 function startQuizRound() {
-  quizRoundQuestions = currentQuiz().questions;
+  quizRoundQuestions = pickQuizQuestions(currentQuiz().questions);
   inRetest = false;
   retestQueue = [];
   wrongQuestions = [];
@@ -1697,8 +1705,8 @@ async function finishQuiz() {
   document.getElementById('retestBanner').hidden = true;
   document.getElementById('progressBar').style.width = '100%';
   const quiz = currentQuiz();
-  document.getElementById('scoreNum').textContent = `${score} / ${quiz.questions.length}`;
-  const pct = Math.round(score / quiz.questions.length * 100);
+  document.getElementById('scoreNum').textContent = `${score} / ${quizRoundQuestions.length}`;
+  const pct = Math.round(score / quizRoundQuestions.length * 100);
   const passed = pct >= PASS_PCT;
   document.getElementById('scoreLbl').textContent = `${currentName} · ${setLabel(quiz.no)} ${quiz.title} · ${pct}%`;
   const badge = document.getElementById('passBadge');
@@ -1706,10 +1714,10 @@ async function finishQuiz() {
   badge.className = 'passbadge ' + (passed ? 'pass' : 'fail');
   badge.hidden = false;
   document.getElementById('resultCard').hidden = false;
-  recordLast(currentSet, 'quiz', { score, total: quiz.questions.length, pct, passed, wrong: [...new Set(wrongWords)], reps: bumpReps(currentSet, 'quiz') });
+  recordLast(currentSet, 'quiz', { score, total: quizRoundQuestions.length, pct, passed, wrong: [...new Set(wrongWords)], reps: bumpReps(currentSet, 'quiz') });
   markLocalProgress(currentSet, 'quiz', passed);
   configureNextModeBtn('quiz');
-  await saveResult({ setTitle: quiz.title, score, total: quiz.questions.length, pct, passed, wrong: [...new Set(wrongWords)] });
+  await saveResult({ setTitle: quiz.title, score, total: quizRoundQuestions.length, pct, passed, wrong: [...new Set(wrongWords)] });
   loadBoard();
   loadTeacherDashboard();
   renderSubmitBanner();
