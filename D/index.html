@@ -4092,7 +4092,7 @@ async function loadOnlineRoster() {
   } catch (e) {}
 }
 
-// --- 로그인: PIN은 중계가 확인하고, 5번 틀리면 5분 잠근다. PIN은 이 화면의 메모리에만 둔다
+// --- 로그인: PIN은 중계가 확인하고, 5번 틀리면 5분 잠근다. 맞게 입력하면 이 기기에 1시간 동안 로그인 정보를 남긴다
 async function confirmPinOnline() {
   if (pinBusy) return;
   const input = document.getElementById('pinInput');
@@ -4106,6 +4106,7 @@ async function confirmPinOnline() {
     const r = await relayPost({ action: 'login', level: LEVEL_CODE, name: pendingName, pin: typed });
     if (r.ok) {
       onlinePin = typed;
+      saveSession(r, typed);   // 1시간 동안 이 기기에 로그인 유지
       onlineTrial = !!r.trial;
       onlineClass = r.cls || '';
       if (r.icon) NAME_ICON[r.name] = r.icon;
@@ -4299,7 +4300,7 @@ let idleTimer = null;
 function resetIdle() {
   clearTimeout(idleTimer);
   if (!ONLINE || !currentName) return;
-  idleTimer = setTimeout(() => { location.reload(); }, IDLE_MS);
+  // 자리를 비워도 화면은 그대로 둔다 (로그인은 1시간 동안 기기에 남는다)
 }
 
 if (ONLINE) {
@@ -4307,8 +4308,35 @@ if (ONLINE) {
   ['pointerdown', 'keydown', 'touchstart'].forEach(ev => document.addEventListener(ev, resetIdle, { passive: true }));
   window.addEventListener('online', flushOutbox);
   setInterval(flushOutbox, 60000);
-  document.getElementById('nameBackBtn').addEventListener('click', () => { onlinePin = ''; onlineClass = ''; clearTimeout(idleTimer); });
+  document.getElementById('nameBackBtn').addEventListener('click', () => { onlinePin = ''; onlineClass = ''; clearTimeout(idleTimer); clearSession(); });
 }
+
+// ===== SESSION_KEEP: 로그인 1시간 유지 =====
+const SESSION_KEY = LEVEL_CODE.toLowerCase() + '_quiz_session';
+const SESSION_MS = 60 * 60 * 1000;
+function saveSession(r, pin) {
+  try { localStorage.setItem(SESSION_KEY, JSON.stringify({ name: r.name, pin: pin, exp: Date.now() + SESSION_MS })); } catch (e) {}
+}
+function clearSession() { try { localStorage.removeItem(SESSION_KEY); } catch (e) {} }
+async function restoreSession() {
+  let s = null;
+  try { s = JSON.parse(localStorage.getItem(SESSION_KEY) || 'null'); } catch (e) {}
+  if (!s || !s.name || !s.pin || !(s.exp > Date.now())) { clearSession(); return; }
+  try {
+    const r = await relayPost({ action: 'login', level: LEVEL_CODE, name: s.name, pin: s.pin });
+    if (!r.ok) { clearSession(); return; }
+    if (currentName) return; // 그 사이에 직접 로그인했다면 그대로 둔다
+    onlinePin = s.pin;
+    onlineTrial = !!r.trial;
+    onlineClass = r.cls || '';
+    if (r.icon) NAME_ICON[r.name] = r.icon;
+    currentName = r.name;
+    resetIdle();
+    flushOutbox();
+    openSetList();
+  } catch (e) { /* 인터넷이 없으면 이름 고르는 화면에서 시작 (저장 정보는 1시간이 지날 때까지 남겨 둔다) */ }
+}
+if (ONLINE) restoreSession();
 </script>
 
 </body></html>
