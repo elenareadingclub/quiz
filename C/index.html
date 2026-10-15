@@ -578,6 +578,8 @@
   .subox.ok{border-color:var(--accent); background:var(--accent-soft);}
   .subox.no{border-color:var(--danger); background:var(--danger-soft);}
   .sutip{background:var(--surface-2); border-radius:12px; padding:12px 14px; font-size:14px; line-height:1.55; margin:12px 0;}
+
+  .swgap{display:inline-block; min-width:.6em; border-bottom:4px solid var(--accent); color:var(--accent-strong);}
 </style>
 
 <div class="celebratebanner" id="celebrateBanner" hidden>🎉 You did it! 🎉</div>
@@ -675,6 +677,7 @@
       <div class="stepuphead">⬆️ Step Up · 추가 활동 <span class="hint" style="margin:0;font-weight:600;">(숙제 아니에요)</span></div>
       <div class="setpicker" id="stepupPicker">
         <button class="setbtn" data-mode="sound">🔤 소리 분류 <span class="dot" id="modeDotSound"></span><br><span class="hint" style="margin:0;" id="soundHint">따라하고 두 상자로 나누기</span></button>
+        <button class="setbtn" data-mode="sight">🔊 사이트워드 <span class="dot" id="modeDotSight"></span><br><span class="hint" style="margin:0;">소리 듣고 빈칸 1개 채우기</span></button>
       </div>
     </div>
     <button class="secondary" id="hwBtn" style="width:100%;margin-top:10px;">📋 숙제 결과 카드 보기</button>
@@ -3108,11 +3111,16 @@ function suSavePass(name, setNo) {
   try { const p = suLoad(name); p[setNo] = true; localStorage.setItem(SU_KEY + name, JSON.stringify(p)); } catch (e) {}
 }
 function suRefresh(setNo) {
-  const d = suData(setNo);
-  document.getElementById('stepupWrap').hidden = !d;
-  if (!d) return;
-  document.getElementById('modeDotSound').className = 'dot' + (suLoad(currentName)[setNo] ? ' pass' : '');
-  document.getElementById('soundHint').textContent = d.rounds.map(r => r.title).join(' · ') + ' · 따라하기';
+  const d = suData(setNo), s = swData(setNo);
+  document.getElementById('stepupWrap').hidden = !d && !s;
+  document.querySelector('#stepupPicker [data-mode="sound"]').hidden = !d;
+  document.querySelector('#stepupPicker [data-mode="sight"]').hidden = !s;
+  const p = suLoad(currentName);
+  if (d) {
+    document.getElementById('modeDotSound').className = 'dot' + (p[setNo] ? ' pass' : '');
+    document.getElementById('soundHint').textContent = d.rounds.map(r => r.title).join(' · ') + ' · 따라하기';
+  }
+  if (s) document.getElementById('modeDotSight').className = 'dot' + (p[setNo + '#sight'] ? ' pass' : '');
 }
 function suShuffle(a) {
   const b = a.slice();
@@ -3131,6 +3139,7 @@ function suWordHtml(w, round) {
 function suStart() {
   const d = suData(currentSet);
   if (!d) return;
+  swState = null;
   suState = { d, r: 0, phase: 'follow', heard: {}, order: [], i: 0, firstTry: 0, wrongOnWord: 0, locked: false, score: 0 };
   document.getElementById('suCard').hidden = false;
   suRender();
@@ -3174,10 +3183,10 @@ function suRender() {
 }
 document.getElementById('stepupPicker').addEventListener('click', e => {
   const btn = e.target.closest('.setbtn');
-  if (!btn || btn.dataset.mode !== 'sound') return;
+  if (!btn || (btn.dataset.mode !== 'sound' && btn.dataset.mode !== 'sight')) return;
   document.getElementById('modeScreen').hidden = true;
   hideAllModeCards();
-  suStart();
+  if (btn.dataset.mode === 'sight') swStart(); else suStart();
 });
 document.getElementById('suExitBtn').addEventListener('click', () => openModeScreen(currentSet));
 document.getElementById('suBody').addEventListener('click', e => {
@@ -3225,6 +3234,91 @@ document.getElementById('suBody').addEventListener('click', e => {
   if (e.target.closest('#suNext')) { suState.r++; suState.phase = 'follow'; suRender(); return; }
   if (e.target.closest('#suRetry')) { suState.phase = 'follow'; suRender(); return; }
   if (e.target.closest('#suBack')) { openModeScreen(currentSet); return; }
+});
+
+// ===== Step Up: 사이트워드 (소리 듣고 빈칸 1개 채우기) =====
+// at = 빈칸이 되는 글자 순서(0부터). 숙제가 아니고 기록은 서버로 보내지 않는다.
+const SIGHT_WORDS = {
+  C: {
+    '2-2': { words: [
+      { en: 'must', ko: '반드시 ~해야 해요', at: 1 },
+      { en: 'done', ko: '다 했어요, 끝난', at: 1 },
+      { en: 'so', ko: '그래서, 아주', at: 1 },
+      { en: 'by', ko: '~ 옆에, ~로', at: 1 },
+      { en: 'and', ko: '그리고', at: 0 }
+    ] }
+  }
+};
+function swData(setNo) { return (SIGHT_WORDS[LEVEL_CODE] || {})[setNo] || null; }
+let swState = null;
+function swStart() {
+  const d = swData(currentSet);
+  if (!d) return;
+  suState = null;
+  swState = { d, order: suShuffle(d.words.map((w, i) => i)), i: 0, score: 0, wrongOnWord: 0, locked: false, done: false };
+  document.getElementById('suCard').hidden = false;
+  swRender();
+}
+function swRender() {
+  const body = document.getElementById('suBody');
+  const words = swState.d.words;
+  const head = '<div class="suhead">🔊 사이트워드 <small>(' + currentSet + ')</small></div>';
+  if (swState.done) {
+    const total = words.length, pct = Math.round(swState.score / total * 100), passed = pct >= 70;
+    if (passed) { playCorrectSound(); try { const p = suLoad(currentName); p[currentSet + '#sight'] = true; localStorage.setItem(SU_KEY + currentName, JSON.stringify(p)); } catch (e) {} }
+    body.innerHTML = head +
+      '<div class="resultcard" style="text-align:center;margin:10px 0;"><div class="num" style="font-size:40px;font-weight:800;">' + swState.score + ' / ' + total + '</div>' +
+      '<div class="lbl">한 번에 맞힌 단어</div>' +
+      '<div class="passbadge ' + (passed ? 'pass' : 'fail') + '">' + (passed ? '✓ 통과!' : '아쉬워요, 다시 도전해요') + '</div></div>' +
+      '<div class="sucards">' + words.map(w => '<div class="sucard heard"><div class="suword">' + w.en + '</div><div class="hint" style="margin:0;">' + w.ko + '</div></div>').join('') + '</div>' +
+      '<button class="primary" id="swRetry">다시 하기</button>' +
+      '<button class="secondary" id="swBack" style="width:100%;margin-top:10px;">모드 선택으로</button>';
+    return;
+  }
+  const w = words[swState.order[swState.i]];
+  const letters = w.en.split('');
+  const right = letters[w.at];
+  const pool = ['a', 'e', 'i', 'o', 'u'].filter(c => c !== right);
+  const choices = suShuffle([right].concat(suShuffle(pool).slice(0, 3)));
+  swState.right = right; swState.locked = false; swState.wrongOnWord = 0;
+  body.innerHTML = head +
+    '<div class="progress"><span style="width:' + Math.round(swState.i / words.length * 100) + '%"></span></div>' +
+    '<div class="qnum">' + (swState.i + 1) + ' / ' + words.length + '</div>' +
+    '<div class="sudir">소리를 듣고, 빈칸에 들어갈 글자 1개를 골라요</div>' +
+    '<div class="suplay"><div class="suword big">' + letters.map((c, k) => k === w.at ? '<span class="swgap" id="swGap">_</span>' : c).join('') + '</div>' +
+    '<button class="suspeak" id="swSpeak">🔊 다시 듣기</button></div>' +
+    '<div class="suboxes">' + choices.map(c => '<button class="subox" data-ch="' + c + '"><b>' + c + '</b></button>').join('') + '</div>' +
+    '<div class="spellfeedback" id="swFb" hidden></div>';
+  speak(w.en);
+}
+document.getElementById('suBody').addEventListener('click', e => {
+  if (!swState) return;
+  const words = swState.d.words;
+  if (e.target.closest('#swRetry')) { swStart(); return; }
+  if (e.target.closest('#swBack')) { openModeScreen(currentSet); return; }
+  if (swState.done) return;
+  const w = words[swState.order[swState.i]];
+  if (e.target.closest('#swSpeak')) { speak(w.en); return; }
+  const b = e.target.closest('.subox');
+  if (!b || swState.locked) return;
+  const fb = document.getElementById('swFb');
+  if (b.dataset.ch === swState.right) {
+    swState.locked = true;
+    if (swState.wrongOnWord === 0) swState.score++;
+    b.classList.add('ok');
+    document.getElementById('swGap').textContent = swState.right;
+    fb.textContent = '✓ ' + w.en + ' — ' + w.ko; fb.className = 'spellfeedback correct'; fb.hidden = false;
+    playCorrectSound();
+    [...document.querySelectorAll('#suBody .subox')].forEach(x => { x.disabled = true; });
+    setTimeout(() => { swState.i++; if (swState.i >= words.length) swState.done = true; swRender(); }, 1100);
+  } else {
+    swState.wrongOnWord++;
+    b.classList.add('no');
+    setTimeout(() => b.classList.remove('no'), 500);
+    fb.textContent = '다시 들어 봐요! 어떤 소리가 날까요?'; fb.className = 'spellfeedback wrong'; fb.hidden = false;
+    playWrongSound();
+    speak(w.en);
+  }
 });
 </script>
 
