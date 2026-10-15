@@ -3272,11 +3272,13 @@ function swRender() {
   const items = swState.items;
   if (swState.done) {
     const total = items.length, pct = Math.round(swState.score / total * 100), passed = pct >= 70;
+    const perfect = swState.score === total;
+    if (perfect) launchConfetti();
     if (passed) { playCorrectSound(); try { const p = suLoad(currentName); p[currentSet + '#sight'] = true; localStorage.setItem(SU_KEY + currentName, JSON.stringify(p)); } catch (e) {} }
     body.innerHTML = head +
       '<div class="resultcard" style="text-align:center;margin:10px 0;"><div class="num" style="font-size:40px;font-weight:800;">' + swState.score + ' / ' + total + '</div>' +
       '<div class="lbl">한 번에 맞힌 문장</div>' +
-      '<div class="passbadge ' + (passed ? 'pass' : 'fail') + '">' + (passed ? '✓ 통과!' : '아쉬워요, 다시 도전해요') + '</div></div>' +
+      '<div class="passbadge ' + (passed ? 'pass' : 'fail') + '">' + (perfect ? '🎉 모두 한 번에 맞혔어요!' : passed ? '✓ 통과!' : '아쉬워요, 다시 도전해요') + '</div></div>' +
       '<div class="swlist">' + items.map(x => '<div class="swsent">' + swFill(x.s, x.w, 'done') + '</div>').join('') + '</div>' +
       '<button class="primary" id="swRetry">다시 하기</button>' +
       '<button class="secondary" id="swBack" style="width:100%;margin-top:10px;">모드 선택으로</button>';
