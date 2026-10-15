@@ -554,6 +554,30 @@
   .hwsent{margin-top:14px; border:2px solid var(--accent); background:var(--accent-soft); border-radius:12px; padding:10px 12px;}
   .hwsent .hwsenthead{font-weight:800; font-size:13.5px; color:var(--accent-strong);}
   footer{margin-top:20px; text-align:center; font-size:11px; color:var(--ink-faint);}
+
+  /* Step Up · 소리 분류 */
+  .stepuphead{font-family:"Baloo 2","IBM Plex Sans KR",sans-serif; font-weight:800; font-size:16px; color:var(--accent-strong); margin:22px 0 10px; padding-top:16px; border-top:2px dashed var(--line);}
+  .suhead{font-family:"Baloo 2","IBM Plex Sans KR",sans-serif; font-weight:800; font-size:18px; margin:6px 0 4px;}
+  .suhead small{font-weight:600; color:var(--ink-soft); font-size:13px;}
+  .sudir{font-size:14px; color:var(--ink-soft); margin:0 0 14px; line-height:1.55;}
+  .sucards{display:grid; grid-template-columns:repeat(auto-fill,minmax(130px,1fr)); gap:12px; margin-bottom:16px;}
+  .sucard{border:2px solid var(--line); border-radius:16px; padding:12px 10px; background:var(--surface); display:flex; flex-direction:column; align-items:center; gap:8px; text-align:center; min-width:0;}
+  .sucard.heard{border-color:var(--accent); background:var(--accent-soft);}
+  .suword{font-family:"Baloo 2","IBM Plex Sans KR",sans-serif; font-weight:800; font-size:30px; line-height:1.1; overflow-wrap:anywhere;}
+  .suword.big{font-size:54px; margin:6px 0;}
+  .suhl{color:var(--accent-strong); background:var(--accent-soft); border-radius:6px; padding:0 3px;}
+  .sufollow{border:2px solid var(--accent); background:var(--surface); color:var(--ink); border-radius:12px; padding:9px 8px; font-weight:800; font-size:14px; cursor:pointer; width:100%; font-family:inherit;}
+  .sucard.heard .sufollow{background:var(--accent); color:#2D2A24;}
+  .suplay{display:flex; flex-direction:column; align-items:center; gap:6px; margin:10px 0 16px;}
+  .suspeak{border:2px solid var(--line); background:var(--surface); color:var(--ink); border-radius:999px; padding:7px 16px; font-weight:700; cursor:pointer; font-family:inherit;}
+  .suboxes{display:grid; grid-template-columns:1fr 1fr; gap:12px;}
+  .subox{border:3px solid var(--line); background:var(--surface); color:var(--ink); border-radius:18px; padding:16px 8px; cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:4px; font-family:inherit; min-width:0;}
+  .subox b{font-family:"Baloo 2","IBM Plex Sans KR",sans-serif; font-size:30px; line-height:1.1;}
+  .subox span{font-size:13px; color:var(--ink-soft); font-weight:600;}
+  .subox:disabled{opacity:.7; cursor:default;}
+  .subox.ok{border-color:var(--accent); background:var(--accent-soft);}
+  .subox.no{border-color:var(--danger); background:var(--danger-soft);}
+  .sutip{background:var(--surface-2); border-radius:12px; padding:12px 14px; font-size:14px; line-height:1.55; margin:12px 0;}
 </style>
 
 <div class="celebratebanner" id="celebrateBanner" hidden>🎉 You did it! 🎉</div>
@@ -647,7 +671,18 @@
     </div>
     <div class="hint" id="modeLockNote" hidden style="color:var(--danger);font-weight:700;margin:-8px 0 10px;">🔒 단어확인을 먼저 해요! 뜻 확인을 모두 누르면 열려요</div>
     <button class="primary" id="startBtn">단어확인 시작 (뜻 확인)</button>
+    <div id="stepupWrap" hidden>
+      <div class="stepuphead">⬆️ Step Up · 추가 활동 <span class="hint" style="margin:0;font-weight:600;">(숙제 아니에요)</span></div>
+      <div class="setpicker" id="stepupPicker">
+        <button class="setbtn" data-mode="sound">🔤 소리 분류 <span class="dot" id="modeDotSound"></span><br><span class="hint" style="margin:0;" id="soundHint">따라하고 두 상자로 나누기</span></button>
+      </div>
+    </div>
     <button class="secondary" id="hwBtn" style="width:100%;margin-top:10px;">📋 숙제 결과 카드 보기</button>
+  </div>
+
+  <div class="card" id="suCard" hidden>
+    <button class="exitbtn" id="suExitBtn" aria-label="그만하고 모드 선택으로">← 그만하기</button>
+    <div id="suBody"></div>
   </div>
 
   <div class="card" id="quizCard" hidden>
@@ -969,6 +1004,7 @@ function hideAllModeCards() {
   document.getElementById('quizCard').hidden = true;
   document.getElementById('matchCard').hidden = true;
   document.getElementById('spellCard').hidden = true;
+  const suc = document.getElementById('suCard'); if (suc) suc.hidden = true;
 }
 
 function showScreen(id) {
@@ -1344,6 +1380,7 @@ function openModeScreen(setNo) {
   const quiz = currentQuiz();
   showScreen('modeScreen');
   document.getElementById('modeSetTitle').textContent = '';
+  suRefresh(setNo);
   const bd = BOOK_DISPLAY[quiz.no] || {};
   document.getElementById('mhsub').textContent = setLabel(quiz.no);
   document.getElementById('mhemoji').textContent = bd.e || '';
@@ -3042,6 +3079,150 @@ if (ONLINE) {
   setInterval(flushOutbox, 60000);
   document.getElementById('nameBackBtn').addEventListener('click', () => { onlinePin = ''; onlineClass = ''; clearTimeout(idleTimer); });
 }
+
+// ===== Step Up: 소리 분류 (따라하기 → 두 상자로 분류하기) =====
+// 한 세트에 라운드를 여러 개 둘 수 있다. 상자(boxes)는 2개, 단어(words)는 box 키로 정답 상자를 가진다.
+const SOUND_SORT = {
+  C: {
+    '2-2': { rounds: [
+      { title: 'ip vs ipe',
+        boxes: [ { key: 'ip', label: 'ip', say: '짧게 \'입\'' }, { key: 'ipe', label: 'ipe', say: '길게 \'아이프\'' } ],
+        words: [
+          { en: 'whip', ko: '휘젓다, 거품 내다', box: 'ip' },
+          { en: 'ship', ko: '배', box: 'ip' },
+          { en: 'lip', ko: '입술', box: 'ip' },
+          { en: 'tip', ko: '끝, 팁', box: 'ip' },
+          { en: 'wipe', ko: '닦다', box: 'ipe' }
+        ],
+        tip: 'wipe 끝의 e는 소리가 나지 않아요. 대신 i를 \'아이\'처럼 길게 읽게 도와줘요 (magic e ✨)' }
+    ] }
+  }
+};
+const SU_KEY = LEVEL_CODE.toLowerCase() + '_quiz_stepup_';
+function suData(setNo) { return (SOUND_SORT[LEVEL_CODE] || {})[setNo] || null; }
+function suLoad(name) { try { return JSON.parse(localStorage.getItem(SU_KEY + name) || '{}'); } catch (e) { return {}; } }
+function suSavePass(name, setNo) {
+  try { const p = suLoad(name); p[setNo] = true; localStorage.setItem(SU_KEY + name, JSON.stringify(p)); } catch (e) {}
+}
+function suRefresh(setNo) {
+  const d = suData(setNo);
+  document.getElementById('stepupWrap').hidden = !d;
+  if (!d) return;
+  document.getElementById('modeDotSound').className = 'dot' + (suLoad(currentName)[setNo] ? ' pass' : '');
+  document.getElementById('soundHint').textContent = d.rounds.map(r => r.title).join(' · ') + ' · 따라하기';
+}
+function suShuffle(a) {
+  const b = a.slice();
+  for (let i = b.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [b[i], b[j]] = [b[j], b[i]]; }
+  return b;
+}
+let suState = null;
+function suRound() { return suState.d.rounds[suState.r]; }
+function suWordHtml(w, round) {
+  const box = round.boxes.find(b => b.key === w.box);
+  if (box && w.en.length > box.key.length && w.en.endsWith(box.key)) {
+    return w.en.slice(0, -box.key.length) + '<span class="suhl">' + box.key + '</span>';
+  }
+  return w.en;
+}
+function suStart() {
+  const d = suData(currentSet);
+  if (!d) return;
+  suState = { d, r: 0, phase: 'follow', heard: {}, order: [], i: 0, firstTry: 0, wrongOnWord: 0, locked: false, score: 0 };
+  document.getElementById('suCard').hidden = false;
+  suRender();
+}
+function suRender() {
+  const body = document.getElementById('suBody');
+  const r = suRound();
+  const n = suState.d.rounds.length;
+  const head = '<div class="suhead">🔤 소리 분류 · ' + r.title + (n > 1 ? ' <small>(' + (suState.r + 1) + '/' + n + ')</small>' : '') + '</div>';
+  if (suState.phase === 'follow') {
+    body.innerHTML = head +
+      '<div class="sudir">① 따라하기 — 단어 아래 버튼을 누르면 <b>소리</b>가 나고 <b>뜻</b>이 보여요. 소리를 듣고 따라 말해요!</div>' +
+      '<div class="sucards">' + r.words.map((w, i) =>
+        '<div class="sucard" data-i="' + i + '"><div class="suword">' + suWordHtml(w, r) + '</div>' +
+        '<button class="sufollow" data-i="' + i + '">🔊 따라하기</button></div>').join('') + '</div>' +
+      '<button class="primary" id="suGo">② 두 상자로 분류하기</button>';
+  } else if (suState.phase === 'sort') {
+    const w = r.words[suState.order[suState.i]];
+    body.innerHTML = head +
+      '<div class="progress"><span style="width:' + Math.round(suState.i / r.words.length * 100) + '%"></span></div>' +
+      '<div class="qnum">' + (suState.i + 1) + ' / ' + r.words.length + '</div>' +
+      '<div class="sudir">소리를 듣고, 어느 상자에 들어갈까요?</div>' +
+      '<div class="suplay"><div class="suword big">' + w.en + '</div><button class="suspeak" id="suSpeak">🔊 다시 듣기</button></div>' +
+      '<div class="suboxes">' + r.boxes.map(b => '<button class="subox" data-box="' + b.key + '"><b>' + b.label + '</b><span>' + b.say + '</span></button>').join('') + '</div>' +
+      '<div class="spellfeedback" id="suFb" hidden></div>';
+    suState.locked = false; suState.wrongOnWord = 0;
+    speak(w.en);
+  } else {
+    const total = r.words.length, pct = Math.round(suState.score / total * 100), passed = pct >= 70;
+    const more = suState.r + 1 < n;
+    if (passed) { playCorrectSound(); if (!more) suSavePass(currentName, currentSet); }
+    body.innerHTML = head +
+      '<div class="resultcard" style="text-align:center;margin:10px 0;"><div class="num" style="font-size:40px;font-weight:800;">' + suState.score + ' / ' + total + '</div>' +
+      '<div class="lbl">한 번에 맞힌 단어</div>' +
+      '<div class="passbadge ' + (passed ? 'pass' : 'fail') + '">' + (passed ? '✓ 통과!' : '아쉬워요, 다시 도전해요') + '</div></div>' +
+      '<div class="sutip">' + r.tip + '</div>' +
+      '<div class="sucards">' + r.words.map(w => '<div class="sucard heard"><div class="suword">' + suWordHtml(w, r) + '</div><div class="hint" style="margin:0;">' + w.ko + '</div></div>').join('') + '</div>' +
+      (more && passed ? '<button class="primary" id="suNext">다음 라운드 →</button>' : '<button class="primary" id="suRetry">다시 하기</button>') +
+      '<button class="secondary" id="suBack" style="width:100%;margin-top:10px;">모드 선택으로</button>';
+  }
+}
+document.getElementById('stepupPicker').addEventListener('click', e => {
+  const btn = e.target.closest('.setbtn');
+  if (!btn || btn.dataset.mode !== 'sound') return;
+  document.getElementById('modeScreen').hidden = true;
+  hideAllModeCards();
+  suStart();
+});
+document.getElementById('suExitBtn').addEventListener('click', () => openModeScreen(currentSet));
+document.getElementById('suBody').addEventListener('click', e => {
+  if (!suState) return;
+  const r = suRound();
+  const fol = e.target.closest('.sufollow');
+  if (fol) {
+    const w = r.words[+fol.dataset.i];
+    speak(w.en);
+    fol.textContent = '🔊 ' + w.ko;
+    fol.closest('.sucard').classList.add('heard');
+    return;
+  }
+  if (e.target.closest('#suGo')) {
+    suState.phase = 'sort'; suState.order = suShuffle(r.words.map((w, i) => i)); suState.i = 0; suState.score = 0;
+    suRender(); return;
+  }
+  if (e.target.closest('#suSpeak')) { speak(r.words[suState.order[suState.i]].en); return; }
+  const box = e.target.closest('.subox');
+  if (box && suState.phase === 'sort' && !suState.locked) {
+    const w = r.words[suState.order[suState.i]];
+    const fb = document.getElementById('suFb');
+    if (box.dataset.box === w.box) {
+      suState.locked = true;
+      if (suState.wrongOnWord === 0) suState.score++;
+      box.classList.add('ok');
+      fb.textContent = '✓ ' + w.en + ' → ' + w.box + ' (' + w.ko + ')'; fb.className = 'spellfeedback correct'; fb.hidden = false;
+      playCorrectSound();
+      [...document.querySelectorAll('.subox')].forEach(b => { b.disabled = true; });
+      setTimeout(() => {
+        suState.i++;
+        if (suState.i >= r.words.length) suState.phase = 'result';
+        suRender();
+      }, 900);
+    } else {
+      suState.wrongOnWord++;
+      box.classList.add('no');
+      setTimeout(() => box.classList.remove('no'), 500);
+      fb.textContent = '다시 들어 봐요! 소리가 달라요'; fb.className = 'spellfeedback wrong'; fb.hidden = false;
+      playWrongSound();
+      speak(w.en);
+    }
+    return;
+  }
+  if (e.target.closest('#suNext')) { suState.r++; suState.phase = 'follow'; suRender(); return; }
+  if (e.target.closest('#suRetry')) { suState.phase = 'follow'; suRender(); return; }
+  if (e.target.closest('#suBack')) { openModeScreen(currentSet); return; }
+});
 </script>
 
 </body></html>
