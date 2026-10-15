@@ -686,7 +686,7 @@
   <div class="card" id="spellCard" hidden>
     <button class="exitbtn" id="spellExitBtn" aria-label="그만하고 모드 선택으로">← 그만하기</button>
     <div class="spelldiff" id="spellDiffToggle">
-      <button class="diffbtn" data-diff="easy" id="diffEasyBtn">🐣 이지 (터치로 완성)</button>
+      <button class="diffbtn" data-diff="easy" id="diffEasyBtn">🐣 이지 (빈칸 1개 고르기)</button>
       <button class="diffbtn" data-diff="hard" id="diffHardBtn">🔥 하드 (타이핑)</button>
     </div>
     <div class="retestbanner" id="spellRetestBanner" hidden>🔁 복습 라운드 — 틀렸던 단어만 다시!</div>
@@ -2142,7 +2142,7 @@ function renderSpellQuestion() {
   document.getElementById('spellNextBtn').hidden = true;
 
   const isHard = spellDifficulty === 'hard';
-  document.getElementById('spellQdir').textContent = isHard ? '뜻을 보고 영단어를 타이핑하세요' : '뜻을 보고 글자를 순서대로 눌러 완성하세요';
+  document.getElementById('spellQdir').textContent = isHard ? '뜻을 보고 영단어를 타이핑하세요' : '첫 글자는 힌트예요! 빈칸에 들어갈 글자 1개를 골라요';
   document.getElementById('spellHint').hidden = !isHard;
   document.getElementById('spellInput').hidden = !isHard;
   document.getElementById('spellCheckBtn').hidden = !isHard;
@@ -2161,17 +2161,39 @@ function renderSpellQuestion() {
   }
 }
 
-// ---- easy mode: tap shuffled letter tiles in order to spell the word ----
+// ---- easy mode (B레벨): 첫 글자는 힌트, 빈칸 한 글자만 골라서 완성 ----
+const EASY_VOWELS = ['a', 'e', 'i', 'o', 'u'];
+const EASY_CONSONANTS = 'bcdfghjklmnprstw'.split('');
+function easyPick(list, n, except) {
+  const pool = list.filter(c => c !== except);
+  for (let i = pool.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [pool[i], pool[j]] = [pool[j], pool[i]]; }
+  return pool.slice(0, n);
+}
 function renderEasyQuestion(q) {
   const chars = q.en.toLowerCase().split('');
   easySlots = chars.map(c => ({ ch: c, isSpace: c === ' ' }));
-  const shuffled = chars.filter(c => c !== ' ').map((c, i) => ({ id: i, ch: c }));
-  for (let i = shuffled.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  const letters = chars.filter(c => c !== ' ');
+  // 빈칸 고르기: 첫 글자(힌트)는 빼고, 모음이 있으면 모음 중에서
+  let blank = 0;
+  if (letters.length > 1) {
+    const cand = [];
+    for (let i = 1; i < letters.length; i++) if (EASY_VOWELS.indexOf(letters[i]) >= 0) cand.push(i);
+    if (!cand.length) for (let i = 1; i < letters.length; i++) cand.push(i);
+    blank = cand[Math.floor(Math.random() * cand.length)];
   }
-  easyTiles = shuffled.map(t => ({ ...t, used: false }));
+  const correct = letters[blank];
+  const decoys = easyPick(EASY_VOWELS.indexOf(correct) >= 0 ? EASY_VOWELS : EASY_CONSONANTS, 3, correct);
+  const choices = [correct, ...decoys].sort(() => Math.random() - 0.5);
+  // 힌트로 보여 줄 글자들은 이미 놓인 '주어진 글자'(given)로 두고, 고를 수 있는 보기만 아래에 보인다
+  easyTiles = [];
   easyPlaced = [];
+  letters.forEach((c, i) => {
+    if (i === blank) return;
+    easyTiles.push({ id: 100 + i, ch: c, used: true, given: true });
+    easyPlaced[i] = 100 + i;
+  });
+  choices.forEach((c, i) => easyTiles.push({ id: i, ch: c, used: false }));
+  document.getElementById('easyUndoBtn').hidden = true;
   renderEasyBlanks();
   renderEasyTiles();
 }
@@ -2179,26 +2201,27 @@ function renderEasyBlanks() {
   const wrap = document.getElementById('easyBlanks');
   let letterIdx = 0;
   wrap.innerHTML = easySlots.map(slot => {
-    if (slot.isSpace) return `<div class="easyBlank gap"></div>`;
+    if (slot.isSpace) return '<div class="easyBlank gap"></div>';
     const tileId = easyPlaced[letterIdx];
     letterIdx++;
     if (tileId !== undefined) {
       const tile = easyTiles.find(t => t.id === tileId);
-      return `<div class="easyBlank filled" data-idx="${letterIdx - 1}" role="button" title="누르면 취소돼요">${tile.ch}</div>`;
+      if (tile.given) return '<div class="easyBlank filled given">' + tile.ch + '</div>';
+      return '<div class="easyBlank filled" data-idx="' + (letterIdx - 1) + '" role="button" title="누르면 취소돼요">' + tile.ch + '</div>';
     }
-    return `<div class="easyBlank"></div>`;
+    return '<div class="easyBlank"></div>';
   }).join('');
 }
 function renderEasyTiles() {
   const wrap = document.getElementById('easyTiles');
-  wrap.innerHTML = easyTiles.map(t => `<button class="easyTile${t.used ? ' used' : ''}" data-id="${t.id}">${t.ch}</button>`).join('');
+  wrap.innerHTML = easyTiles.filter(t => !t.given).map(t => '<button class="easyTile' + (t.used ? ' used' : '') + '" data-id="' + t.id + '">' + t.ch + '</button>').join('');
   [...wrap.querySelectorAll('.easyTile')].forEach(btn => {
     btn.addEventListener('click', () => placeEasyLetter(parseInt(btn.dataset.id, 10)));
   });
 }
 function placeEasyLetter(tileId) {
   const tile = easyTiles.find(t => t.id === tileId);
-  if (!tile || tile.used) return;
+  if (!tile || tile.used || tile.given) return;
   const totalLetterSlots = easySlots.filter(s => !s.isSpace).length;
   let at = -1;
   for (let i = 0; i < totalLetterSlots; i++) { if (easyPlaced[i] === undefined) { at = i; break; } }
@@ -2210,10 +2233,10 @@ function placeEasyLetter(tileId) {
   if (easyPlacedCount() === totalLetterSlots) checkEasyAnswer();
 }
 function easyPlacedCount() { return easyPlaced.filter(x => x !== undefined).length; }
-// tap an already placed letter to take it back (fix a slip without wiping the whole word)
+// 고른 글자를 누르면 취소 (힌트로 주어진 글자는 취소되지 않는다)
 document.getElementById('easyBlanks').addEventListener('click', e => {
   const cell = e.target.closest('.easyBlank.filled');
-  if (!cell || spellAnswered) return;
+  if (!cell || cell.classList.contains('given') || spellAnswered) return;
   const idx = parseInt(cell.dataset.idx, 10);
   const id = easyPlaced[idx];
   if (id === undefined) return;
@@ -2226,18 +2249,19 @@ document.getElementById('easyBlanks').addEventListener('click', e => {
 document.getElementById('easyUndoBtn').addEventListener('click', () => {
   if (spellAnswered) return;
   let last = -1;
-  for (let i = easyPlaced.length - 1; i >= 0; i--) { if (easyPlaced[i] !== undefined) { last = i; break; } }
+  for (let i = easyPlaced.length - 1; i >= 0; i--) {
+    if (easyPlaced[i] !== undefined && !easyTiles.find(t => t.id === easyPlaced[i]).given) { last = i; break; }
+  }
   if (last < 0) return;
-  const lastId = easyPlaced[last];
+  const tile = easyTiles.find(t => t.id === easyPlaced[last]);
   easyPlaced[last] = undefined;
-  const tile = easyTiles.find(t => t.id === lastId);
   if (tile) tile.used = false;
   renderEasyBlanks();
   renderEasyTiles();
 });
 function resetEasyPlacement() {
-  easyTiles.forEach(t => t.used = false);
-  easyPlaced = [];
+  easyTiles.forEach(t => { if (!t.given) t.used = false; });
+  easyPlaced = easyPlaced.map(id => (id !== undefined && easyTiles.find(t => t.id === id).given) ? id : undefined);
   renderEasyBlanks();
   renderEasyTiles();
 }
