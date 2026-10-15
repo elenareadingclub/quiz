@@ -962,7 +962,7 @@ function ttsVoiceScore(v) {
   if (!lang.startsWith('en')) return -1;
   if (TTS_BAD.test(v.name || '')) return -1;
   let s = 0;
-  if (lang === 'en-us') s += 30; else if (lang === 'en-gb') s += 20; else if (lang === 'en-au' || lang === 'en-ca') s += 12; else s += 5;
+  if (lang === 'en-us') s += 200; else if (lang === 'en-gb') s += 20;   // 미국식(en-US) 음성이 있으면 항상 미국식: 다른 점수 합(최대 약 90)보다 크게 else if (lang === 'en-au' || lang === 'en-ca') s += 12; else s += 5;
   if (/natural|neural|online/i.test(v.name || '')) s += 50;
   if (/google/i.test(v.name || '')) s += 25;
   if (/(samantha|ava|allison|aria|jenny|guy|zira|david|mark|daniel|karen|moira|serena|susan|alex|siri)/i.test(v.name || '')) s += 10;
