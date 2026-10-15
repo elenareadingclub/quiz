@@ -580,6 +580,21 @@
   .sutip{background:var(--surface-2); border-radius:12px; padding:12px 14px; font-size:14px; line-height:1.55; margin:12px 0;}
 
   .swgap{display:inline-block; min-width:.6em; border-bottom:4px solid var(--accent); color:var(--accent-strong);}
+
+  /* 사이트워드 v2 */
+  .swsent{font-size:18px; line-height:1.7; margin:8px 0 14px; text-align:center; overflow-wrap:anywhere;}
+  .swsent.big{font-size:22px; font-weight:700;}
+  .swfill{display:inline-block; min-width:3.2em; border-bottom:3px solid var(--accent); padding:0 4px; color:var(--accent-strong); font-weight:800;}
+  .swfill.ok,.swfill.done{background:var(--accent-soft); border-radius:6px;}
+  .swlist{display:flex; flex-direction:column; gap:6px; margin:12px 0 16px; text-align:left;}
+  .swlist .swsent{font-size:15px; margin:0; text-align:left;}
+  .swchoices{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
+  .swword{padding:12px 6px;}
+  .swword b{font-size:22px;}
+  .suword.big.swletters{display:flex; flex-wrap:wrap; justify-content:center; align-items:center; gap:2px; letter-spacing:.02em; font-size:clamp(28px,9vw,44px); margin:6px 0;}
+  .swinp{width:1.3em; height:1.4em; text-align:center; font:inherit; font-weight:800; border:3px solid var(--accent); border-radius:10px; background:var(--surface); color:var(--ink); text-transform:lowercase; margin:0 3px; padding:0;}
+  .swinp.ok{background:var(--accent-soft);}
+  .swinp.no{border-color:var(--danger); background:var(--danger-soft);}
 </style>
 
 <div class="celebratebanner" id="celebrateBanner" hidden>🎉 You did it! 🎉</div>
@@ -677,7 +692,7 @@
       <div class="stepuphead">⬆️ Step Up · 추가 활동 <span class="hint" style="margin:0;font-weight:600;">(숙제 아니에요)</span></div>
       <div class="setpicker" id="stepupPicker">
         <button class="setbtn" data-mode="sound">🔤 소리 분류 <span class="dot" id="modeDotSound"></span><br><span class="hint" style="margin:0;" id="soundHint">따라하고 두 상자로 나누기</span></button>
-        <button class="setbtn" data-mode="sight">🔊 사이트워드 <span class="dot" id="modeDotSight"></span><br><span class="hint" style="margin:0;">소리 듣고 빈칸 1개 채우기</span></button>
+        <button class="setbtn" data-mode="sight">🔊 사이트워드 <span class="dot" id="modeDotSight"></span><br><span class="hint" style="margin:0;">문장 빈칸 · 단어 고르고 글자 쓰기</span></button>
       </div>
     </div>
     <button class="secondary" id="hwBtn" style="width:100%;margin-top:10px;">📋 숙제 결과 카드 보기</button>
@@ -3236,88 +3251,109 @@ document.getElementById('suBody').addEventListener('click', e => {
   if (e.target.closest('#suBack')) { openModeScreen(currentSet); return; }
 });
 
-// ===== Step Up: 사이트워드 (소리 듣고 빈칸 1개 채우기) =====
-// at = 빈칸이 되는 글자 순서(0부터). 숙제가 아니고 기록은 서버로 보내지 않는다.
-const SIGHT_WORDS = {
-  C: {
-    '2-2': { words: [
-      { en: 'must', ko: '반드시 ~해야 해요', at: 1 },
-      { en: 'done', ko: '다 했어요, 끝난', at: 1 },
-      { en: 'so', ko: '그래서, 아주', at: 1 },
-      { en: 'by', ko: '~ 옆에, ~로', at: 1 },
-      { en: 'and', ko: '그리고', at: 0 }
-    ] }
-  }
-};
-function swData(setNo) { return (SIGHT_WORDS[LEVEL_CODE] || {})[setNo] || null; }
+// ===== Step Up: 사이트워드 v2 (문장 속 빈칸 → 단어 고르기 → 글자 1개 쓰기) =====
+// s = 빈칸 문장, w = 정답 사이트워드, f = 완성된 문장. 숙제가 아니고 기록은 서버로 보내지 않는다.
+const SIGHT_WORDS = { C: {"1-1":[{"s":"My fish swims _____.","w":"up","f":"My fish swims up."},{"s":"I _____ at my fish.","w":"look","f":"I look at my fish."},{"s":"My fish swims _____.","w":"down","f":"My fish swims down."},{"s":"My dog loves _____.","w":"me","f":"My dog loves me."},{"s":"I wish I _____ a fish.","w":"were","f":"I wish I were a fish."}],"1-2":[{"s":"I can _____ this whole book.","w":"read","f":"I can read this whole book."},{"s":"I _____ my letters from A to Z.","w":"know","f":"I know my letters from A to Z."},{"s":"Mom, I _____ you!","w":"love","f":"Mom, I love you!"},{"s":"The pictures _____ me as I read.","w":"help","f":"The pictures help me as I read."},{"s":"Can you _____ something here?","w":"find","f":"Can you find something here?"}],"2-1":[{"s":"I _____ a little taller.","w":"am","f":"I am a little taller."},{"s":"We _____ twins.","w":"are","f":"We are twins."},{"s":"I like dresses _____ you like pants.","w":"but","f":"I like dresses but you like pants."},{"s":"You sit _____ read.","w":"and","f":"You sit and read."},{"s":"A lot is the same. But a lot is _____.","w":"not","f":"A lot is the same. But a lot is not."}],"2-2":[{"s":"The shop _____ close.","w":"must","f":"The shop must close."},{"s":"We are _____ for the day.","w":"done","f":"We are done for the day."},{"s":"We need more cake. _____ bake, mice, bake!","w":"so","f":"We need more cake. So bake, mice, bake!"},{"s":"Fly comes _____.","w":"by","f":"Fly comes by."},{"s":"Mice crack _____ whip.","w":"and","f":"Mice crack and whip."}],"3-1":[{"s":"Trouble _____ to play.","w":"wants","f":"Trouble wants to play."},{"s":"Trouble _____ to be a good kitten.","w":"tries","f":"Trouble tries to be a good kitten."},{"s":"Trouble _____ into trouble.","w":"gets","f":"Trouble gets into trouble."},{"s":"Trouble _____ with this mouse.","w":"plays","f":"Trouble plays with this mouse."},{"s":"Trouble hides. The _____ kitten hides.","w":"other","f":"Trouble hides. The other kitten hides."}],"3-2":[{"s":"You can do _____ monkeys do!","w":"what","f":"You can do what monkeys do!"},{"s":"She _____ a figure eight.","w":"does","f":"She does a figure eight."},{"s":"Look _____ monkeys far and wide.","w":"for","f":"Look for monkeys far and wide."},{"s":"Monkeys shake _____ arms about.","w":"their","f":"Monkeys shake their arms about."},{"s":"Monkeys eat bananas _____ their feet.","w":"with","f":"Monkeys eat bananas with their feet."}],"4-1":[{"s":"They put away books _____ fast as they can.","w":"as","f":"They put away books as fast as they can."},{"s":"Sam never used this room _____.","w":"before","f":"Sam never used this room before."},{"s":"He knows _____ to read.","w":"how","f":"He knows how to read."},{"s":"He _____ used this room before.","w":"never","f":"He never used this room before."},{"s":"Which should Sam _____?","w":"use","f":"Which should Sam use?"}],"4-2":[{"s":"Adam _____ a bag.","w":"brings","f":"Adam brings a bag."},{"s":"The _____ day Adam brings a bag.","w":"next","f":"The next day Adam brings a bag."},{"s":"His _____ starts with A.","w":"name","f":"His name starts with A."},{"s":"Brenda sees a _____ chair.","w":"new","f":"Brenda sees a new chair."},{"s":"_____ I sit on it?","w":"may","f":"May I sit on it?"}],"5-1":[{"s":"I drop Bear _____ at Crunch and Bunch.","w":"off","f":"I drop Bear off at Crunch and Bunch."},{"s":"I make a _____ by the lake.","w":"right","f":"I make a right by the lake."},{"s":"_____ my next stop, there is a line.","w":"at","f":"At my next stop, there is a line."},{"s":"I see him _____ day at three.","w":"every","f":"I see him every day at three."},{"s":"Police Dog waves hello _____ me.","w":"to","f":"Police Dog waves hello to me."}],"5-2":[{"s":"Sometimes I have to teach Robot _____.","w":"things","f":"Sometimes I have to teach Robot things."},{"s":"_____ is Lucy’s kitten?","w":"where","f":"Where is Lucy’s kitten?"},{"s":"_____ is my robot.","w":"this","f":"This is my robot."},{"s":"_____ are small ants.","w":"these","f":"These are small ants."},{"s":"_____ is not my kitten.","w":"that","f":"That is not my kitten."}],"6-1":[{"s":"_____ cats have gray fur.","w":"some","f":"Some cats have gray fur."},{"s":"_____ is one cat with a hat.","w":"there","f":"There is one cat with a hat."},{"s":"There is one cat _____ white fur.","w":"with","f":"There is one cat with white fur."},{"s":"Some cats have _____ stripes.","w":"no","f":"Some cats have no stripes."},{"s":"Will thinks of _____ way to sort the cats.","w":"another","f":"Will thinks of another way to sort the cats."}],"6-2":[{"s":"Kim _____ flips.","w":"does","f":"Kim does flips."},{"s":"Dan _____ pass.","w":"must","f":"Dan must pass."},{"s":"Sam is not _____.","w":"fast","f":"Sam is not fast."},{"s":"The ball _____ in.","w":"goes","f":"The ball goes in."},{"s":"_____ Jan does cartwheels.","w":"now","f":"Now Jan does cartwheels."}],"7-1":[{"s":"“_____ lunch is best.” says Jan.","w":"my","f":"“My lunch is best.” says Jan."},{"s":"“Now take _____ seat!” says the teacher.","w":"your","f":"“Now take your seat!” says the teacher."},{"s":"Sam has nothing! _____ mom forgot!","w":"his","f":"Sam has nothing! His mom forgot!"},{"s":"Dan and Pam feel sorry for _____ friend, Sam.","w":"their","f":"Dan and Pam feel sorry for their friend, Sam."},{"s":"Dan gives _____ ham.","w":"him","f":"Dan gives him ham."}],"7-2":[{"s":"Earl _____ Chicken one pumpkin.","w":"gave","f":"Earl gave Chicken one pumpkin."},{"s":"“I _____ grow a pumpkin,” said Earl.","w":"will","f":"“I will grow a pumpkin,” said Earl."},{"s":"“I will _____ two pumpkins,” said Pearl.","w":"grow","f":"“I will grow two pumpkins,” said Pearl."},{"s":"Then one day grasshoppers _____.","w":"came","f":"Then one day grasshoppers came."},{"s":"“Shoo!” _____ Earl.","w":"said","f":"“Shoo!” said Earl."}],"8-1":[{"s":"Fox _____ the hot chocolate.","w":"made","f":"Fox made the hot chocolate."},{"s":"Kitten _____ the mittens.","w":"found","f":"Kitten found the mittens."},{"s":"Rabbit _____ on the carrot.","w":"put","f":"Rabbit put on the carrot."},{"s":"Bear _____ up the branches.","w":"picked","f":"Bear picked up the branches."},{"s":"Deer _____ the broom.","w":"held","f":"Deer held the broom."}],"8-2":[{"s":"What _____ Pete eat?","w":"should","f":"What should Pete eat?"},{"s":"Pete looks at his sandwich _____.","w":"again","f":"Pete looks at his sandwich again."},{"s":"A sandwich _____ be nice.","w":"would","f":"A sandwich would be nice."},{"s":"“I’ve _____ it!” Pete says.","w":"got","f":"“I’ve got it!” Pete says."},{"s":"Pete is _____ hungry.","w":"very","f":"Pete is very hungry."}]} };
+function swData(setNo) { const d = (SIGHT_WORDS[LEVEL_CODE] || {})[setNo]; return d ? { items: d } : null; }
+function swBlankLetter(w) { const m = w.search(/[aeiou]/); return m >= 0 ? m : Math.max(0, w.indexOf('y')); }
 let swState = null;
 function swStart() {
   const d = swData(currentSet);
   if (!d) return;
   suState = null;
-  swState = { d, order: suShuffle(d.words.map((w, i) => i)), i: 0, score: 0, wrongOnWord: 0, locked: false, done: false };
+  swState = { items: d.items, order: suShuffle(d.items.map((x, i) => i)), i: 0, score: 0, stage: 'word', wrong: 0, locked: false, done: false };
   document.getElementById('suCard').hidden = false;
   swRender();
 }
+function swFill(s, w, cls) { return s.replace('_____', '<span class="swfill ' + (cls || '') + '">' + (w || '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;') + '</span>'); }
 function swRender() {
   const body = document.getElementById('suBody');
-  const words = swState.d.words;
   const head = '<div class="suhead">🔊 사이트워드 <small>(' + currentSet + ')</small></div>';
+  const items = swState.items;
   if (swState.done) {
-    const total = words.length, pct = Math.round(swState.score / total * 100), passed = pct >= 70;
+    const total = items.length, pct = Math.round(swState.score / total * 100), passed = pct >= 70;
     if (passed) { playCorrectSound(); try { const p = suLoad(currentName); p[currentSet + '#sight'] = true; localStorage.setItem(SU_KEY + currentName, JSON.stringify(p)); } catch (e) {} }
     body.innerHTML = head +
       '<div class="resultcard" style="text-align:center;margin:10px 0;"><div class="num" style="font-size:40px;font-weight:800;">' + swState.score + ' / ' + total + '</div>' +
-      '<div class="lbl">한 번에 맞힌 단어</div>' +
+      '<div class="lbl">한 번에 맞힌 문장</div>' +
       '<div class="passbadge ' + (passed ? 'pass' : 'fail') + '">' + (passed ? '✓ 통과!' : '아쉬워요, 다시 도전해요') + '</div></div>' +
-      '<div class="sucards">' + words.map(w => '<div class="sucard heard"><div class="suword">' + w.en + '</div><div class="hint" style="margin:0;">' + w.ko + '</div></div>').join('') + '</div>' +
+      '<div class="swlist">' + items.map(x => '<div class="swsent">' + swFill(x.s, x.w, 'done') + '</div>').join('') + '</div>' +
       '<button class="primary" id="swRetry">다시 하기</button>' +
       '<button class="secondary" id="swBack" style="width:100%;margin-top:10px;">모드 선택으로</button>';
     return;
   }
-  const w = words[swState.order[swState.i]];
-  const letters = w.en.split('');
-  const right = letters[w.at];
-  const pool = ['a', 'e', 'i', 'o', 'u'].filter(c => c !== right);
-  const choices = suShuffle([right].concat(suShuffle(pool).slice(0, 3)));
-  swState.right = right; swState.locked = false; swState.wrongOnWord = 0;
-  body.innerHTML = head +
-    '<div class="progress"><span style="width:' + Math.round(swState.i / words.length * 100) + '%"></span></div>' +
-    '<div class="qnum">' + (swState.i + 1) + ' / ' + words.length + '</div>' +
-    '<div class="sudir">소리를 듣고, 빈칸에 들어갈 글자 1개를 골라요</div>' +
-    '<div class="suplay"><div class="suword big">' + letters.map((c, k) => k === w.at ? '<span class="swgap" id="swGap">_</span>' : c).join('') + '</div>' +
-    '<button class="suspeak" id="swSpeak">🔊 다시 듣기</button></div>' +
-    '<div class="suboxes">' + choices.map(c => '<button class="subox" data-ch="' + c + '"><b>' + c + '</b></button>').join('') + '</div>' +
-    '<div class="spellfeedback" id="swFb" hidden></div>';
-  speak(w.en);
+  const q = items[swState.order[swState.i]];
+  swState.q = q; swState.locked = false; swState.wrong = swState.stage === 'word' ? 0 : swState.wrong;
+  const prog = '<div class="progress"><span style="width:' + Math.round(swState.i / items.length * 100) + '%"></span></div><div class="qnum">' + (swState.i + 1) + ' / ' + items.length + '</div>';
+  if (swState.stage === 'word') {
+    const words = suShuffle(items.map(x => x.w).filter((v, k, a) => a.indexOf(v) === k));
+    body.innerHTML = head + prog +
+      '<div class="sudir">① 빈칸에 들어갈 사이트워드를 골라요</div>' +
+      '<div class="swsent big">' + swFill(q.s, '') + '</div>' +
+      '<div class="swchoices">' + words.map(c => '<button class="subox swword" data-w="' + c + '"><b>' + c + '</b></button>').join('') + '</div>' +
+      '<div class="spellfeedback" id="swFb" hidden></div>';
+  } else {
+    const at = swBlankLetter(q.w);
+    const letters = q.w.split('').map((c, k) => k === at ? '<input id="swInp" class="swinp" maxlength="1" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" inputmode="text" aria-label="빈칸 글자 1개">' : '<span>' + c + '</span>').join('');
+    body.innerHTML = head + prog +
+      '<div class="sudir">② 빈칸에 들어갈 글자 1개를 써요</div>' +
+      '<div class="swsent big">' + swFill(q.s, q.w, 'ok') + '</div>' +
+      '<div class="suplay"><div class="suword big swletters">' + letters + '</div>' +
+      '<button class="suspeak" id="swSpeak">🔊 문장 듣기</button></div>' +
+      '<div class="spellfeedback" id="swFb" hidden></div>';
+    speak(q.f);
+    const inp = document.getElementById('swInp');
+    if (inp) setTimeout(() => { try { inp.focus(); } catch (e) {} }, 50);
+  }
+}
+function swAdvance() {
+  swState.i++;
+  swState.stage = 'word';
+  if (swState.i >= swState.items.length) swState.done = true;
+  swRender();
 }
 document.getElementById('suBody').addEventListener('click', e => {
   if (!swState) return;
-  const words = swState.d.words;
   if (e.target.closest('#swRetry')) { swStart(); return; }
   if (e.target.closest('#swBack')) { openModeScreen(currentSet); return; }
   if (swState.done) return;
-  const w = words[swState.order[swState.i]];
-  if (e.target.closest('#swSpeak')) { speak(w.en); return; }
-  const b = e.target.closest('.subox');
-  if (!b || swState.locked) return;
+  if (e.target.closest('#swSpeak')) { speak(swState.q.f); return; }
+  const b = e.target.closest('.swword');
+  if (!b || swState.locked || swState.stage !== 'word') return;
   const fb = document.getElementById('swFb');
-  if (b.dataset.ch === swState.right) {
+  if (b.dataset.w === swState.q.w) {
     swState.locked = true;
-    if (swState.wrongOnWord === 0) swState.score++;
     b.classList.add('ok');
-    document.getElementById('swGap').textContent = swState.right;
-    fb.textContent = '✓ ' + w.en + ' — ' + w.ko; fb.className = 'spellfeedback correct'; fb.hidden = false;
     playCorrectSound();
-    [...document.querySelectorAll('#suBody .subox')].forEach(x => { x.disabled = true; });
-    setTimeout(() => { swState.i++; if (swState.i >= words.length) swState.done = true; swRender(); }, 1100);
+    setTimeout(() => { swState.stage = 'letter'; swRender(); }, 600);
   } else {
-    swState.wrongOnWord++;
+    swState.wrong++;
     b.classList.add('no');
     setTimeout(() => b.classList.remove('no'), 500);
-    fb.textContent = '다시 들어 봐요! 어떤 소리가 날까요?'; fb.className = 'spellfeedback wrong'; fb.hidden = false;
+    fb.textContent = '다시 읽어 봐요! 문장에 어울리는 단어는 뭘까요?'; fb.className = 'spellfeedback wrong'; fb.hidden = false;
     playWrongSound();
-    speak(w.en);
+  }
+});
+document.getElementById('suBody').addEventListener('input', e => {
+  if (!swState || swState.stage !== 'letter' || e.target.id !== 'swInp' || swState.locked) return;
+  const v = (e.target.value || '').trim().toLowerCase();
+  if (!v) return;
+  const q = swState.q, right = q.w[swBlankLetter(q.w)];
+  const fb = document.getElementById('swFb');
+  if (v === right) {
+    swState.locked = true;
+    if (swState.wrong === 0) swState.score++;
+    e.target.value = right; e.target.disabled = true; e.target.classList.add('ok');
+    fb.textContent = '✓ ' + q.f; fb.className = 'spellfeedback correct'; fb.hidden = false;
+    playCorrectSound();
+    setTimeout(swAdvance, 1400);
+  } else {
+    swState.wrong++;
+    e.target.classList.add('no');
+    setTimeout(() => { e.target.classList.remove('no'); e.target.value = ''; try { e.target.focus(); } catch (x) {} }, 450);
+    fb.textContent = '다시 들어 봐요! ' + q.w + ' 에는 어떤 글자가 들어갈까요?'; fb.className = 'spellfeedback wrong'; fb.hidden = false;
+    playWrongSound();
+    speak(q.w);
   }
 });
 </script>
