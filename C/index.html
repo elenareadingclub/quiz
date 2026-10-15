@@ -616,6 +616,12 @@
   .swinp.ok{background:var(--accent-soft);}
   .swinp.no{border-color:var(--danger); background:var(--danger-soft);}
   .swspeak{border:2px solid var(--line); background:var(--surface); color:var(--ink); border-radius:999px; padding:7px 16px; font-weight:700; cursor:pointer; font-family:inherit;}
+
+  /* Word Stars (B·C): 최근 날짜 한 줄 + 지난 기록 토글 */
+  .hallrow{display:flex; align-items:center; gap:8px; margin:4px 0;}
+  .halldate{font-size:11.5px; font-weight:800; color:var(--ink-faint); min-width:36px;}
+  .hallmore{margin-top:6px;}
+  .hallmore summary{cursor:pointer; font-size:12.5px; font-weight:700; color:var(--ink-soft);}
 </style>
 
 <div class="celebratebanner" id="celebrateBanner" hidden>🎉 You did it! 🎉</div>
@@ -3016,11 +3022,17 @@ async function renderHallForSet(setNo) {
     }
   } catch (e) {}
   if (currentSet !== setNo) return;
-  const items = hallCache.items.filter(i => i.set === setNo);
-  box.innerHTML = '<div class="hallttl">🌟 이 책의 Word Stars' + (items.length ? ' <span class="hallcnt">' + items.length + '</span>' : '') + '</div>' +
-    (items.length
-      ? '<div class="hallchips">' + items.map(i => '<span class="hallchip">' + escHtml(nameWithIcon(i.name)) + ' ' + (i.diff === '하드' ? '🔥' : '🐣') + ' <small>' + escHtml(fmtShort(i.date)) + '</small></span>').join('') + '</div>'
-      : '<div class="hallnone">스펠 8문제를 한 번도 안 틀리고 맞히면 여기에 이름이 올라가요! ✨</div>');
+  // 다섯 단계를 마칠 때마다 이름이 올라간다. 가장 최근 날짜의 이름들만 한 줄로 보이고 지난 기록은 토글로 접는다
+  const byDate = {};
+  hallCache.items.filter(i => i.set === setNo).forEach(i => { (byDate[i.date] = byDate[i.date] || []).push(i.name); });
+  const dates = Object.keys(byDate).sort().reverse();
+  const people = new Set(); dates.forEach(d => byDate[d].forEach(n => people.add(n)));
+  const row = d => '<div class="hallrow"><span class="halldate">' + escHtml(fmtShort(d)) + '</span><span class="hallchips">' +
+    [...new Set(byDate[d])].map(n => '<span class="hallchip">' + escHtml(nameWithIcon(n)) + '</span>').join('') + '</span></div>';
+  box.innerHTML = '<div class="hallttl">🌟 이 책의 Word Stars' + (people.size ? ' <span class="hallcnt">' + people.size + '</span>' : '') + '</div>' +
+    (dates.length
+      ? row(dates[0]) + (dates.length > 1 ? '<details class="hallmore"><summary>지난 기록 ' + (dates.length - 1) + '줄 보기</summary>' + dates.slice(1).map(row).join('') + '</details>' : '')
+      : '<div class="hallnone">다섯 단계를 모두 마치면 여기에 이름이 올라가요! ✨</div>');
 }
 
 // --- 제출: 네 단계를 이 기기에서 모두 통과하면 자동 제출. 인터넷이 끊기면 모아 두었다가 다시 보낸다
@@ -3076,7 +3088,7 @@ function sentCardHtml() {
 function showSubmitResult(wrap, r, payload) {
   const lines = ['<div class="submittitle">✅ 선생님께 제출됐어요' + (r.attempt ? ' (' + r.attempt + '번째)' : '') + '</div>'];
   if (r.late) lines.push('<div class="submitnote">⏰ 마감 시간이 지나서 늦게 낸 숙제로 기록됐어요.</div>');
-  if (payload.spell && payload.spell.clean) lines.push('<div class="submitnote">🌟 스펠을 한 번도 안 틀렸어요! Word Stars에 이름이 올라가요.</div>');
+  if (!r.trial) lines.push('<div class="submitnote">🌟 다섯 단계를 모두 마쳤어요! Word Stars에 이름이 올라가요.</div>');
   if (r.trial) lines.push('<div class="submitnote">체험 계정이라 선생님 표에는 체험으로 표시돼요.</div>');
   if (r.card) {
     recordSent(currentSet, { card: r.card, attempt: r.attempt || 0, late: !!r.late, at: Date.now() });
