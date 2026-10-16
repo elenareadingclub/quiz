@@ -715,6 +715,18 @@
   /* 숙제 결과 카드: 화면 아래에 자동으로 */
   .hwinline{margin-top:16px; border:1.5px dashed var(--line); border-radius:14px; padding:12px 12px 14px; background:var(--surface-2);}
   .hwinline-title{font-weight:800; font-size:14px; margin:0 0 8px; color:var(--ink);}
+
+  /* 원서 제목 매칭게임 */
+  .tgbox{margin-top:18px; border:2px dashed var(--line); border-radius:16px; padding:14px; background:var(--surface-2); display:flex; flex-direction:column; gap:8px;}
+  .tgttl{font-family:"Baloo 2","IBM Plex Sans KR",sans-serif; font-weight:800; font-size:17px;}
+  .tgbest{font-size:13px; font-weight:700; color:var(--accent-strong);}
+  .tghead{display:flex; justify-content:space-between; align-items:center; font-weight:800; font-size:18px; margin:4px 0 6px;}
+  .tgcols{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:10px 0;}
+  .tgcol{display:flex; flex-direction:column; gap:8px; min-width:0;}
+  .tgtile{border:3px solid var(--line); background:var(--surface); color:var(--ink); border-radius:14px; padding:10px 6px; min-height:58px; font-family:inherit; font-size:14px; font-weight:700; line-height:1.3; cursor:pointer; overflow-wrap:anywhere; display:flex; align-items:center; justify-content:center; text-align:center; min-width:0;}
+  .tgtile.sel{border-color:var(--accent); background:var(--accent-soft);}
+  .tgtile.ok{border-color:var(--accent); background:var(--accent-soft); opacity:.6;}
+  .tgtile.no{border-color:var(--danger); background:var(--danger-soft);}
 </style>
 
 <div class="celebratebanner" id="celebrateBanner" hidden>🎉 You did it! 🎉</div>
@@ -790,6 +802,7 @@
     <label>원서를 골라보세요</label>
     <div class="setlisthint">📖 제목을 누르면 단어 확인 · 오른쪽 <span class="mono">›</span>을 누르면 시작</div>
     <div class="setlist" id="setListItems"></div>
+    <div class="tgbox" id="tgBox"></div>
   </div>
 
   <div class="card" id="modeScreen" hidden>
@@ -814,6 +827,11 @@
     </div>
     <button hidden class="secondary" id="hwBtn" style="width:100%;margin-top:10px;">📋 숙제 결과 카드 보기</button>
     <div id="hwInline" class="hwinline"></div>
+  </div>
+
+  <div class="card" id="tgCard" hidden>
+    <button class="exitbtn" id="tgExitBtn" aria-label="그만하고 목록으로">← 그만하기</button>
+    <div id="tgBody"></div>
   </div>
 
   <div class="card" id="quizCard" hidden>
@@ -1160,6 +1178,7 @@ function hideAllModeCards() {
   document.getElementById('quizCard').hidden = true;
   document.getElementById('matchCard').hidden = true;
   document.getElementById('spellCard').hidden = true;
+  const tgc = document.getElementById('tgCard'); if (tgc) tgc.hidden = true;
   const ec = document.getElementById('extraCard');
   if (ec) ec.hidden = true;
 }
@@ -1378,6 +1397,7 @@ async function openSetList() {
   studentProgress = mergeProgress(studentProgress, cached, fetched, fromServer);
   saveLocalProgressCache(currentName, studentProgress);
   renderSetList(studentProgress);
+  try { tgRenderBox(); } catch (e) {}
   if (ONLINE) onlineAfterSetList();
 }
 
@@ -4419,6 +4439,110 @@ async function restoreSession() {
   } catch (e) { /* 인터넷이 없으면 이름 고르는 화면에서 시작 (저장 정보는 30일이 지날 때까지 남겨 둔다) */ }
 }
 if (ONLINE) restoreSession();
+
+// ===== TITLE_GAME: 원서 제목 매칭게임 (한글 ↔ 영어, 60초) =====
+const TITLE_KO = {"1-1":"롤로는 어디 있을까?","1-2":"쿠키 하나 먹어도 될까요?","2-1":"배고픈 강아지라니!","2-2":"머리가 엉망인 날","3-1":"나는 씨앗이에요","3-2":"물","4-1":"돼지, 여우, 그리고 상자","4-2":"곰","5-1":"땅속","5-2":"바쁜 토끼의 오감","6-1":"사랑이 가득해요","6-2":"내 이가 빠지려고 해요","7-1":"러키가 학교에 가요","7-2":"우리가 만든 피자","8-1":"아주 아주 작은 할머니","8-2":"우리가 가꾼 정원"};
+const TG_SECONDS = 60, TG_SLOTS = 6;
+let tgS = null, tgTimer = null;
+function tgBooks() {
+  return QUIZZES.filter(q => !/^review/.test(q.no) && TITLE_KO[q.no]).map(q => ({ no: q.no, en: (BOOK_DISPLAY[q.no] && BOOK_DISPLAY[q.no].t) || q.title, ko: TITLE_KO[q.no] }));
+}
+function tgBestKey() { return LEVEL_CODE.toLowerCase() + '_quiz_titlegame_' + currentName; }
+function tgBest() { try { return parseInt(localStorage.getItem(tgBestKey()) || '0', 10) || 0; } catch (e) { return 0; } }
+function tgRenderBox() {
+  const el = document.getElementById('tgBox');
+  if (!el) return;
+  const n = tgBooks().length, best = tgBest();
+  el.innerHTML = '<div class="tgttl">🎮 원서 제목 매칭게임</div>' +
+    '<div class="hint" style="margin:0;">영어 제목과 한글 제목을 짝지어요 · ' + TG_SECONDS + '초 · 책 ' + n + '권</div>' +
+    (best ? '<div class="tgbest">🏆 내 최고 기록 ' + best + '쌍</div>' : '') +
+    '<button class="secondary" id="tgStart" style="width:100%;">게임 시작</button>';
+}
+function tgShuffle(a) {
+  const b = a.slice();
+  for (let i = b.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [b[i], b[j]] = [b[j], b[i]]; }
+  return b;
+}
+function tgStart() {
+  const books = tgBooks();
+  if (books.length < 2) return;
+  clearInterval(tgTimer);
+  const order = tgShuffle(books.map((b, i) => i));
+  tgS = { books, queue: order.slice(TG_SLOTS), L: order.slice(0, TG_SLOTS), R: tgShuffle(order.slice(0, TG_SLOTS)), selL: null, selR: null, score: 0, end: Date.now() + TG_SECONDS * 1000, over: false, locked: false };
+  document.getElementById('setListScreen').hidden = true;
+  document.getElementById('tgCard').hidden = false;
+  tgRender();
+  tgTimer = setInterval(tgTick, 250);
+}
+function tgTick() {
+  if (!tgS || tgS.over) return;
+  const left = Math.max(0, Math.ceil((tgS.end - Date.now()) / 1000));
+  const t = document.getElementById('tgTime'), bar = document.getElementById('tgBar');
+  if (t) t.textContent = left;
+  if (bar) bar.style.width = (Math.max(0, tgS.end - Date.now()) / (TG_SECONDS * 1000) * 100) + '%';
+  if (Date.now() >= tgS.end) tgFinish();
+}
+function tgRender() {
+  const body = document.getElementById('tgBody');
+  const tiles = (arr, side) => arr.map(i => '<button class="tgtile' + (tgS['sel' + side] === i ? ' sel' : '') + '" data-b="' + i + '" data-side="' + side + '">' + (side === 'L' ? tgS.books[i].en : tgS.books[i].ko) + '</button>').join('');
+  body.innerHTML = '<div class="tghead"><span>⏱ <span id="tgTime">' + Math.max(0, Math.ceil((tgS.end - Date.now()) / 1000)) + '</span>초</span><span>⭐ <span id="tgScore">' + tgS.score + '</span>쌍</span></div>' +
+    '<div class="progress"><span id="tgBar" style="width:' + (Math.max(0, tgS.end - Date.now()) / (TG_SECONDS * 1000) * 100) + '%"></span></div>' +
+    '<div class="sudir" style="margin:10px 0 0;">영어 제목과 알맞은 한글 제목을 차례로 눌러요!</div>' +
+    '<div class="tgcols"><div class="tgcol">' + tiles(tgS.L, 'L') + '</div><div class="tgcol">' + tiles(tgS.R, 'R') + '</div></div>';
+}
+function tgFinish() {
+  if (!tgS || tgS.over) return;
+  tgS.over = true; clearInterval(tgTimer);
+  const best = tgBest(), isBest = tgS.score > best;
+  if (isBest) { try { localStorage.setItem(tgBestKey(), String(tgS.score)); } catch (e) {} }
+  const all = tgS.queue.length === 0 && tgS.L.length === 0;
+  if (all || tgS.score >= 10) launchConfetti(); else playCorrectSound();
+  document.getElementById('tgBody').innerHTML =
+    '<div class="resultcard" style="text-align:center;margin:10px 0;"><div class="num" style="font-size:44px;font-weight:800;">' + tgS.score + '쌍</div>' +
+    '<div class="lbl">' + TG_SECONDS + '초 동안 맞힌 책 제목</div>' +
+    '<div class="passbadge pass">' + (all ? '🎉 모든 책을 맞혔어요!' : isBest ? '🏆 새 최고 기록!' : '잘했어요!') + '</div>' +
+    '<div class="hint" style="margin:8px 0 0;">내 최고 기록 ' + Math.max(best, tgS.score) + '쌍</div></div>' +
+    '<button class="primary" id="tgAgain">다시 하기</button>' +
+    '<button class="secondary" id="tgBack" style="width:100%;margin-top:10px;">목록으로</button>';
+}
+function tgLeave() {
+  clearInterval(tgTimer); tgS = null;
+  showScreen('setListScreen');
+  tgRenderBox();
+}
+document.getElementById('setListItems').parentNode.addEventListener('click', e => { if (e.target.closest('#tgStart')) tgStart(); });
+document.getElementById('tgExitBtn').addEventListener('click', tgLeave);
+document.getElementById('tgBody').addEventListener('click', e => {
+  if (e.target.closest('#tgAgain')) { tgStart(); return; }
+  if (e.target.closest('#tgBack')) { tgLeave(); return; }
+  const tile = e.target.closest('.tgtile');
+  if (!tile || !tgS || tgS.over || tgS.locked) return;
+  const b = +tile.dataset.b, side = tile.dataset.side;
+  if (side === 'L') speak(tgS.books[b].en);
+  tgS['sel' + side] = tgS['sel' + side] === b ? null : b;
+  if (tgS.selL === null || tgS.selR === null) { tgRender(); return; }
+  if (tgS.selL === tgS.selR) {
+    const done = tgS.selL;
+    tgS.score++; playCorrectSound();
+    tgS.locked = true;
+    const sel = [...document.querySelectorAll('#tgBody .tgtile.sel')]; sel.forEach(t => { t.classList.remove('sel'); t.classList.add('ok'); });
+    setTimeout(() => {
+      if (!tgS || tgS.over) return;
+      const next = tgS.queue.shift();
+      const idx = tgS.L.indexOf(done);
+      if (next !== undefined) { tgS.L[idx] = next; tgS.R[tgS.R.indexOf(done)] = next; } else { tgS.L.splice(idx, 1); tgS.R.splice(tgS.R.indexOf(done), 1); }
+      tgS.selL = tgS.selR = null; tgS.locked = false;
+      if (!tgS.L.length) { tgFinish(); return; }
+      // 새 제목이 들어오면 두 줄의 위치를 모두 새로 섞어 규칙을 찾지 못하게 한다
+      tgS.L = tgShuffle(tgS.L); tgS.R = tgShuffle(tgS.R);
+      tgRender();
+    }, 450);
+  } else {
+    playWrongSound(); tgS.locked = true;
+    [...document.querySelectorAll('#tgBody .tgtile.sel')].forEach(t => t.classList.add('no'));
+    setTimeout(() => { if (!tgS) return; tgS.selL = tgS.selR = null; tgS.locked = false; tgRender(); }, 450);
+  }
+});
 </script>
 
 </body></html>
