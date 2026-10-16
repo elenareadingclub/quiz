@@ -27,7 +27,7 @@
   #wpItems .wpmeaning{font-size:18px; font-weight:800; color:var(--accent-strong);}
   #wpItems .wpknowitem:has(.wpmeaning){border-color:var(--accent); background:var(--accent-soft);}
   /* B레벨: 3지선다는 큰 버튼 한 줄씩 */
-  .choices{grid-template-columns:1fr;}
+  #choices.choices{grid-template-columns:1fr;}
 </style></head><body>
 <title>B레벨 단어 퀴즈</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -618,6 +618,9 @@
   .tgtile.sel{border-color:var(--accent); background:var(--accent-soft);}
   .tgtile.ok{border-color:var(--accent); background:var(--accent-soft); opacity:.6;}
   .tgtile.no{border-color:var(--danger); background:var(--danger-soft);}
+  .tgtop{display:flex; flex-wrap:wrap; gap:6px 12px; font-size:13px; font-weight:700; color:var(--ink);}
+  .tgtop .me{color:var(--accent-strong); background:var(--accent-soft); border-radius:8px; padding:0 6px;}
+  .resultcard .tgtop{justify-content:center;}
 
   /* 직접 그린 단어 그림 */
   .wimg{height:1.15em; width:1.15em; vertical-align:-0.2em; object-fit:contain;}
@@ -695,7 +698,7 @@
       <span class="whoami" id="whoamiLabel"></span>
     </div>
     <label>원서를 골라보세요</label>
-    <div class="setlisthint">📖 제목을 누르면 단어 확인 · 오른쪽 <span class="mono">›</span>을 누르면 시작</div>
+    <div class="setlisthint">📖 원하는 책을 눌러요 · 단어 확인부터 차례대로 열려요</div>
     <div class="setlist" id="setListItems"></div>
     <div class="tgbox" id="tgBox"></div>
   </div>
@@ -3454,14 +3457,38 @@ function tgBooks() {
   return QUIZZES.filter(q => !/^review/.test(q.no) && TITLE_KO[q.no]).map(q => ({ no: q.no, en: (BOOK_DISPLAY[q.no] && BOOK_DISPLAY[q.no].t) || q.title, ko: TITLE_KO[q.no] }));
 }
 function tgBestKey() { return LEVEL_CODE.toLowerCase() + '_quiz_titlegame_' + currentName; }
-function tgBest() { try { return parseInt(localStorage.getItem(tgBestKey()) || '0', 10) || 0; } catch (e) { return 0; } }
+function tgOldBest() { try { return parseInt(localStorage.getItem(tgBestKey()) || '0', 10) || 0; } catch (e) { return 0; } }
+// TOP 3: 점수만 저장 (이름 없음). 이 기기에서 가장 높은 점수 3개만 남긴다
+function tgTopKey() { return LEVEL_CODE.toLowerCase() + '_quiz_titlegame_top'; }
+function tgTopLoad() {
+  let list = null;
+  try { list = JSON.parse(localStorage.getItem(tgTopKey()) || 'null'); } catch (e) {}
+  if (!Array.isArray(list)) { const old = tgOldBest(); list = old > 0 ? [old] : []; }
+  return list.filter(n => n > 0).sort((a, b) => b - a).slice(0, 3);
+}
+function tgBest() { return tgTopLoad()[0] || 0; }
+// 이번 점수를 넣고, 이번 점수의 순위(1~3, 아니면 0)를 돌려준다
+function tgTopAdd(score) {
+  const top = tgTopLoad();
+  top.push(score);
+  top.sort((a, b) => b - a);
+  const keep = top.slice(0, 3);
+  try { localStorage.setItem(tgTopKey(), JSON.stringify(keep)); } catch (e) {}
+  const idx = keep.indexOf(score);
+  return (score > 0 && idx >= 0) ? idx + 1 : 0;
+}
+function tgTopHtml(newRank) {
+  const top = tgTopLoad(), medals = ['🥇', '🥈', '🥉'];
+  if (!top.length) return '';
+  return '<div class="tgtop">' + top.map((s, i) => '<span class="' + (newRank === i + 1 ? 'me' : '') + '">' + medals[i] + ' ' + (i + 1) + '위 ' + s + '쌍</span>').join('') + '</div>';
+}
 function tgRenderBox() {
   const el = document.getElementById('tgBox');
   if (!el) return;
   const n = tgBooks().length, best = tgBest();
   el.innerHTML = '<div class="tgttl">🎮 원서 제목 매칭게임</div>' +
     '<div class="hint" style="margin:0;">영어 제목과 한글 제목을 짝지어요 · ' + TG_SECONDS + '초 · 책 ' + n + '권</div>' +
-    (best ? '<div class="tgbest">🏆 내 최고 기록 ' + best + '쌍</div>' : '') +
+    (best ? '<div class="tgbest">🏆 TOP 3 (이 기기)</div>' + tgTopHtml(0) : '') +
     '<button class="secondary" id="tgStart" style="width:100%;">게임 시작</button>';
 }
 function tgShuffle(a) {
@@ -3500,14 +3527,14 @@ function tgFinish() {
   if (!tgS || tgS.over) return;
   tgS.over = true; clearInterval(tgTimer);
   const best = tgBest(), isBest = tgS.score > best;
-  if (isBest) { try { localStorage.setItem(tgBestKey(), String(tgS.score)); } catch (e) {} }
+  const rank = tgTopAdd(tgS.score);
   const all = tgS.queue.length === 0 && tgS.L.length === 0;
   if (all || tgS.score >= 10) launchConfetti(); else playCorrectSound();
   document.getElementById('tgBody').innerHTML =
     '<div class="resultcard" style="text-align:center;margin:10px 0;"><div class="num" style="font-size:44px;font-weight:800;">' + tgS.score + '쌍</div>' +
     '<div class="lbl">' + TG_SECONDS + '초 동안 맞힌 책 제목</div>' +
-    '<div class="passbadge pass">' + (all ? '🎉 모든 책을 맞혔어요!' : isBest ? '🏆 새 최고 기록!' : '잘했어요!') + '</div>' +
-    '<div class="hint" style="margin:8px 0 0;">내 최고 기록 ' + Math.max(best, tgS.score) + '쌍</div></div>' +
+    '<div class="passbadge pass">' + (all ? '🎉 모든 책을 맞혔어요!' : rank === 1 ? '🥇 1위! 새 최고 기록!' : rank ? ['', '', '🥈 2위!', '🥉 3위!'][rank] : '잘했어요!') + '</div>' +
+    '<div class="tgbest" style="margin-top:10px;">🏆 TOP 3 (이 기기)</div>' + tgTopHtml(rank) + '</div>' +
     '<button class="primary" id="tgAgain">다시 하기</button>' +
     '<button class="secondary" id="tgBack" style="width:100%;margin-top:10px;">목록으로</button>';
 }
