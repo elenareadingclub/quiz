@@ -664,6 +664,24 @@
   /* 직접 그린 단어 그림 */
   .wimg{height:1.15em; width:1.15em; vertical-align:-0.2em; object-fit:contain;}
   .qemoji .wimg,.mhemoji .wimg{height:1em; width:1em; vertical-align:baseline;}
+  /* 단어확인 카드 격자 (B레벨 방식) */
+  /* 단어확인 창을 화면 가득: 폰 2칸, 태블릿 3~4칸, 컴퓨터 5~6칸 */
+  #wordPreviewOverlay{padding:10px;}
+  #wordPreviewOverlay .wordpreview-card{max-width:1100px; max-height:94vh;}
+  #wpItems{display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:12px;}
+  #wordPreviewOverlay .wpmission{display:block;}
+  @media (max-width:380px){ #wpItems{grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px;} }
+  #wpItems .wpknowitem{aspect-ratio:1/1; display:flex; flex-direction:column; flex-wrap:nowrap; justify-content:center; align-items:center; gap:6px; text-align:center;
+    border:2px solid var(--line); border-radius:18px; padding:10px; position:relative; background:var(--surface); cursor:pointer; min-width:0;}
+  #wpItems .wpknowitem .wpnum{position:absolute; top:8px; left:10px; min-width:0;}
+  #wpItems .wpknowmain{flex:0 0 auto; min-width:0; max-width:100%;}
+  #wpItems .wpknowtop{flex-direction:column; gap:2px; align-items:center;}
+  #wpItems .wpemoji{font-size:46px; margin:0; line-height:1.1;}
+  #wpItems .wpknowitem .wpen{font-size:22px; overflow-wrap:anywhere;}
+  #wpItems .wpspeak{position:absolute; top:6px; right:8px;}
+  #wpItems .wpknowbtns{justify-content:center;}
+  #wpItems .wpmeaning{font-size:18px; font-weight:800; color:var(--accent-strong);}
+  #wpItems .wpknowitem:has(.wpmeaning){border-color:var(--accent); background:var(--accent-soft);}
 </style>
 
 <div class="celebratebanner" id="celebrateBanner" hidden>🎉 You did it! 🎉</div>
@@ -1249,7 +1267,7 @@ function openWordPreview(setNo) {
   wpSeen = {};
   wpRunCounted = false;
   document.getElementById('wordPreviewTitle').textContent = setLabel(set.no) + ' — ' + set.title + ' (' + set.words.length + '개)';
-  const missions = '<div class="wpmissions"><div class="wpmission">👆 단어마다 <b>뜻 확인</b>을 눌러요. 발음도 들려요 (전체 목록에서 모두 누르면 다음 단계가 열려요)</div><div class="wphint" id="wpProgress"></div></div>';
+  const missions = '<div class="wpmissions"><div class="wpmission">👆 카드를 눌러 <b>뜻 확인</b>! 소리도 같이 나와요 (모두 누르면 다음 단계가 열려요)</div><div class="wphint" id="wpProgress"></div></div>';
   document.getElementById('wordPreviewList').innerHTML = missions + '<div id="wpItems"></div>' +
     '<div class="wpnav"><button id="wpPrev">‹ 이전</button><span class="wppagelbl" id="wpPageLbl"></span><button id="wpNext">다음 5개 ›</button></div>';
   renderWpPage();
@@ -1268,7 +1286,7 @@ document.getElementById('wordPreviewList').addEventListener('click', e => {
     document.getElementById('wordPreviewList').scrollTop = 0;
     return;
   }
-  const mean = e.target.closest('.wpmeanbtn');
+  const mean = e.target.closest('.wpmeanbtn') || e.target.closest('.wpknowitem');
   if (mean) {
     const en = mean.closest('.wpknowitem').dataset.en;
     wpSeen[en] = true;
