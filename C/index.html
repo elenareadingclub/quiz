@@ -622,6 +622,8 @@
   .halldate{font-size:11.5px; font-weight:800; color:var(--ink-faint); min-width:36px;}
   .hallmore{margin-top:6px;}
   .hallmore summary{cursor:pointer; font-size:12.5px; font-weight:700; color:var(--ink-soft);}
+
+  .suemoji{font-size:34px; line-height:1.1;}
 </style>
 
 <div class="celebratebanner" id="celebrateBanner" hidden>🎉 You did it! 🎉</div>
@@ -720,6 +722,7 @@
       <div class="stepuphead">⬆️ Step Up · 추가 활동 <span class="hint" style="margin:0;font-weight:600;">(숙제 아니에요)</span></div>
       <div class="setpicker" id="stepupPicker">
         <button class="setbtn" data-mode="sound">🔤 소리 분류 <span class="dot" id="modeDotSound"></span><br><span class="hint" style="margin:0;" id="soundHint">따라하고 두 상자로 나누기</span></button>
+        <button class="setbtn" data-mode="plural">🐭🐭 복수형 <span class="dot" id="modeDotPlural"></span><br><span class="hint" style="margin:0;" id="pluralHint">한 개 vs 많이 · 따라하기</span></button>
       </div>
     </div>
     <button class="secondary" id="hwBtn" style="width:100%;margin-top:10px;">📋 숙제 결과 카드 보기</button>
@@ -3184,18 +3187,48 @@ const SOUND_SORT = {
     ] }
   }
 };
+const PLURAL_SORT = {
+  C: {
+    '2-2': { rounds: [
+      { title: '한 개 vs 많이',
+        dir: '한 개일까요, 많이 있을까요?',
+        wrong: '다시 읽어 봐요! 한 개일까, 많이 있을까?',
+        boxes: [ { key: 'one', label: 'one', say: '한 개 (1)' }, { key: 'many', label: 'many', say: '많이 (여러 개)' } ],
+        words: [
+          { en: 'foot', ko: '발', emoji: '🦶', box: 'one' },
+          { en: 'feet', ko: '발들', emoji: '🦶🦶', box: 'many' },
+          { en: 'mouse', ko: '쥐', emoji: '🐭', box: 'one' },
+          { en: 'mice', ko: '쥐들', emoji: '🐭🐭', box: 'many' },
+          { en: 'cat', ko: '고양이', emoji: '🐱', box: 'one' },
+          { en: 'cats', ko: '고양이들', emoji: '🐱🐱', box: 'many' },
+          { en: 'rat', ko: '큰 쥐', emoji: '🐀', box: 'one' },
+          { en: 'rats', ko: '큰 쥐들', emoji: '🐀🐀', box: 'many' }
+        ],
+        tip: '많을 때는 모양이 바뀌어요! foot → feet, mouse → mice 는 모양이 달라지고, cat → cats, rat → rats 는 끝에 s를 붙여요.' }
+    ] }
+  }
+};
 const SU_KEY = LEVEL_CODE.toLowerCase() + '_quiz_stepup_';
-function suData(setNo) { return (SOUND_SORT[LEVEL_CODE] || {})[setNo] || null; }
+function suData(setNo, kind) { return ((kind === 'plural' ? PLURAL_SORT : SOUND_SORT)[LEVEL_CODE] || {})[setNo] || null; }
 function suLoad(name) { try { return JSON.parse(localStorage.getItem(SU_KEY + name) || '{}'); } catch (e) { return {}; } }
-function suSavePass(name, setNo) {
-  try { const p = suLoad(name); p[setNo] = true; localStorage.setItem(SU_KEY + name, JSON.stringify(p)); } catch (e) {}
+function suSavePass(name, setNo, kind) {
+  try { const p = suLoad(name); p[kind === 'plural' ? setNo + '#plural' : setNo] = true; localStorage.setItem(SU_KEY + name, JSON.stringify(p)); } catch (e) {}
 }
 function suRefresh(setNo) {
-  const d = suData(setNo);
-  document.getElementById('stepupWrap').hidden = !d;
-  if (!d) return;
-  document.getElementById('modeDotSound').className = 'dot' + (suLoad(currentName)[setNo] ? ' pass' : '');
-  document.getElementById('soundHint').textContent = d.rounds.map(r => r.title).join(' · ') + ' · 따라하기';
+  const d = suData(setNo), pl = suData(setNo, 'plural');
+  document.getElementById('stepupWrap').hidden = !d && !pl;
+  const bs = document.querySelector('#stepupPicker [data-mode="sound"]'), bp = document.querySelector('#stepupPicker [data-mode="plural"]');
+  if (bs) bs.hidden = !d;
+  if (bp) bp.hidden = !pl;
+  const p = suLoad(currentName);
+  if (d) {
+    document.getElementById('modeDotSound').className = 'dot' + (p[setNo] ? ' pass' : '');
+    document.getElementById('soundHint').textContent = d.rounds.map(r => r.title).join(' · ') + ' · 따라하기';
+  }
+  if (pl) {
+    document.getElementById('modeDotPlural').className = 'dot' + (p[setNo + '#plural'] ? ' pass' : '');
+    document.getElementById('pluralHint').textContent = pl.rounds.map(r => r.title).join(' · ') + ' · 따라하기';
+  }
 }
 function suShuffle(a) {
   const b = a.slice();
@@ -3211,10 +3244,10 @@ function suWordHtml(w, round) {
   }
   return w.en;
 }
-function suStart() {
-  const d = suData(currentSet);
+function suStart(kind) {
+  const d = suData(currentSet, kind);
   if (!d) return;
-  suState = { d, r: 0, phase: 'follow', heard: {}, order: [], i: 0, firstTry: 0, wrongOnWord: 0, locked: false, score: 0 };
+  suState = { kind: kind || 'sound', d, r: 0, phase: 'follow', heard: {}, order: [], i: 0, firstTry: 0, wrongOnWord: 0, locked: false, score: 0 };
   document.getElementById('suCard').hidden = false;
   suRender();
 }
@@ -3222,12 +3255,12 @@ function suRender() {
   const body = document.getElementById('suBody');
   const r = suRound();
   const n = suState.d.rounds.length;
-  const head = '<div class="suhead">🔤 소리 분류 · ' + r.title + (n > 1 ? ' <small>(' + (suState.r + 1) + '/' + n + ')</small>' : '') + '</div>';
+  const head = '<div class="suhead">' + (suState.kind === 'plural' ? '🐭🐭 복수형 · ' : '🔤 소리 분류 · ') + r.title + (n > 1 ? ' <small>(' + (suState.r + 1) + '/' + n + ')</small>' : '') + '</div>';
   if (suState.phase === 'follow') {
     body.innerHTML = head +
       '<div class="sudir">① 따라하기 — 단어 아래 버튼을 누르면 <b>소리</b>가 나고 <b>뜻</b>이 보여요. 소리를 듣고 따라 말해요!</div>' +
       '<div class="sucards">' + r.words.map((w, i) =>
-        '<div class="sucard" data-i="' + i + '"><div class="suword">' + suWordHtml(w, r) + '</div>' +
+        '<div class="sucard" data-i="' + i + '">' + (w.emoji ? '<div class="suemoji">' + w.emoji + '</div>' : '') + '<div class="suword">' + suWordHtml(w, r) + '</div>' +
         '<button class="sufollow" data-i="' + i + '">🔊 따라하기</button></div>').join('') + '</div>' +
       '<button class="primary" id="suGo">② 두 상자로 분류하기</button>';
   } else if (suState.phase === 'sort') {
@@ -3235,7 +3268,7 @@ function suRender() {
     body.innerHTML = head +
       '<div class="progress"><span style="width:' + Math.round(suState.i / r.words.length * 100) + '%"></span></div>' +
       '<div class="qnum">' + (suState.i + 1) + ' / ' + r.words.length + '</div>' +
-      '<div class="sudir">소리를 듣고, 어느 상자에 들어갈까요?</div>' +
+      '<div class="sudir">' + (r.dir || '소리를 듣고, 어느 상자에 들어갈까요?') + '</div>' +
       '<div class="suplay"><div class="suword big">' + w.en + '</div><button class="suspeak" id="suSpeak">🔊 다시 듣기</button></div>' +
       '<div class="suboxes">' + r.boxes.map(b => '<button class="subox" data-box="' + b.key + '"><b>' + b.label + '</b><span>' + b.say + '</span></button>').join('') + '</div>' +
       '<div class="spellfeedback" id="suFb" hidden></div>';
@@ -3244,7 +3277,7 @@ function suRender() {
   } else {
     const total = r.words.length, pct = Math.round(suState.score / total * 100), passed = pct >= 70;
     const more = suState.r + 1 < n;
-    if (passed) { playCorrectSound(); if (!more) suSavePass(currentName, currentSet); }
+    if (passed) { playCorrectSound(); if (!more) suSavePass(currentName, currentSet, suState.kind); }
     body.innerHTML = head +
       '<div class="resultcard" style="text-align:center;margin:10px 0;"><div class="num" style="font-size:40px;font-weight:800;">' + suState.score + ' / ' + total + '</div>' +
       '<div class="lbl">한 번에 맞힌 단어</div>' +
@@ -3257,10 +3290,10 @@ function suRender() {
 }
 document.getElementById('stepupPicker').addEventListener('click', e => {
   const btn = e.target.closest('.setbtn');
-  if (!btn || btn.dataset.mode !== 'sound') return;
+  if (!btn || (btn.dataset.mode !== 'sound' && btn.dataset.mode !== 'plural')) return;
   document.getElementById('modeScreen').hidden = true;
   hideAllModeCards();
-  suStart();
+  suStart(btn.dataset.mode);
 });
 document.getElementById('suExitBtn').addEventListener('click', () => openModeScreen(currentSet));
 document.getElementById('suBody').addEventListener('click', e => {
@@ -3299,7 +3332,7 @@ document.getElementById('suBody').addEventListener('click', e => {
       suState.wrongOnWord++;
       box.classList.add('no');
       setTimeout(() => box.classList.remove('no'), 500);
-      fb.textContent = '다시 들어 봐요! 소리가 달라요'; fb.className = 'spellfeedback wrong'; fb.hidden = false;
+      fb.textContent = r.wrong || '다시 들어 봐요! 소리가 달라요'; fb.className = 'spellfeedback wrong'; fb.hidden = false;
       playWrongSound();
       speak(w.en);
     }
