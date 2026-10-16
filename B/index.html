@@ -2989,7 +2989,7 @@ async function loadOnlineRoster() {
   } catch (e) {}
 }
 
-// --- 로그인: PIN은 중계가 확인하고, 5번 틀리면 5분 잠근다. 맞게 입력하면 이 기기에 1시간 동안 로그인 정보를 남긴다
+// --- 로그인: PIN은 중계가 확인하고, 5번 틀리면 5분 잠근다. 맞게 입력하면 이 기기에 30일 동안 로그인 정보를 남긴다
 async function confirmPinOnline() {
   if (pinBusy) return;
   const input = document.getElementById('pinInput');
@@ -3003,7 +3003,7 @@ async function confirmPinOnline() {
     const r = await relayPost({ action: 'login', level: LEVEL_CODE, name: pendingName, pin: typed });
     if (r.ok) {
       onlinePin = typed;
-      saveSession(r, typed);   // 1시간 동안 이 기기에 로그인 유지
+      saveSession(r, typed);   // 30일 동안 이 기기에 로그인 유지
       onlineTrial = !!r.trial;
       onlineClass = r.cls || '';
       if (r.icon) NAME_ICON[r.name] = r.icon;
@@ -3207,7 +3207,7 @@ let idleTimer = null;
 function resetIdle() {
   clearTimeout(idleTimer);
   if (!ONLINE || !currentName) return;
-  // 자리를 비워도 화면은 그대로 둔다 (로그인은 1시간 동안 기기에 남는다)
+  // 자리를 비워도 화면은 그대로 둔다 (로그인은 30일 동안 기기에 남는다)
 }
 
 if (ONLINE) {
@@ -3371,9 +3371,9 @@ document.getElementById('swsBody').addEventListener('input', e => {
   }
 });
 
-// ===== SESSION_KEEP: 로그인 1시간 유지 =====
+// ===== SESSION_KEEP: 로그인 30일 유지 =====
 const SESSION_KEY = LEVEL_CODE.toLowerCase() + '_quiz_session';
-const SESSION_MS = 60 * 60 * 1000;
+const SESSION_MS = 30 * 24 * 60 * 60 * 1000;   // 이 기기에서 30일
 function saveSession(r, pin) {
   try { localStorage.setItem(SESSION_KEY, JSON.stringify({ name: r.name, pin: pin, exp: Date.now() + SESSION_MS })); } catch (e) {}
 }
@@ -3394,7 +3394,7 @@ async function restoreSession() {
     resetIdle();
     flushOutbox();
     openSetList();
-  } catch (e) { /* 인터넷이 없으면 이름 고르는 화면에서 시작 (저장 정보는 1시간이 지날 때까지 남겨 둔다) */ }
+  } catch (e) { /* 인터넷이 없으면 이름 고르는 화면에서 시작 (저장 정보는 30일이 지날 때까지 남겨 둔다) */ }
 }
 if (ONLINE) restoreSession();
 </script>
