@@ -644,6 +644,10 @@
 
   .swsko{font-size:13px; font-weight:600; color:var(--ink-soft); text-align:center; margin:-6px 0 14px; line-height:1.45; overflow-wrap:anywhere;}
   .swlist .swsko{text-align:left; margin:2px 0 4px;}
+
+  /* 숙제 결과 카드: 화면 아래에 자동으로 */
+  .hwinline{margin-top:16px; border:1.5px dashed var(--line); border-radius:14px; padding:12px 12px 14px; background:var(--surface-2);}
+  .hwinline-title{font-weight:800; font-size:14px; margin:0 0 8px; color:var(--ink);}
 </style>
 
 <div class="celebratebanner" id="celebrateBanner" hidden>🎉 You did it! 🎉</div>
@@ -746,7 +750,8 @@
         <button class="setbtn" data-mode="trouble">😾 애완고양이의 트러블 <span class="dot" id="modeDotTrouble"></span><br><span class="hint" style="margin:0;">물건 연결 · 시작 소리 찾기</span></button>
       </div>
     </div>
-    <button class="secondary" id="hwBtn" style="width:100%;margin-top:10px;">📋 숙제 결과 카드 보기</button>
+    <button hidden class="secondary" id="hwBtn" style="width:100%;margin-top:10px;">📋 숙제 결과 카드 보기</button>
+    <div id="hwInline" class="hwinline"></div>
   </div>
 
   <div class="card" id="suCard" hidden>
@@ -820,7 +825,8 @@
       <button class="secondary" id="retryBtn">다시 풀기</button>
       <button class="secondary" id="backBtn">세트 목록으로</button>
     </div>
-    <button class="secondary" id="hwBtn2" style="width:100%;margin-top:10px;">📋 숙제 결과 카드 보기</button>
+    <button hidden class="secondary" id="hwBtn2" style="width:100%;margin-top:10px;">📋 숙제 결과 카드 보기</button>
+    <div id="hwInline2" class="hwinline"></div>
     <div class="submitbanner" id="submitBanner" hidden></div>
   </div>
 
@@ -1480,6 +1486,7 @@ function openModeScreen(setNo) {
   if (ONLINE) renderHallForSet(setNo);
   loadBoard();
   renderWarmup();
+  try { renderHwInline(); } catch (e) {}
 }
 
 // each roster name has a 4-digit PIN so a student can't casually pick a classmate's name;
@@ -1854,6 +1861,7 @@ async function submitToTeacher() {
 }
 
 async function renderSubmitBanner() {
+  try { renderHwInline(); } catch (e) {}
   if (ONLINE) return onlineRenderSubmit();
   const wrap = document.getElementById('submitBanner');
   const p = studentProgress[currentSet];
@@ -2966,6 +2974,20 @@ function copyHwText() {
   };
   try { navigator.clipboard.writeText(text).then(done, fallback); } catch (e) { fallback(); }
 }
+
+// 숙제 결과 카드를 화면 아래에 자동으로 만든다 (팝업 카드와 같은 내용)
+function renderHwInline() {
+  if (!currentName || !currentSet) return;
+  const ov = document.getElementById('hwOverlay');
+  const wasHidden = ov.hidden;
+  openHwCard();
+  const html = document.getElementById('hwBody').innerHTML;
+  ov.hidden = wasHidden;
+  ['hwInline', 'hwInline2'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.innerHTML = '<div class="hwinline-title">📋 숙제 결과 카드</div>' + html;
+  });
+}
 document.getElementById('hwBtn').addEventListener('click', openHwCard);
 document.getElementById('hwBtn2').addEventListener('click', openHwCard);
 document.getElementById('hwCloseBtn').addEventListener('click', () => { document.getElementById('hwOverlay').hidden = true; });
@@ -3189,6 +3211,7 @@ function showSubmitResult(wrap, r, payload) {
   wrap.innerHTML = '<div class="submitcard">' + lines.join('') + '</div>';
   wrap.hidden = false;
   hallCache.at = 0;
+  try { renderHwInline(); } catch (e) {}
 }
 
 async function onlineRenderSubmit() {
