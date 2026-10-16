@@ -1483,6 +1483,64 @@ const nextBtn = document.getElementById('nextBtn');
 let quizRoundQuestions = [];
 // 한 번에 풀 퀴즈는 최대 20문항: 단어가 더 많은 책은 풀 때마다 무작위로 20개를 뽑는다
 const QUIZ_MAX_Q = 20;
+// 정답 번호를 풀 때마다 새로 섞는다: 위치를 고르게 나누고, 같은 번호 3연속·1-2-3 계단·A-B-A-B 반복은 피한다
+function quizPosOk(s, strict) {
+  for (let i = 2; i < s.length; i++) {
+    if (s[i] === s[i - 1] && s[i - 1] === s[i - 2]) return false;
+    if (strict && Math.abs(s[i] - s[i - 1]) === 1 && s[i] - s[i - 1] === s[i - 1] - s[i - 2]) return false;
+  }
+  if (strict) for (let i = 3; i < s.length; i++) { if (s[i] === s[i - 2] && s[i - 1] === s[i - 3] && s[i] !== s[i - 1]) return false; }
+  return true;
+}
+function quizShuffleArr(a) {
+  const b = a.slice();
+  for (let i = b.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [b[i], b[j]] = [b[j], b[i]]; }
+  return b;
+}
+// 정답 위치 순서를 하나씩 골라 만든다 (막히면 되돌아가서 다시 고른다)
+function quizBuildSeq(n, m, strict) {
+  const counts = new Array(m).fill(Math.floor(n / m));
+  quizShuffleArr(Array.from({ length: m }, (_, p) => p)).slice(0, n % m).forEach(p => { counts[p]++; });
+  const seq = []; let budget = 20000;
+  function ok(s) {
+    const k = s.length - 1;
+    if (k >= 2 && s[k] === s[k - 1] && s[k - 1] === s[k - 2]) return false;
+    if (strict && k >= 2 && Math.abs(s[k] - s[k - 1]) === 1 && s[k] - s[k - 1] === s[k - 1] - s[k - 2]) return false;
+    if (strict && k >= 3 && s[k] === s[k - 2] && s[k - 1] === s[k - 3] && s[k] !== s[k - 1]) return false;
+    return true;
+  }
+  function rec() {
+    if (seq.length === n) return true;
+    if (--budget < 0) return false;
+    const cand = quizShuffleArr(counts.map((c, p) => p).filter(p => counts[p] > 0));
+    for (const p of cand) {
+      seq.push(p); counts[p]--;
+      if (ok(seq) && rec()) return true;
+      seq.pop(); counts[p]++;
+    }
+    return false;
+  }
+  return rec() ? seq : null;
+}
+function arrangeQuizChoices(list) {
+  const n = list.length;
+  const m = Math.max.apply(null, list.map(q => q.choices.length));
+  const seq = quizBuildSeq(n, m, true) || quizBuildSeq(n, m, false) || quizShuffleArr(Array.from({ length: n }, (_, i) => i % m));
+  return list.map((q, i) => {
+    const others = quizShuffleArr(q.choices.filter(c => c !== q.correct));
+    const pos = Math.min(seq[i], q.choices.length - 1);
+    const choices = others.slice(0, pos).concat([q.correct], others.slice(pos));
+    return Object.assign({}, q, { choices });
+  });
+}
+// 복습 라운드에서 다시 나올 때: 정답 위치가 바뀌도록 보기를 새로 섞는다
+function reshuffleChoices(q) {
+  const was = q.choices.indexOf(q.correct);
+  for (let t = 0; t < 20; t++) {
+    q.choices = quizShuffleArr(q.choices);
+    if (q.choices.length < 2 || q.choices.indexOf(q.correct) !== was) break;
+  }
+}
 function pickQuizQuestions(list) {
   const a = list.slice();
   if (a.length <= QUIZ_MAX_Q) return a;
@@ -1494,7 +1552,7 @@ let retestQueue = [];
 let wrongQuestions = [];
 
 function startQuizRound() {
-  quizRoundQuestions = pickQuizQuestions(currentQuiz().questions);
+  quizRoundQuestions = arrangeQuizChoices(pickQuizQuestions(currentQuiz().questions));
   inRetest = false;
   retestQueue = [];
   wrongQuestions = [];
@@ -1586,13 +1644,14 @@ function advanceQuizFlow(wasCorrect) {
     } else if (wrongQuestions.length > 0) {
       inRetest = true;
       retestQueue = wrongQuestions.slice();
+      retestQueue.forEach(reshuffleChoices);
       renderQuestion();
     } else {
       finishQuiz();
     }
   } else {
     const current = retestQueue.shift();
-    if (!wasCorrect) retestQueue.push(current);
+    if (!wasCorrect) { reshuffleChoices(current); retestQueue.push(current); }
     if (retestQueue.length === 0) finishQuiz();
     else renderQuestion();
   }
