@@ -121,7 +121,7 @@
 
   button.primary{
     font-family:var(--f-ui); font-weight:700; font-size:15px;
-    background:var(--accent); color:#2D2A24; border:none; border-radius:14px;
+    background:var(--accent); color:#fff; border:none; border-radius:14px;
     padding:12px 18px; cursor:pointer; margin-top:14px; width:100%;
   }
   button.primary:disabled{background:var(--ink-faint); cursor:not-allowed;}
@@ -295,7 +295,7 @@
   .nextbtn{
     display:flex; align-items:center; justify-content:center; gap:6px;
     font-family:var(--f-ui); font-weight:700; font-size:15px;
-    background:var(--accent); color:#2D2A24; border:none; border-radius:14px;
+    background:var(--accent); color:#fff; border:none; border-radius:14px;
     padding:12px 18px; cursor:pointer; margin-top:16px; width:100%;
   }
   .nextbtn .arrow{font-style:normal; font-family:var(--f-ui);}
@@ -739,6 +739,8 @@
   .bd.big .bdtail{right:auto; left:50%; top:100%; margin:-4px 0 0 -10px; transform:rotate(90deg);}
   @media (prefers-reduced-motion: reduce){ .bdbtn.hop img{animation:none;} .bdsay{transition:none;} }
   :root{color-scheme:only light;}   /* 늘 밝은 화면 (엘레나 결정 ㉮) */
+  /* 매칭 두 칸 사이 넓게 (2026-10-18) */
+  .matchgrid{column-gap:28px;}
 </style>
 
 <div class="celebratebanner" id="celebrateBanner" hidden>🎉 You did it! 🎉</div>
@@ -2175,6 +2177,7 @@ function matchLeftVal(w) { return currentSet === 'review6' ? w.present : w.en; }
 function matchRightVal(w) { return currentSet === 'review6' ? w.en : w.ko; }
 
 function tileLabel(v, side) {
+  if (side === 'en') return v;   // 그림은 뜻 칸에만 — 같은 그림끼리 맞추는 힌트가 되지 않게 (엘레나 결정 2026-10-18)
   const w = matchAllWords.find(x => (side === 'en' ? matchLeftVal(x) : matchRightVal(x)) === v);
   return (w && w.emoji ? emojiHtml(w.emoji) + ' ' : '') + v;
 }
@@ -3571,7 +3574,7 @@ window.addEventListener('beforeunload', e => {
 // ===== AUTO_UPDATE (요구사항 NF-09): 새 버전을 올리면 다음 접속이나 탭으로 돌아올 때 최신 화면으로 바꾼다.
 // 문제를 푸는 중·기록을 보내는 중에는 끊지 않고, 이름·Day 목록 화면에서만 한 번 다시 불러온다.
 // 못 보낸 기록은 이미 기기에 먼저 저장돼 있어 다시 불러와도 사라지지 않는다.
-const APP_BUILD = '20261018-231009';
+const APP_BUILD = '20261018-232155';
 const VER_URL = '../version.json';
 const VER_FIRST_MS = 1500, VER_POLL_MS = 600000, VER_TICK_MS = 5000, VER_RETRY_MS = 600000;
 let verWant = '';   // 받아야 할 새 번호 (안전한 때를 기다리는 중)
