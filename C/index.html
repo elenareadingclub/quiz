@@ -2945,6 +2945,7 @@ function recordLast(setNo, m, data) {
     all[setNo][m] = Object.assign({ at: Date.now() }, data);
     localStorage.setItem(hwLastKey(currentName), JSON.stringify(all));
   } catch (e) {}
+  try { upStage(setNo, m, data); } catch (e) {}   // 단계 기록을 서버로 (UPLOAD_SAFE)
 }
 function hwStatusRow(label, cls, text) {
   return '<div class="hwrow ' + cls + '"><span class="hwstep">' + label + '</span><span class="hwres">' + text + '</span></div>';
@@ -3106,7 +3107,7 @@ async function confirmPinOnline() {
       currentName = r.name;
       hidePinPrompt();
       resetIdle();
-      flushOutbox();
+      upKick({ resume: true });
       openSetList();
     } else if (r.locked) {
       const mins = Math.max(1, Math.ceil((new Date(r.until) - new Date()) / 60000));
@@ -3260,43 +3261,222 @@ function showSubmitResult(wrap, r, payload) {
   try { renderHwInline(); } catch (e) {}
 }
 
+// ===== UPLOAD_SAFE (2026-10-18): 단계 기록·제출을 먼저 이 기기에 저장하고 서버로 보낸다 =====
+// - 보내기 전에 재전송함(기기 저장소)에 먼저 쓰고, 서버가 받았다고 답하면 지운다 → 보내는 중에 앱을 닫아도 남는다
+// - 한 번 보내는 데 최대 20초. 서버가 '바쁨'이면 20초 안에서 3초 쉬고 다시 시도한다
+// - 20초 안에 답이 없으면 서버에 짧게 인사(ping)해 본다: 답하면 '서버가 바쁨', 안 되면 '인터넷연결 확인' 안내
+// - 가운데 팝업: 보내는 중(진행 막대·남은 시간) → "저장됐어요" / 실패하면 '확인'을 누를 때까지 안내
+// - 재전송: 인터넷연결이 돌아올 때, 1분마다, 로그인할 때. 번호(PIN)가 틀리면 다시 로그인할 때까지 멈춘다
+const UP_TIMEOUT_MS = 20000, UP_BUSY_WAIT_MS = 3000, UP_DONE_MS = 1500, UP_PING_MS = 4000;
+const UP_PERMANENT = ['bad_set', 'bad_stage', 'bad_level', 'bad_score', 'no_submit_id', 'no_event_id', 'no_student', 'unknown_action'];
+let upBusy = false, upPaused = false, upAgain = false, upWant = '', upRun = Promise.resolve();
+let upExtra = [];   // 기기 저장소에 못 쓴 경우(저장 공간 부족 등) 이 화면이 열려 있는 동안만 들고 있는다
+
+function upId() { return Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 8); }
+function upLoad() {
+  const saved = outboxLoad().map(i => i.id ? i : { id: (i.payload && i.payload.submitId) || upId(), name: i.name, kind: 'submit', payload: i.payload, at: 0 });
+  return saved.concat(upExtra.filter(x => !saved.some(s => s.id === x.id)));
+}
+function upMine() { return upLoad().filter(i => i.name === currentName); }
+function upAdd(kind, payload) {
+  const item = { id: payload.eventId || payload.submitId, name: currentName, kind, payload, at: Date.now() };
+  const box = outboxLoad();
+  box.push(item);
+  outboxSave(box);
+  if (!outboxLoad().some(i => i.id === item.id)) upExtra.push(item);
+  return item;
+}
+function upRemove(id) {
+  outboxSave(outboxLoad().filter(i => (i.id || (i.payload && i.payload.submitId)) !== id));
+  upExtra = upExtra.filter(i => i.id !== id);
+}
+function upSleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+// 단계를 끝낼 때마다 (recordLast 에서 부른다): 통과·미통과 모두 기록
+function upStage(setNo, m, data) {
+  if (!ONLINE || !onlinePin || !currentName) return;
+  const reps = (loadReps()[setNo] || {})[m];
+  const p = { action: 'stage', level: LEVEL_CODE, name: currentName, set: setNo, stage: m, noAuto: true,
+    eventId: LEVEL_CODE + '-' + currentName + '-' + setNo + '-' + m + '-' + upId() };
+  if (m === 'wordcheck') { p.total = 0; p.reps = reps || 1; }
+  else { p.score = data.score; p.total = data.total; p.reps = data.reps || reps || 1; p.wrong = (data.wrong || []).slice(0, 60); }
+  if (m === 'match') p.points = data.points;
+  if (m === 'spell') { p.diff = data.diff; p.clean = !!data.clean; }
+  if (setNo === 'review6') p.noSpell = true;
+  upAdd('stage', p);
+  upKick({});
+}
+
+// 서버로 한 번 보내기: 20초가 지나면 끊는다
+function upPost(body, ms) {
+  return new Promise((resolve, reject) => {
+    const ctl = typeof AbortController !== 'undefined' ? new AbortController() : null;
+    const t = setTimeout(() => { if (ctl) ctl.abort(); const e = new Error('timeout'); e.name = 'AbortError'; reject(e); }, ms);
+    fetch(RELAY_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(body), signal: ctl ? ctl.signal : undefined })
+      .then(res => res.text())
+      .then(txt => { let v; try { v = JSON.parse(txt); } catch (e) { const err = new Error('bad_json'); err.upBad = true; throw err; } return v; })
+      .then(v => { clearTimeout(t); resolve(v); }, e => { clearTimeout(t); reject(e); });
+  });
+}
+// 결과: ok | drop(서버가 형식 오류로 거절 → 지움) | pin(번호 확인 필요) | net(연결 끊김·시간 초과) | busy(서버 바쁨·오류)
+async function upSendOne(item, onTick) {
+  const deadline = Date.now() + UP_TIMEOUT_MS;
+  onTick(UP_TIMEOUT_MS);
+  const tick = setInterval(() => onTick(Math.max(0, deadline - Date.now())), 200);
+  try {
+    for (;;) {
+      const left = deadline - Date.now();
+      if (left <= 0) return { kind: 'net' };
+      let r;
+      try { r = await upPost(Object.assign({ pin: onlinePin }, item.payload), left); }
+      catch (e) {
+        if (e && e.upBad) return { kind: 'busy' };
+        if (e && e.name === 'AbortError') { onTick(-1); return { kind: (await upReachable()) ? 'busy' : 'net' }; }
+        return { kind: 'net' };
+      }
+      if (r && r.ok) return { kind: 'ok', r };
+      if (r && (r.wrong || r.locked)) return { kind: 'pin', r };
+      if (r && UP_PERMANENT.indexOf(r.error) >= 0) return { kind: 'drop', r };
+      if (deadline - Date.now() > UP_BUSY_WAIT_MS * 2) { await upSleep(UP_BUSY_WAIT_MS); continue; }
+      return { kind: 'busy', r };
+    }
+  } finally { clearInterval(tick); }
+}
+// 시간 초과 때: 서버가 살아 있는지(인터넷연결은 되는지) 짧게 확인
+function upReachable() {
+  return new Promise(resolve => {
+    const t = setTimeout(() => resolve(false), UP_PING_MS);
+    fetch(RELAY_URL + '?action=ping').then(res => res.text()).then(txt => { clearTimeout(t); let v = null; try { v = JSON.parse(txt); } catch (e) {} resolve(!!(v && v.ok)); }, () => { clearTimeout(t); resolve(false); });
+  });
+}
+function upAfterSubmit(payload, r) {
+  const wrap = document.getElementById('submitBanner');
+  if (payload.set === currentSet && wrap) { showSubmitResult(wrap, r, payload); return; }
+  if (r.card) recordSent(payload.set, { card: r.card, attempt: r.attempt || 0, late: !!r.late, at: Date.now() });
+}
+
+// opt.bg: 1분마다·인터넷연결 복구 때 (조용히, 성공하면 짧게 알림) / opt.resume: 로그인 직후 / 그 밖: 방금 끝낸 단계·제출
+function upKick(opt) {
+  opt = opt || {};
+  if (opt.resume) upPaused = false;
+  if (!ONLINE || !onlinePin || !currentName) return Promise.resolve();
+  if (!opt.bg) upWant = opt.resume ? (upWant || 'resume') : 'live';
+  if (upBusy) { upAgain = true; return upRun; }
+  if (upPaused) {
+    if (upWant && upMine().length) upPopFail('pin');
+    upWant = '';
+    return Promise.resolve();
+  }
+  if (!upMine().length) { upWant = ''; return Promise.resolve(); }
+  upBusy = true;
+  upRun = (async () => {
+    let done = 0, outcome = 'ok', visible = false;
+    try {
+      for (;;) {
+        const box = upMine();
+        if (!box.length) break;
+        visible = visible || !!upWant || upPopIsFailOpen();
+        const item = box[0];
+        // 보내는 사이에 다음 기록(예: 마지막 단계 뒤 제출)이 들어오면 '1/2'처럼 바로 고쳐 보인다
+        const title = () => { const total = done + upMine().length; return upWant === 'live'
+          ? '선생님께 기록을 보내고 있어요' + (total > 1 ? ' (' + (done + 1) + '/' + total + ')' : '')
+          : '못 보낸 기록 ' + total + '개를 보내고 있어요'; };
+        if (visible) upPopSending(title());
+        const res = await upSendOne(item, ms => { if (visible) { upPopTick(ms); document.getElementById('upTitle').textContent = title(); } });
+        if (res.kind === 'ok' || res.kind === 'drop') {
+          upRemove(item.id); done++;
+          if (res.kind === 'ok' && item.kind === 'submit') upAfterSubmit(item.payload, res.r);
+          continue;
+        }
+        outcome = res.kind;
+        break;
+      }
+    } finally { upBusy = false; }
+    if (outcome === 'ok') {
+      if (done > 0 && (visible || opt.bg)) upPopDone(upWant === 'live' ? '저장됐어요!' : '못 보냈던 기록을 보냈어요!');
+    } else {
+      if (outcome === 'pin') upPaused = true;
+      if (visible) upPopFail(outcome);
+      if (upMine().some(i => i.kind === 'submit')) upBannerPending();
+    }
+    upWant = '';
+    if (upAgain) { upAgain = false; if (outcome === 'ok' && upMine().length) return upKick({ bg: !visible }); }
+  })();
+  return upRun;
+}
+function flushOutbox() { return upKick({ bg: true }); }
+
+// ---- 가운데 팝업
+(function upPopInit() {
+  const css = document.createElement('style');
+  css.textContent = '.uppop{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(20,16,10,.45)}' +
+    '.upbox{width:min(340px,100%);background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);padding:22px 20px 18px;text-align:center}' +
+    '.upicon{font-size:34px;line-height:1}.uptitle{font-size:17px;font-weight:700;margin:10px 0 6px;word-break:keep-all}' +
+    '.upmsg{font-size:14px;color:var(--ink-soft);line-height:1.5;word-break:keep-all}.upmsg:empty{display:none}' +
+    '.upbar{height:10px;border-radius:999px;background:var(--surface-2);border:1px solid var(--line);overflow:hidden;margin:14px 0 6px}' +
+    '.upfill{height:100%;width:100%;background:var(--accent);border-radius:999px;transition:width .2s linear}' +
+    '.uptime{font-size:12.5px;color:var(--ink-soft);font-variant-numeric:tabular-nums}' +
+    '.upok{margin-top:14px;min-width:120px;padding:10px 18px;border:0;border-radius:12px;background:var(--accent);color:var(--surface);font-size:15px;font-weight:700;cursor:pointer}';
+  document.head.appendChild(css);
+  document.body.insertAdjacentHTML('beforeend',
+    '<div class="uppop" id="upPop" hidden role="alertdialog" aria-modal="true" aria-live="assertive" aria-labelledby="upTitle">' +
+    '<div class="upbox"><div class="upicon" id="upIcon"></div><div class="uptitle" id="upTitle"></div><div class="upmsg" id="upMsg"></div>' +
+    '<div class="upbar" id="upBar"><div class="upfill" id="upFill"></div></div><div class="uptime" id="upTime"></div>' +
+    '<button type="button" class="upok" id="upOk">확인</button></div></div>');
+  document.getElementById('upOk').addEventListener('click', () => { document.getElementById('upPop').hidden = true; });
+})();
+let upDoneT = null;
+function upPopShow(state, icon, title, msg) {
+  clearTimeout(upDoneT);
+  const pop = document.getElementById('upPop');
+  pop.dataset.state = state;
+  document.getElementById('upIcon').textContent = icon;
+  document.getElementById('upTitle').textContent = title;
+  document.getElementById('upMsg').textContent = msg;
+  document.getElementById('upBar').hidden = state !== 'sending';
+  document.getElementById('upTime').hidden = state !== 'sending';
+  document.getElementById('upOk').hidden = state !== 'fail';
+  pop.hidden = false;
+}
+function upPopSending(title) { upPopShow('sending', '📤', title, '이 화면을 닫지 말아 주세요'); }
+function upPopTick(ms) {
+  const f = document.getElementById('upFill'), t = document.getElementById('upTime');
+  if (ms < 0) { if (t) t.textContent = '연결 확인 중…'; return; }   // 시간 초과 뒤 서버 확인 중
+  if (f) f.style.width = Math.max(0, Math.min(100, ms / UP_TIMEOUT_MS * 100)) + '%';
+  if (t) t.textContent = '남은 시간 ' + Math.ceil(ms / 1000) + '초';
+}
+function upPopDone(title) {
+  upPopShow('done', '✅', title, '');
+  upDoneT = setTimeout(() => { const pop = document.getElementById('upPop'); if (pop.dataset.state === 'done') pop.hidden = true; }, UP_DONE_MS);
+}
+function upPopFail(kind) {
+  if (kind === 'pin') upPopShow('fail', '🔑', '번호 확인이 필요해요', '처음 화면에서 다시 들어와 주세요.');
+  else if (kind === 'busy') upPopShow('fail', '⏳', '기록을 아직 못 보냈어요', '서버가 잠깐 바빠요. 자동으로 다시 보낼게요.');
+  else upPopShow('fail', '⚠️', '기록을 아직 못 보냈어요', '인터넷연결을 확인해 주세요. 연결되면 자동으로 다시 보낼게요.');
+}
+function upPopIsFailOpen() { const pop = document.getElementById('upPop'); return !!pop && !pop.hidden && pop.dataset.state === 'fail'; }
+function upBannerPending() {
+  const wrap = document.getElementById('submitBanner');
+  if (!wrap) return;
+  wrap.hidden = false;
+  wrap.innerHTML = '<div class="submitcard"><div class="submittitle">📡 아직 선생님께 못 보냈어요</div><div class="submitnote">인터넷연결이 되면 자동으로 다시 보낼게요.</div></div>';
+}
+// 보내는 중이거나 못 보낸 기록이 있으면 앱을 닫을 때 브라우저가 한 번 묻는다 (폰에서는 안 뜰 수도 있음)
+window.addEventListener('beforeunload', e => {
+  if (ONLINE && currentName && (upBusy || upMine().length)) { e.preventDefault(); e.returnValue = ''; }
+});
+
 async function onlineRenderSubmit() {
   const wrap = document.getElementById('submitBanner');
   const payload = isSetComplete(currentSet, studentProgress[currentSet]) ? buildOnlinePayload(currentSet) : null;
   if (!payload) { wrap.hidden = true; wrap.innerHTML = ''; return; }
   wrap.hidden = false;
   wrap.innerHTML = '<div class="submitcard"><div class="submittitle">📤 선생님께 보내는 중…</div></div>';
-  let r;
-  try {
-    r = await relayPost(Object.assign({ pin: onlinePin }, payload));
-  } catch (e) {
-    const box = outboxLoad();
-    box.push({ name: currentName, payload: payload });
-    outboxSave(box);
-    wrap.innerHTML = '<div class="submitcard"><div class="submittitle">📡 아직 못 보냈어요</div><div class="submitnote">인터넷이 연결되면 자동으로 다시 보낼게요. 이 화면을 캡처해 두어도 좋아요.</div></div>';
-    return;
-  }
-  if (r && r.ok) { showSubmitResult(wrap, r, payload); return; }
-  wrap.innerHTML = '<div class="submitcard"><div class="submittitle">⚠️ 제출이 안 됐어요</div><div class="submitnote">' +
-    (r && (r.locked || r.wrong) ? '번호 확인이 안 됐어요. 처음 화면에서 다시 들어와 주세요.' : '선생님께 결과 카드를 캡처해서 보내 주세요.') + '</div></div>';
+  upAdd('submit', payload);
+  await upKick({});
+  if (upMine().some(i => i.id === payload.submitId)) upBannerPending();
 }
-
-let outboxBusy = false;
-async function flushOutbox() {
-  if (outboxBusy || !onlinePin || !currentName) return;
-  outboxBusy = true;
-  try {
-    let box = outboxLoad();
-    for (const item of box.filter(i => i.name === currentName)) {
-      try {
-        const r = await relayPost(Object.assign({ pin: onlinePin }, item.payload));
-        if (r && r.ok && r.card) recordSent(item.payload.set, { card: r.card, attempt: r.attempt || 0, late: !!r.late, at: Date.now() });
-        if (r && (r.ok || r.error)) box = box.filter(i => i !== item && i.payload.submitId !== item.payload.submitId);
-        outboxSave(box);
-      } catch (e) { break; }
-    }
-  } finally { outboxBusy = false; }
-}
+// ===== /UPLOAD_SAFE =====
 
 // --- 30분 동안 아무 입력이 없으면 처음 화면으로 (공용 기기에서 다른 학생으로 남지 않게)
 const IDLE_MS = 30 * 60 * 1000;
@@ -3672,7 +3852,7 @@ async function restoreSession() {
     if (r.icon) NAME_ICON[r.name] = r.icon;
     currentName = r.name;
     resetIdle();
-    flushOutbox();
+    upKick({ resume: true });
     openSetList();
   } catch (e) { /* 인터넷이 없으면 이름 고르는 화면에서 시작 (저장 정보는 30일이 지날 때까지 남겨 둔다) */ }
 }
