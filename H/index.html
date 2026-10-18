@@ -3407,7 +3407,7 @@ window.addEventListener('beforeunload', e => {
 // ===== AUTO_UPDATE (요구사항 NF-09): 새 버전을 올리면 다음 접속이나 탭으로 돌아올 때 최신 화면으로 바꾼다.
 // 문제를 푸는 중·기록을 보내는 중에는 끊지 않고, 이름·Day 목록 화면에서만 한 번 다시 불러온다.
 // 못 보낸 기록은 이미 기기에 먼저 저장돼 있어 다시 불러와도 사라지지 않는다.
-const APP_BUILD = '20261018-184517';
+const APP_BUILD = '20261018-185446';
 const VER_URL = '../version.json';
 const VER_FIRST_MS = 1500, VER_POLL_MS = 600000, VER_TICK_MS = 5000, VER_RETRY_MS = 600000;
 let verWant = '';   // 받아야 할 새 번호 (안전한 때를 기다리는 중)
@@ -3559,8 +3559,10 @@ function blReduced() { try { return !!(window.matchMedia && matchMedia('(prefers
     '.blwrap{position:fixed;inset:0;z-index:9000;display:flex;align-items:center;justify-content:center;padding:16px;background:var(--bg)}' +
     '.blbox{display:flex;flex-direction:column;align-items:center;text-align:center;max-width:320px}' +
     '.blbubble,.upbubble{position:relative;background:var(--surface);color:var(--ink);border:2px dashed var(--bs-line);border-radius:18px}' +
-    '.blbubble::after,.upbubble::after{content:"";position:absolute;left:50%;bottom:-9px;width:14px;height:14px;background:var(--surface);border-right:2px dashed var(--bs-line);border-bottom:2px dashed var(--bs-line);transform:translateX(-50%) rotate(45deg)}' +
-    '.blbubble{padding:12px 20px;font-size:19px;font-weight:700;word-break:keep-all;margin-left:64px;white-space:nowrap}.blbubble::after{left:30px;bottom:-10px;width:16px;height:16px}' +
+    // 말풍선 꼬리: 말풍선 테두리에 이어지는 굽은 꼬리 (점선 네모를 돌린 꼬리는 어색해서 바꿈, 엘레나 2026-10-18)
+    '.bstail{position:absolute;overflow:visible}.bstail path{fill:var(--surface);stroke:var(--bs-line);stroke-width:2;stroke-dasharray:5 3.5;stroke-linecap:round;stroke-linejoin:round}' +
+    '.bstail-l{left:22px;bottom:-22px;width:28px;height:24px}.bstail-d{left:50%;margin-left:-12px;bottom:-19px;width:24px;height:20px}' +
+    '.blbubble{padding:12px 20px;font-size:19px;font-weight:700;word-break:keep-all;margin-left:64px;white-space:nowrap}' +
     '.blface{display:block;width:96px;height:96px;margin:8px 40px 0 0;animation:blHop .5s ease-in-out infinite alternate}.blface.rest{animation:none}' +
     '.blload{margin-top:14px;font-size:22px;font-weight:800;color:var(--ink);letter-spacing:.02em}.bldots i{font-style:normal;animation:blDot 1.2s infinite}.bldots i:nth-child(2){animation-delay:.2s}.bldots i:nth-child(3){animation-delay:.4s}' +
     '@keyframes blDot{0%,20%{opacity:.15}50%,100%{opacity:1}}' +
@@ -3572,12 +3574,13 @@ function blReduced() { try { return !!(window.matchMedia && matchMedia('(prefers
   document.head.appendChild(css);
   document.body.insertAdjacentHTML('beforeend',
     '<div class="blwrap" id="blWrap" hidden role="status" aria-live="polite">' +
-    '<div class="blbox"><div class="blbubble">난 배실이야~ 안녕 !!</div>' +
+    '<div class="blbox"><div class="blbubble">난 배실이야~ 안녕 !!<svg class="bstail bstail-l" viewBox="0 0 28 24" aria-hidden="true"><path d="M6 2 Q9 15 1 23 Q18 18 24 2"/></svg></div>' +
     '<img class="blface" id="blFace" alt="배실이" width="96" height="96" decoding="async">' +
     '<div class="blload">로딩 중<span class="bldots" aria-hidden="true"><i>.</i><i>.</i><i>.</i></span></div>' +
     '<div class="blnote" id="blNote"></div>' +
     '<button type="button" class="exitbtn blback" id="blBack">← 다른 이름</button></div></div>');
   document.getElementById('blBack').addEventListener('click', blCancel);
+  document.querySelector('#upPop .upbubble').insertAdjacentHTML('beforeend', '<svg class="bstail bstail-d" viewBox="0 0 24 20" aria-hidden="true"><path d="M3 1.5 Q9 9 12 19 Q15 9 21 1.5"/></svg>');
   // 그림 5장(약 62KB)은 첫 화면이 다 뜬 뒤 미리 받아 둔다 → [확인]을 누르면 바로 보임
   if (ONLINE) window.addEventListener('load', () => setTimeout(() => BL_FACES.forEach(f => { const i = new Image(); i.src = BL_IMG + f + '.webp'; }), 300));
 })();
