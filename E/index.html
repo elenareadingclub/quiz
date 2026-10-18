@@ -1268,10 +1268,12 @@ function updateCurrentNameBadge() {
   }
 }
 
+// Day 목록 다시 받기 5분 (엘레나 결정 ⑦ 2026-10-18): 로딩 때 받은 뒤 5분 안에 돌아오면 서버에 다시 묻지 않고 이 기기 기록으로 바로
+const SETLIST_REFRESH_MS = 5 * 60 * 1000;
 async function openSetList(opt) {
   opt = opt || {};
   // 다른 아이로 바뀌었으면 앞 아이의 진도를 섞지 않는다 (S-108, 3단계에서 고침)
-  if (openSetList.owner !== currentName) { studentProgress = {}; openSetList.owner = currentName; }
+  if (openSetList.owner !== currentName) { studentProgress = {}; openSetList.owner = currentName; openSetList.fetchedAt = 0; }
   showScreen('setListScreen');
   document.getElementById('whoamiLabel').textContent = `${nameWithIcon(currentName)} 님`;
   updateCurrentNameBadge();
@@ -1282,12 +1284,14 @@ async function openSetList(opt) {
   try { tgRenderBox(); } catch (e) {}
   if (ONLINE && opt.ready) renderHomeworkBanner();
   const fetched = await fetchStudentProgress(currentName);
-  const fromServer = opt.ready ? opt.fromServer : (ONLINE ? await onlineProgress() : null);
+  const refetch = ONLINE && !opt.ready && !(Date.now() - (openSetList.fetchedAt || 0) < SETLIST_REFRESH_MS);
+  if (opt.ready || refetch) openSetList.fetchedAt = Date.now();
+  const fromServer = opt.ready ? opt.fromServer : (refetch ? await onlineProgress() : null);
   studentProgress = mergeProgress(studentProgress, cached, fetched, fromServer);
   saveLocalProgressCache(currentName, studentProgress);
   renderSetList(studentProgress);
   try { tgRenderBox(); } catch (e) {}
-  if (ONLINE && !opt.ready) onlineAfterSetList();
+  if (ONLINE && !opt.ready) { if (refetch) onlineAfterSetList(); else renderHomeworkBanner(); }
 }
 
 // once a mission's green light is earned it must never go dark again — at least on this
@@ -3412,7 +3416,7 @@ window.addEventListener('beforeunload', e => {
 // ===== AUTO_UPDATE (요구사항 NF-09): 새 버전을 올리면 다음 접속이나 탭으로 돌아올 때 최신 화면으로 바꾼다.
 // 문제를 푸는 중·기록을 보내는 중에는 끊지 않고, 이름·Day 목록 화면에서만 한 번 다시 불러온다.
 // 못 보낸 기록은 이미 기기에 먼저 저장돼 있어 다시 불러와도 사라지지 않는다.
-const APP_BUILD = '20261018-210802';
+const APP_BUILD = '20261018-213109';
 const VER_URL = '../version.json';
 const VER_FIRST_MS = 1500, VER_POLL_MS = 600000, VER_TICK_MS = 5000, VER_RETRY_MS = 600000;
 let verWant = '';   // 받아야 할 새 번호 (안전한 때를 기다리는 중)
