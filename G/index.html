@@ -65,7 +65,7 @@
   .setrow.assigned .setrow-title::after{content:" 📌";}
   .hallbox{border:1.5px dashed var(--line); border-radius:14px; padding:10px 12px; margin:6px 0 12px; background:var(--surface-2);}
   .hallttl{font-weight:800; font-size:14px; color:var(--ink); margin-bottom:6px;}
-  .hallcnt{font-size:11.5px; font-weight:800; color:var(--gold); margin-left:4px;}
+  .hallcnt{font-size:11.5px; font-weight:800; color:var(--gold-ink); margin-left:4px;}
   .hallchips{display:flex; flex-wrap:wrap; gap:6px;}
   .hallchip{font-size:13px; font-weight:700; background:var(--surface); border:1px solid var(--line); border-radius:20px; padding:3px 10px; color:var(--ink);}
   .hallchip small{font-weight:500; color:var(--ink-faint); font-size:11px;}
@@ -297,10 +297,10 @@
     background:var(--gold-soft); border:1.5px solid var(--gold); border-radius:12px;
     padding:14px 16px; text-align:center;
   }
-  .submitbanner .submittitle{font-family:var(--f-ui); font-weight:700; font-size:15px; color:var(--gold); margin-bottom:8px;}
-  .submitbanner button.primary{background:var(--gold); margin-top:0;}
+  .submitbanner .submittitle{font-family:var(--f-ui); font-weight:700; font-size:15px; color:var(--gold-ink); margin-bottom:8px;}
+  .submitbanner button.primary{background:var(--gold-ink); margin-top:0;}
   .submitbanner .submitdone{font-size:12.5px; color:var(--ink-soft); line-height:1.6;}
-  .submitbanner .submitdone b{color:var(--gold); font-weight:700;}
+  .submitbanner .submitdone b{color:var(--gold-ink); font-weight:700;}
 
   .confetti-container{position:fixed; inset:0; pointer-events:none; z-index:9999; overflow:hidden;}
   .confetti-piece{position:absolute; top:-20px; width:8px; height:14px; opacity:.9; animation-name:confettiFall; animation-timing-function:ease-in; animation-fill-mode:forwards;}
@@ -337,7 +337,7 @@
   }
   .grandcelebrate .gtitle{
     font-family:var(--f-ui); font-weight:700;
-    font-size:clamp(30px,8vw,52px); color:var(--gold); text-shadow:0 3px 20px rgba(0,0,0,0.35);
+    font-size:clamp(30px,8vw,52px); color:var(--gold-ink); text-shadow:0 3px 20px rgba(0,0,0,0.35);
     animation:celebratePop .6s cubic-bezier(.34,1.56,.64,1);
   }
   .grandcelebrate .gsub{
@@ -348,7 +348,7 @@
     background:var(--surface-2); border:1px solid var(--gold); border-radius:12px;
     padding:12px 14px; margin-bottom:16px;
   }
-  .warmupcard .warmtitle{font-family:var(--f-ui); font-weight:700; font-size:13.5px; color:var(--gold); margin-bottom:8px;}
+  .warmupcard .warmtitle{font-family:var(--f-ui); font-weight:700; font-size:13.5px; color:var(--gold-ink); margin-bottom:8px;}
   .warmupchips{display:flex; flex-wrap:wrap; gap:8px;}
   .warmupchip{
     font-family:var(--f-ui); font-size:12.5px; background:var(--surface);
@@ -442,11 +442,11 @@
   table.board th{text-align:left; font-family:var(--f-ui); font-size:10.5px; color:var(--ink-faint); font-weight:500; padding:6px 8px; border-bottom:1px solid var(--line);}
   table.board td{padding:7px 8px; border-bottom:1px dashed var(--line);}
   table.board td.score{font-family:var(--f-ui); font-weight:600; text-align:right;}
-  table.board tr.top1 td{background:var(--gold-soft); color:var(--gold); font-weight:600;}
+  table.board tr.top1 td{background:var(--gold-soft); color:var(--gold-ink); font-weight:600;}
   table.board tr.top1 td:first-child{font-size:15px; text-align:center;}
   table.board tr.me td{background:var(--accent-soft); color:var(--accent-strong); font-weight:600;}
   table.board tr.me td:first-child{font-size:13px; text-align:center;}
-  table.board tr.top1.me td{background:var(--gold-soft); color:var(--gold);}
+  table.board tr.top1.me td{background:var(--gold-soft); color:var(--gold-ink);}
   table.board td.done-check{color:var(--ink-faint); font-weight:400; font-family:var(--f-ui);}
 
   .hint{font-size:12px; color:var(--ink-faint); margin-top:10px;}
@@ -479,7 +479,7 @@
   @keyframes pulseTimer{0%,100%{transform:scale(1);} 50%{transform:scale(1.16);}}
   .timer.low{color:var(--danger); animation:pulseTimer .6s ease-in-out infinite;}
   .streakrow{
-    text-align:center; font-size:13.5px; font-weight:600; color:var(--gold);
+    text-align:center; font-size:13.5px; font-weight:600; color:var(--gold-ink);
     margin-bottom:10px;
   }
 
@@ -492,14 +492,14 @@
   .pointPop b{font-size:26px; font-weight:800; line-height:1;}
   .pointPop span{font-size:12.5px; font-weight:700; white-space:nowrap;}
   .pointPop.good{color:var(--accent-strong);}
-  .pointPop.great{color:var(--gold);}
+  .pointPop.great{color:var(--gold-ink);}
   .pointPop.bad{color:var(--danger);}
   @keyframes pointRise{0%{opacity:0; transform:translate(-50%,6px) scale(.6);} 18%{opacity:1; transform:translate(-50%,-6px) scale(1.15);} 100%{opacity:0; transform:translate(-50%,-56px) scale(1);}}
-  .repbadge{font-size:11px; font-weight:800; color:var(--gold); margin-left:4px;}
+  .repbadge{font-size:11px; font-weight:800; color:var(--gold-ink); margin-left:4px;}
   .comboToast{
     position:fixed; top:26%; left:50%; transform:translate(-50%,-50%); z-index:9998;
     pointer-events:none; text-align:center;
-    font-family:var(--f-ui); font-weight:800; color:var(--gold);
+    font-family:var(--f-ui); font-weight:800; color:var(--gold-ink);
     font-size:clamp(26px,7vw,40px); text-shadow:0 3px 14px rgba(0,0,0,0.25);
     animation:comboPop .6s cubic-bezier(.34,1.56,.64,1);
   }
@@ -516,7 +516,7 @@
 
   .timeWarnBanner{
     display:flex; align-items:center; justify-content:center; gap:6px;
-    background:var(--gold-soft); color:var(--gold); font-family:var(--f-ui); font-weight:700; font-size:13.5px;
+    background:var(--gold-soft); color:var(--gold-ink); font-family:var(--f-ui); font-weight:700; font-size:13.5px;
     border:1.5px solid var(--gold); border-radius:10px; padding:8px; margin-bottom:10px;
   }
 
@@ -734,6 +734,11 @@
   :root{color-scheme:only light;}   /* 늘 밝은 화면 (엘레나 결정 ㉮) */
   /* 매칭 두 칸 사이 넓게 (2026-10-18) */
   .matchgrid{column-gap:28px;}
+  /* 분홍·금색 글씨 대비 (2026-10-18) */
+  :root{--danger:#C2255C;}
+  .grandcelebrate .gtitle{background:#fff; color:var(--gold-ink); border:3px solid var(--gold); border-radius:24px; padding:10px 22px; text-shadow:none;}
+  .grandcelebrate .gsub{background:#fff; color:var(--ink); border-radius:999px; padding:6px 16px;}
+  .grandcelebrate .gsub:empty{display:none;}
 </style>
 
 <div class="celebratebanner" id="celebrateBanner" hidden>🎉 You did it! 🎉</div>
@@ -3558,7 +3563,7 @@ window.addEventListener('beforeunload', e => {
 // ===== AUTO_UPDATE (요구사항 NF-09): 새 버전을 올리면 다음 접속이나 탭으로 돌아올 때 최신 화면으로 바꾼다.
 // 문제를 푸는 중·기록을 보내는 중에는 끊지 않고, 이름·Day 목록 화면에서만 한 번 다시 불러온다.
 // 못 보낸 기록은 이미 기기에 먼저 저장돼 있어 다시 불러와도 사라지지 않는다.
-const APP_BUILD = '20261018-232155';
+const APP_BUILD = '20261018-233045';
 const VER_URL = '../version.json';
 const VER_FIRST_MS = 1500, VER_POLL_MS = 600000, VER_TICK_MS = 5000, VER_RETRY_MS = 600000;
 let verWant = '';   // 받아야 할 새 번호 (안전한 때를 기다리는 중)
