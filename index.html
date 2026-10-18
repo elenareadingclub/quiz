@@ -1,26 +1,51 @@
 <!doctype html>
-<html lang="ko">
+<html lang="ko" data-theme="light">
 <head>
 <meta charset="utf-8">
+<meta name="color-scheme" content="only light">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="robots" content="noindex">
 <style>body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 </head>
 <body>
 <title>ERC 단어 퀴즈</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gaegu:wght@700&display=swap" media="print" onload="this.media='all'">
 <style>
-  :root{--bg:#FBF7F0; --ink:#2B2620; --soft:#6B6254; --line:#E7DECE;}
-  @media (prefers-color-scheme: dark){ :root{--bg:#17140F; --ink:#F3EBDC; --soft:#C9BCA5; --line:#3A3326; color-scheme:dark;} }
-  body{background:var(--bg); color:var(--ink); font-family:"IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif;}
-  .wrap{max-width:520px; margin:0 auto; padding-inline:16px; padding-block:40px;}
-  h1{font-size:28px; margin:0 0 6px;}
-  p{color:var(--soft); margin:0 0 24px;}
-  .lv{display:flex; align-items:center; gap:14px; text-decoration:none; color:var(--ink); border:1px solid var(--line); border-radius:16px; padding:14px; margin-bottom:12px;}
+  /* 시작 화면 배실이 (2026-10-18) */
+  :root{--bg:#EEF6FC; --card:#FFFFFF; --ink:#4A3628; --soft:#6B5747; --line:#D9CFC6; --bs-line:#6B5747; color-scheme:only light;}
+  body{background:var(--bg); color:var(--ink); font-family:system-ui,-apple-system,"Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",sans-serif; -webkit-tap-highlight-color:transparent;}
+  .wrap{max-width:520px; margin:0 auto; padding-inline:16px; padding-block:24px 40px;}
+  /* 제목 줄: 왼쪽 제목, 오른쪽 배실이 88px */
+  .hero{position:relative; display:flex; align-items:center; gap:8px; min-height:96px; margin-bottom:10px;}
+  .tt{flex:1; min-width:0;}
+  .tt small{display:block; font-size:15px; font-weight:700; color:var(--soft); margin-bottom:2px; word-break:keep-all;}
+  h1{font-size:42px; line-height:1.1; font-weight:900; margin:0; letter-spacing:-.01em; word-break:keep-all;}
+  .bd{width:88px; height:88px; padding:0; border:0; background:none; cursor:pointer; flex:none; border-radius:50%;}
+  .bd img{display:block; width:88px; height:88px;}
+  .bd:focus-visible{outline:3px solid #F08FA8; outline-offset:2px;}
+  .bd.hop img{animation:bdHop .3s ease-out;}
+  @keyframes bdHop{0%{transform:translateY(0)} 45%{transform:translateY(-8px)} 100%{transform:translateY(0)}}
+  /* 말풍선: 배실이 왼쪽, 꼬리는 배실이 쪽, 눌러도 아래가 눌림, 2.5초 뒤 사라짐 */
+  .say{position:absolute; right:98px; top:50%; z-index:5; width:max-content; max-width:calc(100% - 104px); box-sizing:border-box;
+    background:var(--card); color:var(--ink); border:2px dashed var(--bs-line); border-radius:18px; padding:8px 14px;
+    font-family:"Gaegu",system-ui,sans-serif; font-weight:700; font-size:20px; line-height:1.25; word-break:keep-all;
+    pointer-events:none; opacity:0; visibility:hidden; transform:translate(6px,-50%); transition:opacity .15s, transform .15s, visibility .15s;}
+  .say.on{opacity:1; visibility:visible; transform:translate(0,-50%);}
+  .say svg{position:absolute; right:-19px; top:50%; margin-top:-12px; width:20px; height:24px; overflow:visible;}
+  .say path{fill:var(--card); stroke:var(--bs-line); stroke-width:2; stroke-dasharray:5 3.5; stroke-linecap:round; stroke-linejoin:round;}
+  p{color:var(--soft); margin:0 0 18px; font-size:16px;}
+  .lv{display:flex; align-items:center; gap:14px; text-decoration:none; color:var(--ink); background:var(--card); border:1.5px solid var(--line); border-radius:16px; padding:14px; margin-bottom:12px;}
+  .lv:active{transform:scale(.97);}
   .badge{width:52px; height:52px; border-radius:14px; display:flex; align-items:center; justify-content:center; font-size:28px; font-weight:800;}
   .lv b{font-size:18px;}
+  @media (prefers-reduced-motion: reduce){ .bd.hop img{animation:none;} .say{transition:none;} }
 </style>
 <div class="wrap">
-  <h1>ERC 단어 퀴즈</h1>
+  <div class="hero">
+    <div class="tt"><small>판교대장 ERC 학생들을 위한</small><h1>단어 퀴즈</h1></div>
+    <button type="button" class="bd" id="bd" aria-label="배실이 — 누르면 말해요"><img id="bdImg" src="img/baesil/basic.webp" width="88" height="88" alt="" decoding="async"></button>
+    <div class="say" id="say" aria-live="polite"><span id="sayText"></span><svg viewBox="0 0 20 24" aria-hidden="true"><path d="M1.5 3 Q9 9 19 12 Q9 15 1.5 21"/></svg></div>
+  </div>
   <p>내 레벨을 눌러서 시작해요.</p>
   <a class="lv" href="./B/"><span class="badge" style="background:#F39C12;color:#2B2620">B</span><b>B레벨</b></a>
   <a class="lv" href="./C/"><span class="badge" style="background:#F1C40F;color:#2B2620">C</span><b>C레벨</b></a>
@@ -31,9 +56,53 @@
   <a class="lv" href="./H/"><span class="badge" style="background:#D81B60;color:#FFFFFF">H</span><b>H레벨</b></a>
 </div>
 <script>
+// ===== 시작 화면 배실이 (2026-10-18): 3초마다 표정, 30초면 졸기, 누르면 말풍선 — 레벨 앱과 같은 규칙
+(function () {
+  var FACE_MS = 3000, SAY_MS = 2500, SLEEP_MS = 30000, TAP_MS = 1000, IMG = 'img/baesil/';
+  var IDLE = ['basic', 'smile', 'wink', 'playful', 'happy'], ALL = IDLE.concat(['bigsmile', 'surprise', 'sleepy']);
+  // 엘레나 지정 문구 2개는 쓴 그대로
+  var LINES = ['내 레벨을 눌러 봐요!', '오늘도 반가워요!', '나는 배실이에요~', '판교대장 ERC에서 만날까?', '오늘도 잼있겠다'];
+  var bd = document.getElementById('bd'), img = document.getElementById('bdImg'), say = document.getElementById('say');
+  var loaded = { basic: 1 }, faceI = 0, lineI = -1, asleep = false, lastTouch = Date.now(), lastTap = 0, holdUntil = 0, sayT = null;
+  function reduced() { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) { return false; } }
+  function face(f, hop) {
+    if (!loaded[f]) return;
+    img.src = IMG + f + '.webp'; img.setAttribute('data-face', f);
+    if (hop && !reduced()) { bd.classList.remove('hop'); void bd.offsetWidth; bd.classList.add('hop'); }
+  }
+  function talk(t) {
+    document.getElementById('sayText').textContent = t; say.classList.add('on');
+    clearTimeout(sayT); sayT = setTimeout(function () { say.classList.remove('on'); }, SAY_MS);
+  }
+  img.addEventListener('error', function () { var f = img.getAttribute('data-face'); if (!f || f === 'basic') bd.hidden = true; });   // 기본 그림을 못 받으면 배실이 숨김
+  window.addEventListener('load', function () { setTimeout(function () { ALL.forEach(function (f) {   // 나머지 표정은 화면이 다 뜬 뒤
+    if (loaded[f]) return; var i = new Image(); i.onload = function () { loaded[f] = 1; }; i.src = IMG + f + '.webp'; }); }, 400); });
+  document.addEventListener('pointerdown', function (e) {
+    lastTouch = Date.now();
+    if (asleep && !bd.contains(e.target)) { asleep = false; face('smile'); }
+  }, true);
+  bd.addEventListener('click', function () {
+    var now = Date.now();
+    if (now - lastTap < TAP_MS) return;
+    lastTap = now; lastTouch = now; holdUntil = now + 1500;
+    if (asleep) { asleep = false; face('surprise', true); talk('앗, 깜빡 졸았어요!'); setTimeout(function () { if (!asleep) face('smile'); }, 700); return; }
+    lineI = (lineI + 1) % LINES.length;
+    face(['smile', 'bigsmile', 'wink', 'playful'][Math.floor(Math.random() * 4)], true);
+    talk(LINES[lineI]);
+  });
+  setInterval(function () {
+    if (document.hidden) return;
+    var now = Date.now();
+    if (!asleep && now - lastTouch > SLEEP_MS) { asleep = true; say.classList.remove('on'); face('sleepy'); return; }
+    if (asleep || now < holdUntil) return;
+    faceI = (faceI + 1) % IDLE.length; face(IDLE[faceI]);
+  }, FACE_MS);
+})();
+</script>
+<script>
 // ===== AUTO_UPDATE (요구사항 NF-09): 첫 화면도 새 버전이면 한 번 다시 불러온다
 (function () {
-  var APP_BUILD = '20261018-223822', KEY = 'root_quiz_reload', RETRY = 600000;
+  var APP_BUILD = '20261018-224728', KEY = 'root_quiz_reload', RETRY = 600000;
   if (!/github\.io$/.test(location.hostname)) return;
   function check() {
     if (document.hidden) return;
