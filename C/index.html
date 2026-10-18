@@ -16,7 +16,7 @@
 <style>
   :root{
     --bg:#FFF8EE; --surface:#FFFFFF; --surface-2:#FFF3E1;
-    --ink:#2D2A24; --ink-soft:#6E6255; --ink-faint:#A79A87;
+    --ink:#2D2A24; --ink-soft:#6E6255; --ink-faint:#736657;
     --line:#FFE1B8; --accent:#F1C40F; --accent-strong:#8A6D00; --accent-soft:#FEF6D0;
     --gold:#FFB100; --gold-soft:#FFEFC7; --danger:#EF476F; --danger-soft:#FFE1E9;
     --shadow: 0 2px 4px rgba(255,140,20,0.08), 0 10px 26px -14px rgba(255,120,20,0.28);
@@ -685,6 +685,47 @@
   #wpItems .wpknowbtns{justify-content:center;}
   #wpItems .wpmeaning{font-size:18px; font-weight:800; color:var(--accent-strong);}
   #wpItems .wpknowitem:has(.wpmeaning){border-color:var(--accent); background:var(--accent-soft);}
+
+  /* 학생 화면 2단계 (2026-10-18) */
+  :root{--ok:#3FAE7A; --ok-soft:#E2F5EC; --ok-ink:#1E6E4A; --ok-mark:#2E8B5E; --retry:#F29B4B; --retry-soft:#FDEEDF; --retry-ink:#9A4B0E; --retry-mark:#C2640F;}
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){--ok-soft:#173A2B; --ok-ink:#8FDDB6; --retry-soft:#3E2715; --retry-ink:#F7BC86;} }
+  :root[data-theme="dark"]{--ok-soft:#173A2B; --ok-ink:#8FDDB6; --retry-soft:#3E2715; --retry-ink:#F7BC86;}
+  /* 정답 민트 + ✓, 오답 주황 + ↺ */
+  .choice.correct{background:var(--ok-soft); border:2px solid var(--ok); color:var(--ok-ink); font-weight:700;}
+  .choice.wrong{background:var(--retry-soft); border:2px solid var(--retry); color:var(--retry-ink);}
+  .choice.correct .cnum, .choice.wrong .cnum{font-size:0; color:#fff;}
+  .choice.correct .cnum{background:var(--ok-mark); border-color:var(--ok-mark);}
+  .choice.wrong .cnum{background:var(--retry-mark); border-color:var(--retry-mark);}
+  .choice.correct .cnum::after{content:"✓"; font-size:20px;}
+  .choice.wrong .cnum::after{content:"↺"; font-size:20px;}
+  .choice.needclick{animation-name:pulseOk;}
+  @keyframes pulseOk{0%,100%{box-shadow:0 0 0 0 var(--ok-soft);} 50%{box-shadow:0 0 0 5px var(--ok);}}
+  input.spellinput.correct{border-color:var(--ok); background:var(--ok-soft); color:var(--ok-ink);}
+  input.spellinput.wrong{border-color:var(--retry); background:var(--retry-soft); color:var(--retry-ink);}
+  .spellfeedback.correct{background:var(--ok-soft); color:var(--ok-ink);}
+  .spellfeedback.wrong{background:var(--retry-soft); color:var(--retry-ink);}
+  .tile.correctflash{border-color:var(--ok); background:var(--ok-soft); color:var(--ok-ink);}
+  .tile.wrongflash{border-color:var(--retry); background:var(--retry-soft); color:var(--retry-ink);}
+  .matchoops{min-height:26px; margin:-4px 0 6px; text-align:center; font-size:15px; font-weight:700; color:var(--retry-ink); opacity:0; transition:opacity .15s;}
+  .matchoops.on{opacity:1;}
+  /* 폰에서 퀴즈 보기는 한 줄에 하나 */
+  @media (max-width:480px){ .choices{grid-template-columns:1fr;} }
+  /* 시작 버튼: 모드를 고르면 바로 보이게 화면 아래에 붙여 둠 */
+  #startBtn{position:sticky; bottom:calc(10px + env(safe-area-inset-bottom)); z-index:5; box-shadow:0 0 0 8px var(--surface);}
+  /* 잠긴 모드: 흐리게(대비 낮음) 대신 점선 + 🔒 */
+  .setbtn{position:relative;}
+  .setbtn.locked{opacity:1; filter:none; background:var(--surface-2); border-style:dashed; color:var(--ink-soft);}
+  .setbtn.locked::after{content:"🔒"; position:absolute; top:8px; right:10px; font-size:15px;}
+  /* 누르는 곳 44px 이상 */
+  .exitbtn{display:inline-flex; align-items:center; min-height:44px; padding:8px 14px; font-size:14px;}
+  button.secondary, .wpbtn, .diffbtn, .tile, .wpnav button{min-height:44px;}
+  .soundtoggle{width:44px; height:44px;}
+  .wpspeak{min-width:44px; min-height:44px; display:inline-flex; align-items:center; justify-content:center; font-size:16px; padding:0;}
+  #wpItems .wpspeak{top:2px; right:2px;}
+  .easyTile{width:44px;}
+  /* 영어 음성 안내: 아래 버튼을 가리지 않게 위쪽에, 눌러도 통과 */
+  .ttsnotice{bottom:auto; top:calc(8px + env(safe-area-inset-top)); left:16px; right:16px; transform:none; margin:0 auto; width:fit-content; pointer-events:none;}
+  @media (prefers-reduced-motion: reduce){ .choice.needclick{animation:none;} }
 </style>
 
 <div class="celebratebanner" id="celebrateBanner" hidden>🎉 You did it! 🎉</div>
@@ -854,6 +895,7 @@
     <div class="sirenBanner" id="sirenBanner" hidden>🚨 빨리 눌러요! 🚨</div>
     <div class="timeWarnBanner" id="timeWarnBanner" hidden>⏰ 20초 남았어요!</div>
     <div class="streakrow" id="streakRow" hidden>🔥 <span id="streakNum">0</span>연속!</div>
+    <div class="matchoops" id="matchOops" aria-live="polite"></div>
     <div class="matchgrid" id="matchGrid"></div>
   </div>
 
@@ -1337,18 +1379,26 @@ function updateCurrentNameBadge() {
   }
 }
 
-async function openSetList() {
+async function openSetList(opt) {
+  opt = opt || {};
+  // 다른 아이로 바뀌었으면 앞 아이의 진도를 섞지 않는다 (S-108, 3단계에서 고침)
+  if (openSetList.owner !== currentName) { studentProgress = {}; openSetList.owner = currentName; }
   showScreen('setListScreen');
   document.getElementById('whoamiLabel').textContent = `${nameWithIcon(currentName)} 님`;
   updateCurrentNameBadge();
-  const fetched = await fetchStudentProgress(currentName);
   const cached = loadLocalProgressCache(currentName);
-  const fromServer = ONLINE ? await onlineProgress() : null;
+  if (ONLINE && opt.ready) onlineHomework = opt.homework || [];
+  studentProgress = mergeProgress(studentProgress, cached, opt.ready ? opt.fromServer : null);
+  renderSetList(studentProgress);   // 기다리지 않고 바로 (3단계)
+  try { tgRenderBox(); } catch (e) {}
+  if (ONLINE && opt.ready) renderHomeworkBanner();
+  const fetched = await fetchStudentProgress(currentName);
+  const fromServer = opt.ready ? opt.fromServer : (ONLINE ? await onlineProgress() : null);
   studentProgress = mergeProgress(studentProgress, cached, fetched, fromServer);
   saveLocalProgressCache(currentName, studentProgress);
   renderSetList(studentProgress);
   try { tgRenderBox(); } catch (e) {}
-  if (ONLINE) onlineAfterSetList();
+  if (ONLINE && !opt.ready) onlineAfterSetList();
 }
 
 // once a mission's green light is earned it must never go dark again — at least on this
@@ -1416,6 +1466,15 @@ const OOPS_MSGS = ['앗!', '아이쿠~', '다시 다시!', '괜찮아, 힘내!']
 let matchWrongStreak = 0;
 let matchNewRank = 0;
 function pickMsg(list) { return list[Math.floor(Math.random() * list.length)]; }
+// 틀렸을 때 문구는 카드를 가리지 않게 카드 위 칸에 (진단 4번)
+function showMatchOops(main, sub) {
+  const el = document.getElementById('matchOops');
+  if (!el) return;
+  el.innerHTML = '<b>' + main + '</b> ' + sub;
+  el.classList.add('on');
+  clearTimeout(showMatchOops._t);
+  showMatchOops._t = setTimeout(() => el.classList.remove('on'), 1100);
+}
 function showPointPop(anchor, main, sub, cls) {
   if (!anchor || !anchor.getBoundingClientRect) return;
   const pop = document.createElement('div');
@@ -1627,6 +1686,7 @@ modepicker.addEventListener('click', e => {
   [...modepicker.children].forEach(c => c.classList.toggle('active', c === btn));
   startBtn.textContent = mode === 'sight' ? startLabelFor('sight') : mode === 'wordcheck' ? '단어확인 시작 (뜻 확인)' : mode === 'quiz' ? quizStartLabel() : mode === 'spell' ? '스펠쓰기 시작 (8문항)' : '매칭게임 시작 (80초)';
   loadBoard();
+  startBtn.click();   // 모드 버튼을 누르면 [시작]을 따로 누르지 않아도 바로 시작 (엘레나 결정 2026-10-18)
 });
 
 startBtn.addEventListener('click', () => {
@@ -1805,7 +1865,7 @@ function onChoose(e) {
         if (b === btn) b.classList.add('wrong');
       }
     });
-    document.getElementById('qdir').textContent = '정답(초록, 깜빡이는 버튼)을 클릭하면 다음으로 넘어가요';
+    document.getElementById('qdir').textContent = '✓ 표시된 정답을 누르면 다음으로 넘어가요';
     awaitingConfirm = true;
   }
 }
@@ -2215,7 +2275,7 @@ function tryMatch() {
     const hadCombo = matchStreak >= 3;
     matchWrongStreak++;
     matchPoints -= lost;
-    showPointPop(matchSelKo, lost ? '-' + lost : '0', hadCombo ? '콤보가 끊겼어요 💦' : pickMsg(OOPS_MSGS), 'bad');
+    showMatchOops(lost ? '-' + lost : '0', hadCombo ? '콤보가 끊겼어요 💦' : pickMsg(OOPS_MSGS));
     updateMatchHud();
     updateStreak();
     matchSelEn.classList.add('wrongflash'); matchSelKo.classList.add('wrongflash');
@@ -3096,8 +3156,11 @@ async function confirmPinOnline() {
   const say = t => { err.textContent = t; err.style.display = 'block'; };
   if (!/^[0-9]{4}$/.test(typed)) { say('숫자 4자리를 입력해요.'); return; }
   pinBusy = true; btn.disabled = true; btn.textContent = '확인 중…';
+  const gen = blStart(pendingName);   // 0.1초 안에 배실이 로딩 (계획 10절)
   try {
     const r = await relayPost({ action: 'login', level: LEVEL_CODE, name: pendingName, pin: typed });
+    if (gen !== blGen) return;   // 로딩 중 [다른 이름]을 눌렀으면 끼어들지 않음 (S-108)
+    if (!r.ok) blStopNow(gen);
     if (r.ok) {
       onlinePin = typed;
       saveSession(r, typed);   // 30일 동안 이 기기에 로그인 유지
@@ -3107,8 +3170,7 @@ async function confirmPinOnline() {
       currentName = r.name;
       hidePinPrompt();
       resetIdle();
-      upKick({ resume: true });
-      openSetList();
+      blEnter(gen);   // 진도 ∥ 숙제 → 목록, 못 보낸 기록은 그 뒤
     } else if (r.locked) {
       const mins = Math.max(1, Math.ceil((new Date(r.until) - new Date()) / 60000));
       say('번호를 5번 틀려서 잠겼어요. 약 ' + mins + '분 뒤에 다시 해요.');
@@ -3120,6 +3182,8 @@ async function confirmPinOnline() {
       say('이름을 찾을 수 없어요. 선생님께 알려 주세요.');
     }
   } catch (e) {
+    if (gen !== blGen) return;
+    blStopNow(gen);
     say('인터넷이 연결되지 않았어요. 연결한 뒤 다시 해요.');
   } finally {
     pinBusy = false; btn.disabled = false; btn.textContent = '확인';
@@ -3173,27 +3237,19 @@ async function renderHallForSet(setNo) {
     box = document.createElement('div');
     box.id = 'hallBox';
     box.className = 'hallbox';
-    const w = document.getElementById('warmupWrap');
-    w.parentNode.insertBefore(box, w);
+    document.getElementById('startBtn').after(box);
   }
-  try {
-    if (Date.now() - hallCache.at > 60000) {
-      const r = await relayPost({ action: 'hall', level: LEVEL_CODE });
-      if (r.ok) hallCache = { at: Date.now(), items: r.items || [] };
-    }
-  } catch (e) {}
-  if (currentSet !== setNo) return;
-  // 다섯 단계를 마칠 때마다 이름이 올라간다. 가장 최근 날짜의 이름들만 한 줄로 보이고 지난 기록은 토글로 접는다
-  const byDate = {};
-  hallCache.items.filter(i => i.set === setNo).forEach(i => { (byDate[i.date] = byDate[i.date] || []).push(i.name); });
-  const dates = Object.keys(byDate).sort().reverse();
-  const people = new Set(); dates.forEach(d => byDate[d].forEach(n => people.add(n)));
-  const row = d => '<div class="hallrow"><span class="halldate">' + escHtml(fmtShort(d)) + '</span><span class="hallchips">' +
-    [...new Set(byDate[d])].map(n => '<span class="hallchip">' + escHtml(nameWithIcon(n)) + '</span>').join('') + '</span></div>';
-  box.innerHTML = '<div class="hallttl">🌟 이 책의 Word Stars' + (people.size ? ' <span class="hallcnt">' + people.size + '</span>' : '') + '</div>' +
-    (dates.length
-      ? row(dates[0]) + (dates.length > 1 ? '<details class="hallmore"><summary>지난 기록 ' + (dates.length - 1) + '줄 보기</summary>' + dates.slice(1).map(row).join('') + '</details>' : '')
-      : '<div class="hallnone">다섯 단계를 모두 마치면 여기에 이름이 올라가요! ✨</div>');
+  const draw = () => {
+    if (currentSet !== setNo) return;
+    const items = hallCache.items.filter(i => i.set === setNo);
+    box.innerHTML = '<div class="hallttl">🌟 이 Day의 Word Stars' + (items.length ? ' <span class="hallcnt">' + items.length + '</span>' : '') + '</div>' +
+      (items.length
+        ? '<div class="hallchips">' + items.map(i => '<span class="hallchip">' + escHtml(nameWithIcon(i.name)) + ' ' + (i.diff === '하드' ? '🔥' : '🐣') + ' <small>' + escHtml(fmtShort(i.date)) + '</small></span>').join('') + '</div>'
+        : '<div class="hallnone">스펠 8문제를 한 번도 안 틀리고 맞히면 여기에 이름이 올라가요! ✨</div>');
+  };
+  if (hallCache.at) draw();   // 로그인 때 받아 둔 것으로 바로 (3단계)
+  await hallRefresh();
+  draw();
 }
 
 // --- 제출: 네 단계를 이 기기에서 모두 통과하면 자동 제출. 인터넷이 끊기면 모아 두었다가 다시 보낸다
@@ -3423,8 +3479,9 @@ function flushOutbox() { return upKick({ bg: true }); }
   document.head.appendChild(css);
   document.body.insertAdjacentHTML('beforeend',
     '<div class="uppop" id="upPop" hidden role="alertdialog" aria-modal="true" aria-live="assertive" aria-labelledby="upTitle">' +
-    '<div class="upbox"><div class="upicon" id="upIcon"></div><div class="uptitle" id="upTitle"></div><div class="upmsg" id="upMsg"></div><ul class="uplist" id="upList"></ul>' +
-    '<div class="upbar" id="upBar"><div class="upfill" id="upFill"></div></div><div class="uptime" id="upTime"></div>' +
+    '<div class="upbox"><div class="upbubble"><div class="upicon" id="upIcon"></div><div class="uptitle" id="upTitle"></div><div class="upmsg" id="upMsg"></div><ul class="uplist" id="upList"></ul>' +
+    '<div class="upbar" id="upBar"><div class="upfill" id="upFill"></div></div><div class="uptime" id="upTime"></div></div>' +
+    '<img class="upbaesil" id="upBaesil" alt="" width="72" height="72" decoding="async">' +
     '<button type="button" class="upok" id="upOk">확인</button></div></div>');
   document.getElementById('upOk').addEventListener('click', () => { document.getElementById('upPop').hidden = true; });
 })();
@@ -3440,6 +3497,7 @@ function upPopShow(state, icon, title, msg, list, btn) {   // UPLOAD_POPUP_V2: l
   document.getElementById('upOk').textContent = btn || '확인';
   const pop = document.getElementById('upPop');
   pop.dataset.state = state;
+  document.getElementById('upBaesil').src = BL_IMG + (state === 'done' ? 'bigsmile' : 'smile') + '.webp';   // 팝업에서는 항상 웃는 배실이
   document.getElementById('upIcon').textContent = icon;
   document.getElementById('upTitle').textContent = title;
   document.getElementById('upMsg').textContent = msg;
@@ -3483,7 +3541,7 @@ window.addEventListener('beforeunload', e => {
 // ===== AUTO_UPDATE (요구사항 NF-09): 새 버전을 올리면 다음 접속이나 탭으로 돌아올 때 최신 화면으로 바꾼다.
 // 문제를 푸는 중·기록을 보내는 중에는 끊지 않고, 이름·Day 목록 화면에서만 한 번 다시 불러온다.
 // 못 보낸 기록은 이미 기기에 먼저 저장돼 있어 다시 불러와도 사라지지 않는다.
-const APP_BUILD = '20261018-185446';
+const APP_BUILD = '20261018-210802';
 const VER_URL = '../version.json';
 const VER_FIRST_MS = 1500, VER_POLL_MS = 600000, VER_TICK_MS = 5000, VER_RETRY_MS = 600000;
 let verWant = '';   // 받아야 할 새 번호 (안전한 때를 기다리는 중)
@@ -3932,11 +3990,13 @@ async function whoContinue() {
   if (!s) { hideWhoBox(); return; }
   const btn = document.getElementById('whoYes'), err = document.getElementById('whoErr');
   whoBusy = true; btn.disabled = true; btn.textContent = '확인 중…'; err.style.display = 'none';
+  const gen = blStart(s.name);   // 0.1초 안에 배실이 로딩 (계획 10절)
   try {
     const r = await relayPost({ action: 'login', level: LEVEL_CODE, name: s.name, pin: s.pin });
     // 기다리는 사이에 다른 이름을 골랐거나 이미 들어갔으면 끼어들지 않는다 (S-108 ⓑ)
-    if (currentName || (pendingName && pendingName !== s.name) || document.getElementById('whoBox').hidden) return;
+    if (gen !== blGen || currentName || (pendingName && pendingName !== s.name) || document.getElementById('whoBox').hidden) return;
     if (!r.ok) {
+      blStopNow(gen);
       if (r.error === 'busy' || r.error === 'server_error') { err.textContent = '서버가 잠깐 바빠요. 잠시 뒤 다시 눌러 주세요.'; err.style.display = 'block'; return; }
       // 번호가 바뀌었거나 잠김·명단에서 빠짐: 기억을 지우고, 번호 문제면 번호를 직접 넣게 한다
       clearSession(); hideWhoBox();
@@ -3950,12 +4010,118 @@ async function whoContinue() {
     currentName = r.name;
     hideWhoBox(); hidePinPrompt();
     resetIdle();
-    upKick({ resume: true });
-    openSetList();
+    blEnter(gen);   // 진도 ∥ 숙제 → 목록, 못 보낸 기록은 그 뒤
   } catch (e) {
+    if (gen !== blGen) return;
+    blStopNow(gen);
     err.textContent = '인터넷연결을 확인해 주세요.'; err.style.display = 'block';
   } finally { whoBusy = false; btn.disabled = false; btn.textContent = '네, 저예요 →'; }
 }
+// ===== BAESIL_STAGE3 (2026-10-18): 로그인 뒤 배실이 로딩 (계획 10절) =====
+const BL_IMG = '../img/baesil/';
+const BL_FACES = ['basic', 'smile', 'wink', 'bigsmile', 'happy'];   // 기다리는 동안 0.5초마다 바뀜, 끝나면 happy
+const BL_MAX_MS = 10000, BL_FACE_MS = 500, BL_REST_MS = 200;
+let blGen = 0, blAt = 0, blFaceT = null, blHideT = null, hallP = null;
+function blReduced() { try { return !!(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches); } catch (e) { return false; } }
+(function blInit() {
+  const css = document.createElement('style');
+  css.textContent = ':root{--bs-line:#6B5747}@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bs-line:#D8C6AC}}:root[data-theme="dark"]{--bs-line:#D8C6AC}' +
+    '.blwrap{position:fixed;inset:0;z-index:9000;display:flex;align-items:center;justify-content:center;padding:16px;background:var(--bg)}' +
+    '.blbox{display:flex;flex-direction:column;align-items:center;text-align:center;max-width:320px}' +
+    '.blbubble,.upbubble{position:relative;background:var(--surface);color:var(--ink);border:2px dashed var(--bs-line);border-radius:18px}' +
+    // 말풍선 꼬리: 말풍선 테두리에 이어지는 굽은 꼬리 (점선 네모를 돌린 꼬리는 어색해서 바꿈, 엘레나 2026-10-18)
+    '.bstail{position:absolute;overflow:visible}.bstail path{fill:var(--surface);stroke:var(--bs-line);stroke-width:2;stroke-dasharray:5 3.5;stroke-linecap:round;stroke-linejoin:round}' +
+    '.bstail-l{left:22px;bottom:-22px;width:28px;height:24px}.bstail-d{left:50%;margin-left:-12px;bottom:-19px;width:24px;height:20px}' +
+    '.blbubble{padding:12px 20px;font-size:19px;font-weight:700;word-break:keep-all;margin-left:64px;white-space:nowrap}' +
+    '.blface{display:block;width:96px;height:96px;margin:8px 40px 0 0;animation:blHop .5s ease-in-out infinite alternate}.blface.rest{animation:none}' +
+    '.blload{margin-top:14px;font-size:22px;font-weight:800;color:var(--ink);letter-spacing:.02em}.bldots i{font-style:normal;animation:blDot 1.2s infinite}.bldots i:nth-child(2){animation-delay:.2s}.bldots i:nth-child(3){animation-delay:.4s}' +
+    '@keyframes blDot{0%,20%{opacity:.15}50%,100%{opacity:1}}' +
+    '@keyframes blHop{from{transform:translateY(0)}to{transform:translateY(-6px)}}' +
+    '.blnote{margin-top:4px;font-size:14px;color:var(--ink-soft);word-break:keep-all}.blback{margin-top:16px}' +
+    '.upbox{display:flex;flex-direction:column;align-items:center}.upbubble{width:100%;box-sizing:border-box;padding:14px 14px 12px}' +
+    '.upicon{font-size:26px}.upbaesil{display:block;width:72px;height:72px;margin-top:12px}.upok{min-height:44px}' +
+    '@media (prefers-reduced-motion: reduce){.blface{animation:none}.bldots i{animation:none}}';
+  document.head.appendChild(css);
+  document.body.insertAdjacentHTML('beforeend',
+    '<div class="blwrap" id="blWrap" hidden role="status" aria-live="polite">' +
+    '<div class="blbox"><div class="blbubble">난 배실이야~ 안녕 !!<svg class="bstail bstail-l" viewBox="0 0 28 24" aria-hidden="true"><path d="M6 2 Q9 15 1 23 Q18 18 24 2"/></svg></div>' +
+    '<img class="blface" id="blFace" alt="배실이" width="96" height="96" decoding="async">' +
+    '<div class="blload">로딩 중<span class="bldots" aria-hidden="true"><i>.</i><i>.</i><i>.</i></span></div>' +
+    '<div class="blnote" id="blNote"></div>' +
+    '<button type="button" class="exitbtn blback" id="blBack">← 다른 이름</button></div></div>');
+  document.getElementById('blBack').addEventListener('click', blCancel);
+  document.querySelector('#upPop .upbubble').insertAdjacentHTML('beforeend', '<svg class="bstail bstail-d" viewBox="0 0 24 20" aria-hidden="true"><path d="M3 1.5 Q9 9 12 19 Q15 9 21 1.5"/></svg>');
+  // 그림 5장(약 62KB)은 첫 화면이 다 뜬 뒤 미리 받아 둔다 → [확인]을 누르면 바로 보임
+  if (ONLINE) window.addEventListener('load', () => setTimeout(() => BL_FACES.forEach(f => { const i = new Image(); i.src = BL_IMG + f + '.webp'; }), 300));
+})();
+// Word Stars: 같은 요청은 한 번만, 1분 안에 받은 것은 다시 받지 않음 (서버도 5분 기억)
+function hallRefresh() {
+  if (!ONLINE) return Promise.resolve();
+  if (hallP) return hallP;
+  if (Date.now() - hallCache.at <= 60000) return Promise.resolve();
+  hallP = relayPost({ action: 'hall', level: LEVEL_CODE })
+    .then(r => { if (r.ok) hallCache = { at: Date.now(), items: r.items || [] }; })
+    .catch(() => {})
+    .then(() => { hallP = null; });
+  return hallP;
+}
+function blStart(name) {
+  blGen++; blAt = Date.now();
+  clearTimeout(blHideT); clearInterval(blFaceT);
+  const face = document.getElementById('blFace');
+  let i = 0;
+  face.classList.remove('rest');
+  face.src = BL_IMG + BL_FACES[0] + '.webp';
+  blFaceT = setInterval(() => { i = (i + 1) % BL_FACES.length; face.src = BL_IMG + BL_FACES[i] + '.webp'; }, blReduced() ? BL_FACE_MS * 2 : BL_FACE_MS);
+  document.getElementById('blNote').textContent = (name ? name + '의 ' : '') + 'Day 목록을 불러오고 있어요';
+  document.getElementById('blWrap').hidden = false;
+  hallRefresh();   // Word Stars는 누구나 볼 수 있어 번호 확인을 기다리지 않고 바로 받기 시작
+  return blGen;
+}
+function blStopNow(gen) {   // 번호가 틀렸거나 인터넷이 끊김: 바로 닫고 안내를 보이게
+  if (gen !== blGen) return;
+  clearInterval(blFaceT); clearTimeout(blHideT);
+  document.getElementById('blWrap').hidden = true;
+}
+function blStop(gen) {   // 다 받았음: '행복'으로 멈추고 닫음
+  if (gen !== blGen) return;
+  clearInterval(blFaceT);
+  const face = document.getElementById('blFace');
+  face.src = BL_IMG + 'happy.webp'; face.classList.add('rest');
+  blHideT = setTimeout(() => { if (gen === blGen) document.getElementById('blWrap').hidden = true; }, BL_REST_MS);
+}
+function blCancel() {   // 로딩 중 [다른 이름]: 앞 로그인 결과가 끼어들지 않게 하고 이름 고르기로
+  blGen++;
+  clearInterval(blFaceT); clearTimeout(blHideT);
+  document.getElementById('blWrap').hidden = true;
+  pinBusy = false; whoBusy = false;
+  const pb = document.getElementById('pinConfirmBtn'); pb.disabled = false; pb.textContent = '확인';
+  const wy = document.getElementById('whoYes'); if (wy) { wy.disabled = false; wy.textContent = '네, 저예요 →'; }
+  hideWhoBox();
+  document.getElementById('nameBackBtn').click();
+}
+// 번호가 맞은 뒤: 진도 ∥ 숙제를 동시에 받고(최대 10초) 목록 완성본을 보여 준 다음, 못 보낸 기록을 보낸다
+async function blEnter(gen) {
+  const name = currentName;
+  const both = Promise.all([
+    onlineProgress(),
+    relayPost({ action: 'homework', level: LEVEL_CODE, cls: onlineClass }).then(r => r.ok ? (r.items || []) : []).catch(() => [])
+  ]);
+  const left = Math.max(0, BL_MAX_MS - (Date.now() - blAt));
+  const got = await Promise.race([both, new Promise(res => setTimeout(() => res(null), left))]);
+  if (gen !== blGen || currentName !== name) return;
+  openSetList({ ready: true, fromServer: got ? got[0] : null, homework: got ? got[1] : [] });
+  blStop(gen);
+  upKick({ resume: true });
+  if (!got) both.then(([p, hw]) => {   // 10초가 넘었으면 이 기기 기록으로 먼저 보여 주고, 나머지는 받는 대로 채운다
+    if (gen !== blGen || currentName !== name) return;
+    studentProgress = mergeProgress(studentProgress, p);
+    saveLocalProgressCache(currentName, studentProgress);
+    if (!document.getElementById('setListScreen').hidden) renderSetList(studentProgress);
+    onlineHomework = hw; renderHomeworkBanner();
+  });
+}
+// ===== /BAESIL_STAGE3 =====
 if (ONLINE) restoreSession();
 // ===== /WHO_CONTINUE =====
 
