@@ -1,7 +1,8 @@
 <!doctype html>
-<html lang="ko">
+<html lang="ko" data-theme="light">
 <head>
 <meta charset="utf-8">
+<meta name="color-scheme" content="only light">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="robots" content="noindex">
 <style>body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
@@ -12,7 +13,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Andika:wght@400;700&family=Baloo+2:wght@500;700;800&family=Gowun+Batang:wght@400;700&family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Andika:wght@400;700&family=Gaegu:wght@700&display=swap" rel="stylesheet">
 <style>
   :root{
     --bg:#FFF8EE; --surface:#FFFFFF; --surface-2:#FFF3E1;
@@ -38,17 +39,17 @@
     --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 12px 28px -16px rgba(0,0,0,0.55);
   }
   *{box-sizing:border-box;}
-  body{background:var(--bg); color:var(--ink); font-family:"IBM Plex Sans KR","Pretendard",-apple-system,sans-serif; line-height:1.6;}
+  body{background:var(--bg); color:var(--ink); font-family:var(--f-ui); line-height:1.6;}
   .wrap{max-width:640px; margin:0 auto; padding:36px 20px 64px;}
-  h1,h2{font-family:"Baloo 2","Gowun Batang","Noto Serif KR",serif; font-weight:700; text-wrap:balance; color:var(--ink); margin:0;}
-  .mono{font-family:"IBM Plex Mono",ui-monospace,monospace;}
+  h1,h2{font-family:var(--f-ui); font-weight:700; text-wrap:balance; color:var(--ink); margin:0;}
+  .mono{font-family:var(--f-ui);}
 
   header.page{display:flex; flex-direction:column; gap:6px; margin-bottom:22px;}
-  .eyebrow{font-family:"IBM Plex Mono",monospace; font-size:12px; letter-spacing:.09em; text-transform:uppercase; color:var(--accent); font-weight:600;}
+  .eyebrow{font-family:var(--f-ui); font-size:12px; letter-spacing:.09em; text-transform:uppercase; color:var(--accent); font-weight:600;}
   header.page h1{font-size:clamp(22px,4vw,27px);}
   .currentnamebadge{
     align-self:flex-start; margin-top:2px;
-    font-family:"IBM Plex Sans KR",sans-serif; font-size:12.5px; font-weight:600; color:var(--accent-strong);
+    font-family:var(--f-ui); font-size:12.5px; font-weight:600; color:var(--accent-strong);
     background:var(--accent-soft); border:1px solid var(--accent); border-radius:20px; padding:5px 13px;
   }
 
@@ -82,29 +83,29 @@
     .wrap{padding:24px 14px 48px;}
   }
   .setbtn{
-    font-family:"Baloo 2","IBM Plex Sans KR",sans-serif; font-size:13.5px; text-align:left;
+    font-family:var(--f-ui); font-size:13.5px; text-align:left;
     background:var(--surface); border:2px solid var(--line); border-radius:14px;
     padding:10px 12px; cursor:pointer; color:var(--ink); font-weight:600;
   }
-  .setbtn .no{font-family:"IBM Plex Mono",monospace; font-size:11px; color:var(--ink-faint); display:block; margin-bottom:2px;}
+  .setbtn .no{font-family:var(--f-ui); font-size:11px; color:var(--ink-faint); display:block; margin-bottom:2px;}
   .setbtn.active{border-color:var(--accent); background:var(--accent-soft); color:var(--accent-strong);}
 
   label{font-size:13px; color:var(--ink-soft); display:block; margin-bottom:6px;}
   input[type=text]{
-    width:100%; font-family:"IBM Plex Sans KR",sans-serif; font-size:15px;
+    width:100%; font-family:var(--f-ui); font-size:15px;
     padding:10px 12px; border:1px solid var(--line); border-radius:10px;
     background:var(--surface-2); color:var(--ink);
   }
   input[type=text]:focus{outline:2px solid var(--accent); outline-offset:1px;}
 
   button.primary{
-    font-family:"Baloo 2","IBM Plex Sans KR",sans-serif; font-weight:700; font-size:15px;
+    font-family:var(--f-ui); font-weight:700; font-size:15px;
     background:var(--accent); color:#2D2A24; border:none; border-radius:14px;
     padding:12px 18px; cursor:pointer; margin-top:14px; width:100%;
   }
   button.primary:disabled{background:var(--ink-faint); cursor:not-allowed;}
   button.secondary{
-    font-family:"IBM Plex Sans KR",sans-serif; font-weight:500; font-size:13.5px;
+    font-family:var(--f-ui); font-weight:500; font-size:13.5px;
     background:transparent; color:var(--accent-strong); border:1px solid var(--accent); border-radius:10px;
     padding:9px 14px; cursor:pointer;
   }
@@ -114,7 +115,7 @@
   }
   .pinprompt label{font-weight:600; color:var(--ink);}
   #pinInput{
-    width:100%; font-family:"IBM Plex Mono",monospace; font-size:26px; font-weight:700;
+    width:100%; font-family:var(--f-ui); font-size:26px; font-weight:700;
     text-align:center; letter-spacing:.3em; padding:12px 14px; border:1.5px solid var(--line);
     border-radius:10px; background:var(--surface-2); color:var(--ink);
   }
@@ -122,12 +123,12 @@
   .passsub{font-size:11px; color:var(--ink-soft); margin-top:2px; margin-bottom:8px;}
 
   .screentop{display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; gap:10px;}
-  .whoami{font-family:"IBM Plex Sans KR",sans-serif; font-size:13px; font-weight:600; color:var(--ink-soft);}
+  .whoami{font-family:var(--f-ui); font-size:13px; font-weight:600; color:var(--ink-soft);}
   .setlisthint{font-size:11.5px; color:var(--ink-faint); margin:-2px 0 10px;}
   .setlist{display:flex; flex-direction:column; gap:8px;}
   .setrow{
     display:flex; align-items:stretch; gap:0; width:100%;
-    font-family:"IBM Plex Sans KR",sans-serif; font-size:14px;
+    font-family:var(--f-ui); font-size:14px;
     background:var(--surface-2); border:1px solid var(--line); border-radius:10px;
     color:var(--ink); overflow:hidden;
   }
@@ -146,8 +147,8 @@
   .setrow.complete .setrow-enter{border-left-color:var(--accent);}
   .setrow-enter:hover{background:rgba(0,0,0,0.03);}
   .setrow-arrow{color:var(--ink-faint); font-size:16px;}
-  .setrow-no{font-family:"IBM Plex Mono",monospace; font-size:11px; color:var(--ink-faint); flex-shrink:0;}
-  .setrow-title{flex:1; font-weight:700; font-family:"Baloo 2",inherit;}
+  .setrow-no{font-family:var(--f-ui); font-size:11px; color:var(--ink-faint); flex-shrink:0;}
+  .setrow-title{flex:1; font-weight:700; font-family:var(--f-ui);}
   .setrow.complete .setrow-title{color:var(--accent-strong);}
   .setrow-dots{display:flex; gap:4px; flex-shrink:0;}
   .setrow-badge{font-size:13px; color:var(--accent-strong); font-weight:700; flex-shrink:0;}
@@ -160,12 +161,12 @@
   .choice.needclick{animation:pulseChoice 1s ease-in-out infinite;}
   @keyframes pulseChoice{0%,100%{box-shadow:0 0 0 0 var(--accent-soft);} 50%{box-shadow:0 0 0 5px var(--accent-soft);}}
   .spellcorrectreveal{
-    font-family:"IBM Plex Mono",monospace; font-size:22px; font-weight:700; color:var(--accent-strong);
+    font-family:var(--f-ui); font-size:22px; font-weight:700; color:var(--accent-strong);
     background:var(--accent-soft); border:1.5px solid var(--accent); border-radius:10px;
     padding:12px 14px; margin-bottom:10px; text-align:center; letter-spacing:.04em;
   }
   .rostertable{width:100%; border-collapse:collapse; margin-top:8px; font-size:12.5px;}
-  .rostertable th{text-align:center; font-family:"IBM Plex Mono",monospace; font-size:10px; color:var(--ink-faint); font-weight:500; padding:4px 6px; border-bottom:1px solid var(--line);}
+  .rostertable th{text-align:center; font-family:var(--f-ui); font-size:10px; color:var(--ink-faint); font-weight:500; padding:4px 6px; border-bottom:1px solid var(--line);}
   .rostertable th:first-child{text-align:left;}
   .rostertable td{padding:7px 6px; border-bottom:1px dashed var(--line);}
   .rostertable td.rstat{text-align:center;}
@@ -173,7 +174,7 @@
   .dot{display:inline-block; width:13px; height:13px; border-radius:50%; background:var(--surface); border:1.5px solid var(--line); vertical-align:middle;}
   .dot.pass{background:var(--accent); border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-soft);}
   .statcell{
-    display:inline-block; font-family:"IBM Plex Mono",monospace; font-weight:600; font-size:11.5px;
+    display:inline-block; font-family:var(--f-ui); font-weight:600; font-size:11.5px;
     color:var(--ink-faint); background:var(--surface-2); border:1px solid var(--line);
     border-radius:20px; padding:2px 9px;
   }
@@ -183,7 +184,7 @@
   .overviewscroll{overflow-x:auto;}
   .overviewtable{border-collapse:collapse; font-size:12px; min-width:100%;}
   .overviewtable th{
-    font-family:"IBM Plex Mono",monospace; font-size:10px; font-weight:500; color:var(--ink-faint);
+    font-family:var(--f-ui); font-size:10px; font-weight:500; color:var(--ink-faint);
     padding:4px 5px; border-bottom:1px solid var(--line); text-align:center; white-space:nowrap;
   }
   .overviewtable th:first-child{text-align:left; position:sticky; left:0; background:var(--surface); z-index:1;}
@@ -193,13 +194,13 @@
     position:sticky; left:0; background:var(--surface); padding-right:10px; z-index:1;
   }
   .ovcell{
-    display:inline-block; min-width:30px; font-family:"IBM Plex Mono",monospace; font-variant-numeric:tabular-nums;
+    display:inline-block; min-width:30px; font-family:var(--f-ui); font-variant-numeric:tabular-nums;
     font-weight:600; font-size:11px; color:var(--ink-faint); background:var(--surface-2);
     border:1px solid var(--line); border-radius:20px; padding:2px 6px;
   }
   .ovcell.partial{color:var(--gold-ink,#8a6100); background:var(--gold-soft,#fdf3d8); border-color:var(--gold,#e0b74a);}
   .ovcell.full{color:var(--accent-strong); background:var(--accent-soft); border-color:var(--accent);}
-  .ovtotal{font-family:"IBM Plex Mono",monospace; font-weight:700; font-size:11.5px; color:var(--ink-soft);}
+  .ovtotal{font-family:var(--f-ui); font-weight:700; font-size:11.5px; color:var(--ink-soft);}
   .teacherpanel{border:1.5px dashed var(--danger); background:var(--danger-soft);}
   .teacherpanel .rostertable{background:var(--surface); border-radius:10px; padding:2px 4px;}
   .teacherpanel .passsub{font-size:11.5px; color:var(--ink-soft); margin:14px 0 8px; font-weight:600;}
@@ -207,23 +208,23 @@
   .teachercard{background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:10px 11px;}
   .teachercard.perfect{border-color:var(--accent);}
   .teachercard.empty{opacity:.6;}
-  .tname{font-family:"IBM Plex Sans KR",sans-serif; font-weight:700; font-size:13px; color:var(--ink); margin-bottom:4px;}
-  .tcount{font-family:"IBM Plex Mono",monospace; font-weight:600; font-size:10.5px; color:var(--danger); background:var(--danger-soft); border-radius:20px; padding:1px 7px; margin-left:4px;}
+  .tname{font-family:var(--f-ui); font-weight:700; font-size:13px; color:var(--ink); margin-bottom:4px;}
+  .tcount{font-family:var(--f-ui); font-weight:600; font-size:10.5px; color:var(--danger); background:var(--danger-soft); border-radius:20px; padding:1px 7px; margin-left:4px;}
   .tnote{font-size:11.5px; color:var(--ink-faint);}
   .wrongchips{display:flex; flex-direction:column; gap:4px;}
-  .wrongchip{font-family:"IBM Plex Mono",monospace; font-size:12px; font-weight:600; color:var(--danger); display:flex; justify-content:space-between; gap:6px;}
-  .wrongchip .wko{font-family:"IBM Plex Sans KR",sans-serif; font-weight:400; color:var(--ink-soft);}
+  .wrongchip{font-family:var(--f-ui); font-size:12px; font-weight:600; color:var(--danger); display:flex; justify-content:space-between; gap:6px;}
+  .wrongchip .wko{font-family:var(--f-ui); font-weight:400; color:var(--ink-soft);}
 
-  .qnum{font-family:"IBM Plex Mono",monospace; font-size:11.5px; color:var(--ink-faint); margin-bottom:6px;}
-  .qprompt{font-family:"Baloo 2","IBM Plex Mono",monospace; font-size:clamp(24px,7vw,34px); font-weight:700; color:var(--ink); margin-bottom:6px; letter-spacing:-.01em; word-break:break-word;}
+  .qnum{font-family:var(--f-ui); font-size:11.5px; color:var(--ink-faint); margin-bottom:6px;}
+  .qprompt{font-family:var(--f-ui); font-size:clamp(24px,7vw,34px); font-weight:700; color:var(--ink); margin-bottom:6px; letter-spacing:-.01em; word-break:break-word;}
   .qemoji{font-size:clamp(30px,8vw,44px); line-height:1; margin-bottom:2px;}
   .qdir{font-size:11.5px; color:var(--accent); margin-bottom:16px;}
   .choices{display:grid; grid-template-columns:1fr 1fr; gap:8px;}
   .choice{display:flex; align-items:center; gap:8px;}
-  .cnum{flex-shrink:0; width:34px; height:34px; border-radius:50%; background:var(--accent-soft); border:2px solid var(--accent); color:var(--ink); font-family:"IBM Plex Sans KR","Pretendard",-apple-system,sans-serif; font-weight:700; font-size:19px; line-height:1; display:inline-flex; align-items:center; justify-content:center;}
+  .cnum{flex-shrink:0; width:34px; height:34px; border-radius:50%; background:var(--accent-soft); border:2px solid var(--accent); color:var(--ink); font-family:var(--f-ui); font-weight:700; font-size:19px; line-height:1; display:inline-flex; align-items:center; justify-content:center;}
   .choices .choice{font-size:16px; padding-top:10px; padding-bottom:10px; gap:10px;}
   .choice{
-    text-align:left; font-family:"IBM Plex Sans KR",sans-serif; font-size:14.5px;
+    text-align:left; font-family:var(--f-ui); font-size:14.5px;
     background:var(--surface-2); border:1px solid var(--line); border-radius:10px;
     padding:11px 14px; cursor:pointer; color:var(--ink);
   }
@@ -234,10 +235,10 @@
   .progress{height:5px; border-radius:3px; background:var(--accent-soft); overflow:hidden; margin-bottom:18px;}
   .progress > span{display:block; height:100%; background:var(--accent);}
 
-  .spellhint{font-family:"Baloo 2","IBM Plex Mono",monospace; font-size:16px; letter-spacing:.1em; color:var(--ink-faint); margin-bottom:14px;}
+  .spellhint{font-family:var(--f-ui); font-size:16px; letter-spacing:.1em; color:var(--ink-faint); margin-bottom:14px;}
   .spelldiff{display:flex; gap:8px; margin-bottom:14px;}
   .diffbtn{
-    flex:1; font-family:"Baloo 2",sans-serif; font-weight:700; font-size:12.5px;
+    flex:1; font-family:var(--f-ui); font-weight:700; font-size:12.5px;
     padding:9px 6px; border-radius:12px; border:2px solid var(--line);
     background:var(--surface); color:var(--ink-soft); cursor:pointer;
   }
@@ -246,41 +247,41 @@
   .easyBlank{
     width:34px; height:42px; border-radius:9px; border:2.5px dashed var(--line);
     display:flex; align-items:center; justify-content:center;
-    font-family:"Baloo 2",monospace; font-size:18px; font-weight:700; color:var(--ink); background:var(--surface-2);
+    font-family:var(--f-ui); font-size:18px; font-weight:700; color:var(--ink); background:var(--surface-2);
   }
   .easyBlank.filled{cursor:pointer; border-style:solid; border-color:var(--accent); background:var(--accent-soft); color:var(--accent-strong);}
   .easyBlank.gap{border:none; background:transparent; width:14px;}
   .easyTiles{display:flex; flex-wrap:wrap; gap:8px; justify-content:center;}
   .easyTile{
     width:42px; height:46px; border-radius:11px; border:2px solid var(--line);
-    background:var(--surface); font-family:"Baloo 2",monospace; font-weight:800; font-size:18px;
+    background:var(--surface); font-family:var(--f-ui); font-weight:800; font-size:18px;
     color:var(--ink); cursor:pointer; box-shadow:0 2px 6px rgba(0,0,0,.06);
   }
   .easyTile:active{transform:scale(0.92);}
   .easyTile.used{opacity:.2; pointer-events:none;}
   input.spellinput{
-    width:100%; font-family:"IBM Plex Mono",monospace; font-size:22px; font-weight:600;
+    width:100%; font-family:var(--f-ui); font-size:22px; font-weight:600;
     padding:12px 14px; border:1.5px solid var(--line); border-radius:10px;
     background:var(--surface-2); color:var(--ink); letter-spacing:.02em;
   }
   input.spellinput:focus{outline:2px solid var(--accent); outline-offset:1px;}
   input.spellinput.correct{border-color:var(--accent); background:var(--accent-soft); color:var(--accent-strong);}
   input.spellinput.wrong{border-color:var(--danger); background:var(--danger-soft); color:var(--danger);}
-  .spellfeedback{font-family:"IBM Plex Sans KR",sans-serif; font-size:13.5px; font-weight:600; margin-top:10px; border-radius:10px; padding:9px 12px;}
+  .spellfeedback{font-family:var(--f-ui); font-size:13.5px; font-weight:600; margin-top:10px; border-radius:10px; padding:9px 12px;}
   .spellfeedback.correct{background:var(--accent-soft); color:var(--accent-strong);}
   .spellfeedback.wrong{background:var(--danger-soft); color:var(--danger);}
 
   .nextbtn{
     display:flex; align-items:center; justify-content:center; gap:6px;
-    font-family:"Baloo 2","IBM Plex Sans KR",sans-serif; font-weight:700; font-size:15px;
+    font-family:var(--f-ui); font-weight:700; font-size:15px;
     background:var(--accent); color:#2D2A24; border:none; border-radius:14px;
     padding:12px 18px; cursor:pointer; margin-top:16px; width:100%;
   }
-  .nextbtn .arrow{font-style:normal; font-family:"IBM Plex Mono",monospace;}
+  .nextbtn .arrow{font-style:normal; font-family:var(--f-ui);}
   .nextbtn:focus-visible{outline:2px solid var(--accent-strong); outline-offset:2px;}
 
   .scoretile{text-align:center; padding:18px 0;}
-  .scoretile .num{font-family:"Baloo 2","IBM Plex Mono",monospace; font-size:44px; font-weight:700; color:var(--accent-strong);}
+  .scoretile .num{font-family:var(--f-ui); font-size:44px; font-weight:700; color:var(--accent-strong);}
   .scoretile .lbl{font-size:13px; color:var(--ink-soft); margin-top:4px;}
   .passbadge{
     display:inline-block; margin-top:12px; font-size:14px; font-weight:600;
@@ -296,7 +297,7 @@
     background:var(--gold-soft); border:1.5px solid var(--gold); border-radius:12px;
     padding:14px 16px; text-align:center;
   }
-  .submitbanner .submittitle{font-family:"Gowun Batang","Noto Serif KR",serif; font-weight:700; font-size:15px; color:var(--gold); margin-bottom:8px;}
+  .submitbanner .submittitle{font-family:var(--f-ui); font-weight:700; font-size:15px; color:var(--gold); margin-bottom:8px;}
   .submitbanner button.primary{background:var(--gold); margin-top:0;}
   .submitbanner .submitdone{font-size:12.5px; color:var(--ink-soft); line-height:1.6;}
   .submitbanner .submitdone b{color:var(--gold); font-weight:700;}
@@ -307,7 +308,7 @@
   .celebratebanner{
     position:fixed; top:40%; left:50%; transform:translate(-50%,-50%); z-index:10000;
     text-align:center; pointer-events:none;
-    font-family:"Gowun Batang","Noto Serif KR",serif; font-weight:700;
+    font-family:var(--f-ui); font-weight:700;
     font-size:clamp(28px,7vw,44px); color:var(--accent-strong);
     text-shadow:0 2px 16px rgba(0,0,0,0.18);
     animation:celebratePop .5s cubic-bezier(.34,1.56,.64,1);
@@ -335,30 +336,30 @@
     background:rgba(20,18,14,0.35);
   }
   .grandcelebrate .gtitle{
-    font-family:"Gowun Batang","Noto Serif KR",serif; font-weight:700;
+    font-family:var(--f-ui); font-weight:700;
     font-size:clamp(30px,8vw,52px); color:var(--gold); text-shadow:0 3px 20px rgba(0,0,0,0.35);
     animation:celebratePop .6s cubic-bezier(.34,1.56,.64,1);
   }
   .grandcelebrate .gsub{
-    font-family:"IBM Plex Sans KR",sans-serif; font-weight:600; font-size:15px; color:#fff;
+    font-family:var(--f-ui); font-weight:600; font-size:15px; color:#fff;
   }
 
   .warmupcard{
     background:var(--surface-2); border:1px solid var(--gold); border-radius:12px;
     padding:12px 14px; margin-bottom:16px;
   }
-  .warmupcard .warmtitle{font-family:"Gowun Batang","Noto Serif KR",serif; font-weight:700; font-size:13.5px; color:var(--gold); margin-bottom:8px;}
+  .warmupcard .warmtitle{font-family:var(--f-ui); font-weight:700; font-size:13.5px; color:var(--gold); margin-bottom:8px;}
   .warmupchips{display:flex; flex-wrap:wrap; gap:8px;}
   .warmupchip{
-    font-family:"IBM Plex Sans KR",sans-serif; font-size:12.5px; background:var(--surface);
+    font-family:var(--f-ui); font-size:12.5px; background:var(--surface);
     border:1px solid var(--line); border-radius:9px; padding:6px 10px; display:flex; gap:6px; align-items:baseline;
   }
-  .warmupchip .wen{font-family:"IBM Plex Mono",monospace; font-weight:700; color:var(--ink);}
+  .warmupchip .wen{font-family:var(--f-ui); font-weight:700; color:var(--ink);}
   .warmupchip .wko{color:var(--ink-soft);}
 
   .exportbox{margin-top:14px;}
   .exportbox textarea{
-    width:100%; min-height:110px; font-family:"IBM Plex Mono",monospace; font-size:11.5px;
+    width:100%; min-height:110px; font-family:var(--f-ui); font-size:11.5px;
     padding:10px; border:1px solid var(--line); border-radius:8px; background:var(--surface); color:var(--ink);
     resize:vertical; margin-top:8px;
   }
@@ -375,7 +376,7 @@
     display:flex; align-items:center; justify-content:space-between; gap:10px;
     padding:16px 18px; border-bottom:1px solid var(--line); flex-shrink:0;
   }
-  .wordpreview-top span{font-family:"Baloo 2","Gowun Batang","Noto Serif KR",serif; font-weight:700; font-size:15px; color:var(--ink);}
+  .wordpreview-top span{font-family:var(--f-ui); font-weight:700; font-size:15px; color:var(--ink);}
   .wordpreview-list{overflow-y:auto; padding:10px 18px 18px;}
   .wordpreview-footer{
     padding:12px 18px; border-top:1px solid var(--line); flex-shrink:0;
@@ -405,7 +406,7 @@
   .wpitem[data-marker]:not([data-marker=""]):hover{background:var(--surface-2); border-radius:6px;}
   .wpko{color:var(--ink-soft); min-width:76px;}
   .wparrow{color:var(--ink-faint); font-size:12px;}
-  .wpen{font-family:"Baloo 2","IBM Plex Mono",monospace; font-weight:700; color:var(--ink);}
+  .wpen{font-family:var(--f-ui); font-weight:700; color:var(--ink);}
   .wpemoji{font-size:17px; margin-right:2px;}
   .wpitem.marked .wpen{position:relative;}
   .wpspeak{
@@ -423,51 +424,51 @@
     border-bottom:10px solid var(--accent); vertical-align:middle;
   }
 
-  .wpnum{flex-shrink:0; min-width:22px; font-family:"IBM Plex Mono",monospace; font-size:11.5px; font-weight:600; color:var(--ink-faint);}
+  .wpnum{flex-shrink:0; min-width:22px; font-family:var(--f-ui); font-size:11.5px; font-weight:600; color:var(--ink-faint);}
   .wpknowitem{display:flex; align-items:center; gap:10px; padding:10px 4px; border-bottom:1px dashed var(--line); flex-wrap:wrap;}
   .wpknowmain{flex:1; min-width:150px;}
   .wpknowtop{display:flex; align-items:center; gap:8px;}
   .wpknowitem .wpen{font-size:19px;}
   .wpknowitem .wpko{display:block; margin-top:2px; font-size:13.5px; font-weight:600; color:var(--accent-strong);}
   .wpknowbtns{display:flex; gap:6px;}
-  .wpbtn{font-family:"Baloo 2","IBM Plex Sans KR",sans-serif; font-weight:700; font-size:13px; padding:8px 12px; border-radius:12px; border:2px solid var(--line); background:var(--surface); color:var(--ink-soft); cursor:pointer;}
+  .wpbtn{font-family:var(--f-ui); font-weight:700; font-size:13px; padding:8px 12px; border-radius:12px; border:2px solid var(--line); background:var(--surface); color:var(--ink-soft); cursor:pointer;}
   .wpbtn.know.on{border-color:var(--accent); background:var(--accent-soft); color:var(--accent-strong);}
   .wpbtn.unknown.on{border-color:var(--danger); background:var(--danger-soft); color:var(--danger);}
   .wpnav{display:flex; align-items:center; justify-content:space-between; gap:8px; margin-top:12px;}
-  .wpnav button{font-family:"IBM Plex Sans KR",sans-serif; font-weight:600; font-size:13px; padding:8px 14px; border-radius:10px; border:1px solid var(--accent); background:transparent; color:var(--accent-strong); cursor:pointer;}
+  .wpnav button{font-family:var(--f-ui); font-weight:600; font-size:13px; padding:8px 14px; border-radius:10px; border:1px solid var(--accent); background:transparent; color:var(--accent-strong); cursor:pointer;}
   .wpnav button:disabled{opacity:.35; cursor:not-allowed;}
-  .wpnav .wppagelbl{font-family:"IBM Plex Mono",monospace; font-size:12px; color:var(--ink-faint);}
+  .wpnav .wppagelbl{font-family:var(--f-ui); font-size:12px; color:var(--ink-faint);}
   table.board{width:100%; border-collapse:collapse; font-size:13px; margin-top:10px;}
-  table.board th{text-align:left; font-family:"IBM Plex Mono",monospace; font-size:10.5px; color:var(--ink-faint); font-weight:500; padding:6px 8px; border-bottom:1px solid var(--line);}
+  table.board th{text-align:left; font-family:var(--f-ui); font-size:10.5px; color:var(--ink-faint); font-weight:500; padding:6px 8px; border-bottom:1px solid var(--line);}
   table.board td{padding:7px 8px; border-bottom:1px dashed var(--line);}
-  table.board td.score{font-family:"IBM Plex Mono",monospace; font-weight:600; text-align:right;}
+  table.board td.score{font-family:var(--f-ui); font-weight:600; text-align:right;}
   table.board tr.top1 td{background:var(--gold-soft); color:var(--gold); font-weight:600;}
   table.board tr.top1 td:first-child{font-size:15px; text-align:center;}
   table.board tr.me td{background:var(--accent-soft); color:var(--accent-strong); font-weight:600;}
   table.board tr.me td:first-child{font-size:13px; text-align:center;}
   table.board tr.top1.me td{background:var(--gold-soft); color:var(--gold);}
-  table.board td.done-check{color:var(--ink-faint); font-weight:400; font-family:"IBM Plex Sans KR",sans-serif;}
+  table.board td.done-check{color:var(--ink-faint); font-weight:400; font-family:var(--f-ui);}
 
   .hint{font-size:12px; color:var(--ink-faint); margin-top:10px;}
 
   .matchtop{display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; gap:10px;}
   .exitbtn{
-    font-family:"IBM Plex Sans KR",sans-serif; font-size:12.5px; color:var(--ink-soft);
+    font-family:var(--f-ui); font-size:12.5px; color:var(--ink-soft);
     background:transparent; border:1px solid var(--line); border-radius:8px;
     padding:6px 10px; cursor:pointer; display:block; margin-bottom:14px;
   }
   .exitbtn:hover{border-color:var(--ink-faint); color:var(--ink);}
-  .timer{font-family:"Baloo 2","IBM Plex Mono",monospace; font-size:26px; font-weight:700; color:var(--ink);}
-  .matchscore{font-family:"Baloo 2","IBM Plex Mono",monospace; font-size:17px; font-weight:700; color:var(--accent-strong);}
+  .timer{font-family:var(--f-ui); font-size:26px; font-weight:700; color:var(--ink);}
+  .matchscore{font-family:var(--f-ui); font-size:17px; font-weight:700; color:var(--accent-strong);}
   .matchpairsrow{text-align:center; font-size:11.5px; color:var(--ink-faint); margin:-10px 0 10px;}
   .matchgrid{display:grid; grid-template-columns:1fr 1fr; gap:0 12px;}
   .matchgrid .col-en, .matchgrid .col-ko{display:flex; flex-direction:column; gap:8px;}
   .tile{
-    font-family:"IBM Plex Sans KR",sans-serif; font-size:13.5px; text-align:left;
+    font-family:var(--f-ui); font-size:13.5px; text-align:left;
     background:var(--surface-2); border:1px solid var(--line); border-radius:9px;
     padding:10px 12px; cursor:pointer; color:var(--ink); min-height:40px;
   }
-  .tile.en{font-family:"Baloo 2","IBM Plex Mono",monospace; font-weight:700;}
+  .tile.en{font-family:var(--f-ui); font-weight:700;}
   .tile.sel{border-color:var(--accent); background:var(--accent-soft); color:var(--accent-strong);}
   .tile.done{border-color:var(--accent); background:var(--accent-soft); color:var(--accent-strong); opacity:.55; cursor:default;}
   .tile.correctflash{border-color:var(--accent); background:var(--accent); color:var(--surface);}
@@ -485,7 +486,7 @@
   .pointPop{
     position:fixed; z-index:9997; pointer-events:none; transform:translate(-50%,0);
     display:flex; flex-direction:column; align-items:center; gap:1px; text-align:center;
-    font-family:"Baloo 2","IBM Plex Sans KR",sans-serif; text-shadow:0 2px 8px rgba(0,0,0,0.25);
+    font-family:var(--f-ui); text-shadow:0 2px 8px rgba(0,0,0,0.25);
     animation:pointRise 1s ease-out forwards;
   }
   .pointPop b{font-size:26px; font-weight:800; line-height:1;}
@@ -498,7 +499,7 @@
   .comboToast{
     position:fixed; top:26%; left:50%; transform:translate(-50%,-50%); z-index:9998;
     pointer-events:none; text-align:center;
-    font-family:"Baloo 2",sans-serif; font-weight:800; color:var(--gold);
+    font-family:var(--f-ui); font-weight:800; color:var(--gold);
     font-size:clamp(26px,7vw,40px); text-shadow:0 3px 14px rgba(0,0,0,0.25);
     animation:comboPop .6s cubic-bezier(.34,1.56,.64,1);
   }
@@ -506,7 +507,7 @@
 
   .sirenBanner{
     display:flex; align-items:center; justify-content:center; gap:6px;
-    background:var(--danger); color:#fff; font-family:"Baloo 2",sans-serif; font-weight:700; font-size:13.5px;
+    background:var(--danger); color:#fff; font-family:var(--f-ui); font-weight:700; font-size:13.5px;
     border-radius:10px; padding:8px; margin-bottom:10px; animation:sirenBlink .5s steps(1,end) infinite;
   }
   @keyframes sirenBlink{50%{opacity:.4;}}
@@ -515,21 +516,21 @@
 
   .timeWarnBanner{
     display:flex; align-items:center; justify-content:center; gap:6px;
-    background:var(--gold-soft); color:var(--gold); font-family:"Baloo 2",sans-serif; font-weight:700; font-size:13.5px;
+    background:var(--gold-soft); color:var(--gold); font-family:var(--f-ui); font-weight:700; font-size:13.5px;
     border:1.5px solid var(--gold); border-radius:10px; padding:8px; margin-bottom:10px;
   }
 
   .modehero{text-align:center; padding:6px 0 20px; margin-bottom:18px; border-bottom:1px dashed var(--line);}
-  .mhsub{font-family:"IBM Plex Mono",monospace; font-size:12px; font-weight:600; letter-spacing:.08em; color:var(--ink-faint); margin-bottom:6px;}
+  .mhsub{font-family:var(--f-ui); font-size:12px; font-weight:600; letter-spacing:.08em; color:var(--ink-faint); margin-bottom:6px;}
   .mhemoji{font-size:clamp(44px,12vw,64px); line-height:1.1; margin-bottom:6px;}
-  .mhtitle{font-family:"Baloo 2","IBM Plex Sans KR",sans-serif; font-weight:800; font-size:clamp(26px,7.5vw,38px); line-height:1.15; color:var(--ink); text-wrap:balance;}
-  .qprompt,.wpen,.tile.en,.mhtitle,.easyBlank,.easyTile,.spellhint,.warmupchip .wen{font-family:"Andika","IBM Plex Sans KR","Baloo 2",sans-serif; letter-spacing:.01em;}
+  .mhtitle{font-family:var(--f-ui); font-weight:800; font-size:clamp(26px,7.5vw,38px); line-height:1.15; color:var(--ink); text-wrap:balance;}
+  .qprompt,.wpen,.tile.en,.mhtitle,.easyBlank,.easyTile,.spellhint,.warmupchip .wen{font-family:"Andika",var(--f-ui); letter-spacing:.01em;}
   .qprompt{font-weight:700;}
   .wpknowitem .wpen{font-size:22px;}
   .tile.en{font-weight:700; font-size:15px;}
   .hwhead{text-align:center; padding:4px 0 14px; border-bottom:1px dashed var(--line); margin-bottom:10px;}
-  .hwname{font-family:"Baloo 2","IBM Plex Sans KR",sans-serif; font-weight:800; font-size:26px; line-height:1.2;}
-  .hwset{font-family:"Andika","IBM Plex Sans KR",sans-serif; font-weight:700; font-size:16px; margin-top:4px;}
+  .hwname{font-family:var(--f-ui); font-weight:800; font-size:26px; line-height:1.2;}
+  .hwset{font-family:"Andika",var(--f-ui); font-weight:700; font-size:16px; margin-top:4px;}
   .hwdate{font-size:12.5px; color:var(--ink-soft); margin-top:2px;}
   .hwrow{display:flex; align-items:center; gap:10px; padding:11px 0; border-bottom:1px dashed var(--line);}
   .hwrow .hwstep{flex:1; font-weight:700; font-size:15px;}
@@ -537,33 +538,33 @@
   .hwrow.ok .hwres{color:var(--accent-strong);}
   .hwrow.retry .hwres{color:var(--danger);}
   .hwrow.todo .hwres{color:var(--ink-faint);}
-  .hwfinal{margin-top:14px; text-align:center; border-radius:14px; padding:12px; font-family:"Baloo 2","IBM Plex Sans KR",sans-serif; font-weight:800; font-size:19px;}
+  .hwfinal{margin-top:14px; text-align:center; border-radius:14px; padding:12px; font-family:var(--f-ui); font-weight:800; font-size:19px;}
   .hwfinal.done{background:var(--accent-soft); color:var(--accent-strong); border:2px solid var(--accent);}
   .hwfinal.notyet{background:var(--surface-2); color:var(--ink-soft); border:2px dashed var(--line); font-size:15px;}
   .hwwrongtitle{margin-top:16px; font-weight:800; font-size:14.5px; padding-bottom:6px; border-bottom:2px solid var(--line);}
   .hwwrong{display:flex; align-items:baseline; gap:10px; padding:7px 0; border-bottom:1px dashed var(--line);}
-  .hwwrong .hwen{font-family:"Andika","IBM Plex Sans KR",sans-serif; font-weight:700; font-size:16px; flex:0 0 42%;}
+  .hwwrong .hwen{font-family:"Andika",var(--f-ui); font-weight:700; font-size:16px; flex:0 0 42%;}
   .hwwrong .hwko{flex:1; font-size:14.5px;}
   .hwwrong .hwtag{font-size:11px; color:var(--danger); font-weight:700; white-space:nowrap;}
-  .hwcopybox{width:100%; min-height:130px; margin-top:8px; font:13px/1.5 "IBM Plex Sans KR",sans-serif; padding:8px; border:1px solid var(--line); border-radius:10px; background:var(--surface-2); color:var(--ink); resize:none;}
+  .hwcopybox{width:100%; min-height:130px; margin-top:8px; font:13px/1.5 var(--f-ui); padding:8px; border:1px solid var(--line); border-radius:10px; background:var(--surface-2); color:var(--ink); resize:none;}
   .hwnote{font-size:12px; color:var(--ink-faint); text-align:center; margin-top:10px;}
 
   .sentdet{margin-top:10px; text-align:left;}
   .sentdet summary{cursor:pointer; font-weight:700; font-size:13px; color:var(--accent-strong);}
-  .sentpre{white-space:pre-wrap; word-break:break-word; margin:8px 0 0; font:13px/1.6 "IBM Plex Sans KR",sans-serif; background:var(--surface-2); color:var(--ink); border:1px solid var(--line); border-radius:10px; padding:10px 12px;}
+  .sentpre{white-space:pre-wrap; word-break:break-word; margin:8px 0 0; font:13px/1.6 var(--f-ui); background:var(--surface-2); color:var(--ink); border:1px solid var(--line); border-radius:10px; padding:10px 12px;}
   .hwsent{margin-top:14px; border:2px solid var(--accent); background:var(--accent-soft); border-radius:12px; padding:10px 12px;}
   .hwsent .hwsenthead{font-weight:800; font-size:13.5px; color:var(--accent-strong);}
   footer{margin-top:20px; text-align:center; font-size:11px; color:var(--ink-faint);}
 
   /* Step Up · 소리 분류 */
-  .stepuphead{font-family:"Baloo 2","IBM Plex Sans KR",sans-serif; font-weight:800; font-size:16px; color:var(--accent-strong); margin:22px 0 10px; padding-top:16px; border-top:2px dashed var(--line);}
-  .suhead{font-family:"Baloo 2","IBM Plex Sans KR",sans-serif; font-weight:800; font-size:18px; margin:6px 0 4px;}
+  .stepuphead{font-family:var(--f-ui); font-weight:800; font-size:16px; color:var(--accent-strong); margin:22px 0 10px; padding-top:16px; border-top:2px dashed var(--line);}
+  .suhead{font-family:var(--f-ui); font-weight:800; font-size:18px; margin:6px 0 4px;}
   .suhead small{font-weight:600; color:var(--ink-soft); font-size:13px;}
   .sudir{font-size:14px; color:var(--ink-soft); margin:0 0 14px; line-height:1.55;}
   .sucards{display:grid; grid-template-columns:repeat(auto-fill,minmax(130px,1fr)); gap:12px; margin-bottom:16px;}
   .sucard{border:2px solid var(--line); border-radius:16px; padding:12px 10px; background:var(--surface); display:flex; flex-direction:column; align-items:center; gap:8px; text-align:center; min-width:0;}
   .sucard.heard{border-color:var(--accent); background:var(--accent-soft);}
-  .suword{font-family:"Baloo 2","IBM Plex Sans KR",sans-serif; font-weight:800; font-size:30px; line-height:1.1; overflow-wrap:anywhere;}
+  .suword{font-family:var(--f-ui); font-weight:800; font-size:30px; line-height:1.1; overflow-wrap:anywhere;}
   .suword.big{font-size:54px; margin:6px 0;}
   .suhl{color:var(--accent-strong); background:var(--accent-soft); border-radius:6px; padding:0 3px;}
   .sufollow{border:2px solid var(--accent); background:var(--surface); color:var(--ink); border-radius:12px; padding:9px 8px; font-weight:800; font-size:14px; cursor:pointer; width:100%; font-family:inherit;}
@@ -572,7 +573,7 @@
   .suspeak{border:2px solid var(--line); background:var(--surface); color:var(--ink); border-radius:999px; padding:7px 16px; font-weight:700; cursor:pointer; font-family:inherit;}
   .suboxes{display:grid; grid-template-columns:1fr 1fr; gap:12px;}
   .subox{border:3px solid var(--line); background:var(--surface); color:var(--ink); border-radius:18px; padding:16px 8px; cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:4px; font-family:inherit; min-width:0;}
-  .subox b{font-family:"Baloo 2","IBM Plex Sans KR",sans-serif; font-size:30px; line-height:1.1;}
+  .subox b{font-family:var(--f-ui); font-size:30px; line-height:1.1;}
   .subox span{font-size:13px; color:var(--ink-soft); font-weight:600;}
   .subox:disabled{opacity:.7; cursor:default;}
   .subox.ok{border-color:var(--accent); background:var(--accent-soft);}
@@ -597,7 +598,7 @@
   .swinp.no{border-color:var(--danger); background:var(--danger-soft);}
 
   /* 사이트워드 단계 (5번째) */
-  .swshead{font-family:"Baloo 2","IBM Plex Sans KR",sans-serif; font-weight:800; font-size:18px; margin:6px 0 4px;}
+  .swshead{font-family:var(--f-ui); font-weight:800; font-size:18px; margin:6px 0 4px;}
   .swshead small{font-weight:600; color:var(--ink-soft); font-size:13px;}
   .swsdir{font-size:14px; color:var(--ink-soft); margin:0 0 14px; line-height:1.55;}
   .swsent{font-size:18px; line-height:1.7; margin:8px 0 14px; text-align:center; overflow-wrap:anywhere;}
@@ -611,7 +612,7 @@
   .swbtn.ok{border-color:var(--accent); background:var(--accent-soft);}
   .swbtn.no{border-color:var(--danger); background:var(--danger-soft);}
   .swplay{display:flex; flex-direction:column; align-items:center; gap:6px; margin:10px 0 16px;}
-  .swletters{display:flex; flex-wrap:wrap; justify-content:center; align-items:center; gap:2px; letter-spacing:.02em; font-family:"Baloo 2","IBM Plex Sans KR",sans-serif; font-weight:800; font-size:clamp(28px,9vw,44px); margin:6px 0;}
+  .swletters{display:flex; flex-wrap:wrap; justify-content:center; align-items:center; gap:2px; letter-spacing:.02em; font-family:var(--f-ui); font-weight:800; font-size:clamp(28px,9vw,44px); margin:6px 0;}
   .swinp{width:1.3em; height:1.4em; text-align:center; font:inherit; font-weight:800; border:3px solid var(--accent); border-radius:10px; background:var(--surface); color:var(--ink); text-transform:lowercase; margin:0 3px; padding:0;}
   .swinp.ok{background:var(--accent-soft);}
   .swinp.no{border-color:var(--danger); background:var(--danger-soft);}
@@ -629,7 +630,7 @@
   .trcols{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:6px 0 14px;}
   .trcol{display:flex; flex-direction:column; gap:10px; min-width:0;}
   .trw,.trp{border:3px solid var(--line); background:var(--surface); color:var(--ink); border-radius:16px; padding:10px 6px; cursor:pointer; font-family:inherit; min-width:0; display:flex; flex-direction:column; align-items:center; gap:2px;}
-  .trw b{font-family:"Baloo 2","IBM Plex Sans KR",sans-serif; font-size:21px; line-height:1.15; overflow-wrap:anywhere;}
+  .trw b{font-family:var(--f-ui); font-size:21px; line-height:1.15; overflow-wrap:anywhere;}
   .trp .e{font-size:38px; line-height:1.15;}
   .trw small,.trp small,.trpick small{font-size:12px; color:var(--ink-soft); font-weight:600; line-height:1.3;}
   .trw.sel{border-color:var(--accent); background:var(--accent-soft);}
@@ -651,7 +652,7 @@
 
   /* 원서 제목 매칭게임 */
   .tgbox{margin-top:18px; border:2px dashed var(--line); border-radius:16px; padding:14px; background:var(--surface-2); display:flex; flex-direction:column; gap:8px;}
-  .tgttl{font-family:"Baloo 2","IBM Plex Sans KR",sans-serif; font-weight:800; font-size:17px;}
+  .tgttl{font-family:var(--f-ui); font-weight:800; font-size:17px;}
   .tgbest{font-size:13px; font-weight:700; color:var(--accent-strong);}
   .tghead{display:flex; justify-content:space-between; align-items:center; font-weight:800; font-size:18px; margin:4px 0 6px;}
   .tgcols{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:10px 0;}
@@ -726,6 +727,78 @@
   /* 영어 음성 안내: 아래 버튼을 가리지 않게 위쪽에, 눌러도 통과 */
   .ttsnotice{bottom:auto; top:calc(8px + env(safe-area-inset-top)); left:16px; right:16px; transform:none; margin:0 auto; width:fit-content; pointer-events:none;}
   @media (prefers-reduced-motion: reduce){ .choice.needclick{animation:none;} }
+
+  /* 학생 화면 6단계 (2차, 2026-10-18) */
+  /* 2-5 색: 디자인 가이드 (밝은 화면만 바꿈, 어두운 화면은 그대로) */
+  :root{--bg:#EEF6FC; --surface:#FFFFFF; --surface-2:#F4F8FC; --ink:#4A3628; --ink-soft:#6B5747; --ink-faint:#76645A; --line:#D9CFC6;
+    --accent:#4A3628; --accent-strong:#3B2A1E; --accent-soft:#FDE7EE; --pink:#F08FA8; --gold-ink:#8A5300; --shadow:none; --lv:#F1C40F; --lv-ink:#4A3628;
+    --f-ui:system-ui,-apple-system,"Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",sans-serif;}
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){--gold-ink:var(--gold); --track:#3A3026;} }
+  :root[data-theme="dark"]{--gold-ink:var(--gold); --track:#3A3026;}
+  .card{border-width:1.5px; box-shadow:none;}
+  /* 진단 9: 레벨 배지 (레벨 색은 여기에만). 배지 줄 높이 44px → 제목은 배실이 아래부터 */
+  header.page .lvbadge{align-self:flex-start; margin:8px 0; padding:3px 12px; border-radius:999px; background:var(--lv); color:var(--lv-ink);
+    font-family:var(--f-ui); font-size:13px; font-weight:800; letter-spacing:0; text-transform:none; line-height:22px;}
+  /* 금색 글씨(연속·Word Stars 등) 대비 1.8:1 → 4.5:1 이상 */
+  .hallcnt, .submitbanner .submittitle, .submitbanner .submitdone b, .warmupcard .warmtitle, table.board tr.top1 td, table.board tr.top1.me td,
+  .streakrow, .pointPop.great, .repbadge, .comboToast, .timeWarnBanner{color:var(--gold-ink);}
+  /* 2-4 누르면 살짝 눌림 (97%) */
+  .setbtn:active, button.primary:active:not(:disabled), button.secondary:active, .choice:active, .tile:active, .diffbtn:active, .wpbtn:active,
+  .exitbtn:active, .nextbtn:active, .setrow-preview:active, .setrow-enter:active, .tgtile:active, .bdbtn:active{transform:scale(.97);}
+  /* 진단 7: 진행 막대 두껍게(10px) 분홍, "3 / 20" 크게 */
+  .progress{height:10px; border-radius:999px; background:var(--track,#F1EAE4);}
+  .progress > span{background:var(--pink); border-radius:999px; transition:width .25s ease-out;}
+  .qnum{font-size:16px; font-weight:800; color:var(--ink);}
+  .qnum, .timer, .scoretile .num{font-variant-numeric:tabular-nums;}
+  /* 진단 13: 고른 이름은 분홍으로 */
+  #namepicker .setbtn.picked{border-color:var(--pink); background:var(--accent-soft); box-shadow:0 0 0 2px var(--pink);}
+  /* 2-4 끝낸 Day: 민트 + ✓ 도장 */
+  .setrow.complete{background:var(--ok-soft); border-color:var(--ok);}
+  .setrow.complete .setrow-title{color:var(--ok-ink);}
+  .setrow.complete .setrow-enter{border-left-color:var(--ok);}
+  .dot.pass{background:var(--ok-mark); border-color:var(--ok-mark); box-shadow:none;}
+  .setrow-badge{display:inline-flex; align-items:center; justify-content:center; width:26px; height:26px; border-radius:50%; background:var(--ok-mark); color:#fff;
+    font-size:15px; font-weight:900; transform:rotate(-10deg); box-shadow:0 0 0 2px var(--surface), 0 0 0 3.5px var(--ok-mark);}
+  /* 진단 5: 매칭 카드 — 같은 줄의 왼쪽·오른쪽 카드 높이를 맞춤 */
+  .matchgrid{grid-auto-flow:row dense; gap:8px 12px;}
+  .matchgrid .col-en, .matchgrid .col-ko{display:contents;}
+  .matchgrid .col-en > *{grid-column:1;}
+  .matchgrid .col-ko > *{grid-column:2;}
+  .matchgrid .tile{display:flex; align-items:center;}
+  /* 진단 8: 스펠(이지) 빈칸을 글자 수에 맞춰 줄임 — 한 단어는 한 줄에, 줄바꿈은 단어 사이에서만 */
+  .easyBlanks{gap:6px 4px;}
+  .easyBlank{width:var(--bw,34px); font-size:min(18px, calc(var(--bw,34px) * .56));}
+  .easyBlank.gap{width:14px;}
+  .easyBlank.gap.br{flex-basis:100%; width:auto; height:0; margin:0;}
+  @media (prefers-reduced-motion: reduce){ .progress > span{transition:none;} }
+  /* 2-1 맨 위 줄 배실이 56px: 소리 버튼 왼쪽 */
+  header.page{position:relative;}
+  .bd{position:relative; width:56px; height:56px; flex:none; z-index:40;}
+  .bd.at-head{position:absolute; right:52px; top:-26px;}   /* 소리 버튼(위 16px, 44px)과 가운데 높이를 맞춤: 위 여백 36px */
+  @media (max-width:480px){ .bd.at-head{top:-14px;} }      /* 폰: 위 여백 24px */
+  @media (min-width:720px){ .bd.at-head{right:0;} }
+  .bd.at-word{margin-left:auto;}
+  .bdbtn{display:block; width:56px; height:56px; padding:0; border:0; background:none; cursor:pointer; border-radius:50%; -webkit-tap-highlight-color:transparent;}
+  .bdbtn img{display:block; width:100%; height:100%;}
+  .bdbtn:focus-visible{outline:3px solid #F08FA8; outline-offset:2px;}
+  .bdbtn.hop img{animation:bdHop .3s ease-out;}
+  @keyframes bdHop{0%{transform:translateY(0)} 45%{transform:translateY(-8px)} 100%{transform:translateY(0)}}
+  .bd.big, .bd.big .bdbtn{width:96px; height:96px;}
+  .bd.big{margin:0 auto 10px;}
+  /* 말풍선: 배실이 왼쪽(제목 자리)에만, 꼬리는 배실이 쪽, 눌러도 아래가 눌림 */
+  .bdsay{position:absolute; right:calc(100% + 10px); top:50%; z-index:60; width:max-content; max-width:240px; box-sizing:border-box;
+    background:var(--surface); color:var(--ink); border:2px dashed var(--bs-line); border-radius:18px; padding:8px 14px;
+    font-family:"Gaegu",system-ui,sans-serif; font-weight:700; font-size:19px; line-height:1.25; word-break:keep-all; text-align:left;
+    pointer-events:none; opacity:0; visibility:hidden; transform:translate(6px,-50%); transition:opacity .15s, transform .15s, visibility .15s;}
+  .bdsay.on{opacity:1; visibility:visible; transform:translate(0,-50%);}
+  .bdtail{position:absolute; right:-19px; top:50%; margin-top:-12px; width:20px; height:24px; overflow:visible;}
+  .bdtail path{fill:var(--surface); stroke:var(--bs-line); stroke-width:2; stroke-dasharray:5 3.5; stroke-linecap:round; stroke-linejoin:round;}
+  /* 결과 화면: 가운데 96px, 말풍선은 위로 */
+  .bd.big .bdsay{right:auto; left:50%; top:auto; bottom:calc(100% + 16px); transform:translate(-50%,6px); text-align:center; max-width:min(300px, 86vw);}
+  .bd.big .bdsay.on{transform:translate(-50%,0);}
+  .bd.big .bdtail{right:auto; left:50%; top:100%; margin:-4px 0 0 -10px; transform:rotate(90deg);}
+  @media (prefers-reduced-motion: reduce){ .bdbtn.hop img{animation:none;} .bdsay{transition:none;} }
+  :root{color-scheme:only light;}   /* 늘 밝은 화면 (엘레나 결정 ㉮) */
 </style>
 
 <div class="celebratebanner" id="celebrateBanner" hidden>🎉 You did it! 🎉</div>
@@ -761,7 +834,7 @@
 
 <div class="wrap">
   <header class="page">
-    <span class="eyebrow">ERC 언어교육 콘텐츠 · C레벨 단어 확인 퀴즈</span>
+    <span class="eyebrow lvbadge">C레벨</span>
     <h1>C레벨 원서별 단어 퀴즈</h1>
     <div class="currentnamebadge" id="currentNameBadge" hidden>👤 <span id="currentNameText"></span></div>
   </header>
@@ -921,8 +994,7 @@
     <div class="hint">최근 20건까지 표시됩니다.</div>
   </div>
 
-  <footer>ERC 영어독서클럽 · C레벨 단어 확인용 · 퀴즈는 단어 수만큼 문항(영→한·한→영 혼합)으로 구성 · 통과 기준: 퀴즈·매칭게임·사이트워드·스펠쓰기 각 70% 이상
-  </footer>
+  <footer>퀴즈, 매칭게임, 스펠쓰기 모두 70점 이상이면 통과예요!</footer>
 </div>
 
 <script>
@@ -3545,7 +3617,7 @@ window.addEventListener('beforeunload', e => {
 // ===== AUTO_UPDATE (요구사항 NF-09): 새 버전을 올리면 다음 접속이나 탭으로 돌아올 때 최신 화면으로 바꾼다.
 // 문제를 푸는 중·기록을 보내는 중에는 끊지 않고, 이름·Day 목록 화면에서만 한 번 다시 불러온다.
 // 못 보낸 기록은 이미 기기에 먼저 저장돼 있어 다시 불러와도 사라지지 않는다.
-const APP_BUILD = '20261018-224728';
+const APP_BUILD = '20261018-231009';
 const VER_URL = '../version.json';
 const VER_FIRST_MS = 1500, VER_POLL_MS = 600000, VER_TICK_MS = 5000, VER_RETRY_MS = 600000;
 let verWant = '';   // 받아야 할 새 번호 (안전한 때를 기다리는 중)
@@ -4384,6 +4456,161 @@ function emojiHtml(e) {
   if (String(e).indexOf('img:') === 0) { const s = WORD_IMG[String(e).slice(4)]; return s ? '<img class="wimg" alt="" src="' + s + '">' : ''; }
   return e;
 }
+// ===== BAESIL_STAGE6 (2026-10-18): 맨 위 줄 배실이 — 화면당 한 마리, 3초마다 표정, 30초면 졸기, 누르면 말풍선 (2차 계획 2-1~2-3) =====
+const BD_FACE_MS = 3000, BD_SAY_MS = 2500, BD_SLEEP_MS = 30000, BD_TAP_MS = 1000;   // 엘레나 결정 ㉡ 3초, ㉤ 30초
+const BD_IDLE = ['basic', 'smile', 'wink', 'playful', 'happy'];
+const BD_ALL = BD_IDLE.concat(['bigsmile', 'surprise', 'sleepy']);   // 화남·삐짐·슬픔·당황은 쓰지 않음
+const BD_LINES = {
+  name: ['오늘도 반가워요!', '같이 단어 공부해요!', '나는 배실이에요~'],
+  days: ['오늘은 어떤 Day 할까요?', '하나씩 차근차근!', '어제보다 한 걸음 더!'],
+  mode: ['단어확인부터 해 볼까요?', '할 수 있어요!'],
+  word: ['소리 내어 읽어 봐요!', '뜻을 떠올려 봐요'],
+  quiz: ['집중! 집중!', '천천히 읽어 봐요', '잘하고 있어요!'],   // 퀴즈 중에는 응원만 (답을 알려 주지 않음)
+  result: ['오늘도 해냈어요!', '정말 멋져요!']
+};
+// 엘레나 지정 문구 (2026-10-18 밤, 쓴 그대로): 모든 화면에서 누르면 나오는 말에 더함
+const BD_ELENA = ['판교대장 ERC에서 만날까?', '오늘도 잼있겠다'];
+Object.keys(BD_LINES).forEach(k => BD_LINES[k].push(...BD_ELENA));
+// 계획 2-3: 퀴즈 중 말에 이 레벨 퀴즈의 답·뜻이 들어가면 퀴즈 화면에서만 뺌 (예: D 'today = 오늘'과 '오늘도 잼있겠다')
+try { const ans = []; QUIZZES.forEach(z => z.questions.forEach(x => [x.correct, x.prompt, ...(x.choices || [])].forEach(a => { if (a && a.length > 1) ans.push(a); }))); BD_LINES.quiz = BD_LINES.quiz.filter(l => !ans.some(a => l.includes(a))); } catch (e) {}
+const BD_OK_LINES = ['맞았어요!', '최고예요!'];
+const BD_WATCH = ['nameScreen', 'setListScreen', 'modeScreen', 'tgCard', 'quizCard', 'spellCard', 'matchCard', 'resultCard', 'wordPreviewOverlay', 'hwOverlay', 'blWrap', 'upPop', 'teacherPanel'];
+const BD = { screen: '', faceI: 0, lineI: {}, okI: 0, asleep: false, lastTouch: Date.now(), lastTap: 0, holdUntil: 0, sayT: null, broken: false, loaded: new Set(['basic']) };
+function bdVis(id) { const e = document.getElementById(id); return !!e && !e.hidden; }
+function bdScreen() {   // 지금 보이는 학생 화면 ('' = 배실이 숨김: 로딩·팝업·선생님 화면)
+  if (BD.broken || TEACHER_MODE || bdVis('teacherPanel')) return '';
+  if (bdVis('blWrap') || bdVis('upPop') || bdVis('hwOverlay')) return '';
+  if (bdVis('wordPreviewOverlay')) return 'word';
+  if (bdVis('resultCard')) return 'result';
+  if (['quizCard', 'spellCard', 'matchCard', 'tgCard'].some(bdVis)) return 'quiz';
+  if (bdVis('modeScreen')) return 'mode';
+  if (bdVis('setListScreen')) return 'days';
+  if (bdVis('nameScreen')) return 'name';
+  return '';
+}
+function bdFace(f, hop) {
+  if (!BD.loaded.has(f)) return;   // 아직 못 받은 그림은 건너뜀
+  const img = document.getElementById('bdImg');
+  img.src = BL_IMG + f + '.webp'; img.dataset.face = f;
+  if (hop && !blReduced()) { const b = document.getElementById('bdBtn'); b.classList.remove('hop'); void b.offsetWidth; b.classList.add('hop'); }
+}
+function bdHush() { clearTimeout(BD.sayT); const s = document.getElementById('bdSay'); if (s) s.classList.remove('on'); }
+function bdSay(text) {
+  const say = document.getElementById('bdSay'), bd = document.getElementById('bd');
+  document.getElementById('bdSayText').textContent = text;
+  // 말풍선이 화면 왼쪽 밖으로 나가지 않게 배실이 왼쪽 남은 폭만큼만
+  say.style.maxWidth = bd.classList.contains('big') ? '' : Math.max(140, Math.min(240, Math.round(bd.getBoundingClientRect().left - 18))) + 'px';
+  say.classList.add('on');
+  clearTimeout(BD.sayT); BD.sayT = setTimeout(bdHush, BD_SAY_MS);
+}
+function bdReset() {   // 다음 아이에게 앞 아이의 말 순서·표정이 남지 않게 (S-108)
+  BD.faceI = 0; BD.lineI = {}; BD.okI = 0; BD.asleep = false; BD.lastTouch = Date.now(); BD.holdUntil = 0;
+  bdHush(); bdFace('basic');
+}
+function bdPlace() {   // 화면이 바뀌면 배실이를 그 화면 맨 위 줄로 옮기거나 숨김 (화면당 한 마리)
+  const s = bdScreen(), bd = document.getElementById('bd');
+  if (s === BD.screen) return;
+  const prev = BD.screen; BD.screen = s;
+  bdHush();
+  if (s === 'name' && prev) bdReset();
+  bd.hidden = !s;
+  if (!s) return;
+  bd.className = 'bd ' + (s === 'word' ? 'at-word' : s === 'result' ? 'big' : 'at-head');
+  if (s === 'word') { const c = document.getElementById('wordPreviewCloseBtn'); c.parentNode.insertBefore(bd, c); }
+  else if (s === 'result') { const r = document.getElementById('resultCard'); r.insertBefore(bd, r.firstChild); }
+  else { const hd = document.querySelector('header.page'); if (bd.parentNode !== hd) hd.appendChild(bd); }
+  if (s === 'result') {
+    const pass = document.getElementById('passBadge').classList.contains('pass');
+    BD.asleep = false; BD.holdUntil = Date.now() + 2 * BD_FACE_MS;
+    bdFace(pass ? 'bigsmile' : 'happy', true);
+  } else if (prev === 'result' || prev === 'word') { bdFace(BD_IDLE[BD.faceI]); }
+}
+function bdTick() {   // 3초마다 표정 하나씩. 탭이 안 보이면 쉬고, 30초 동안 안 누르면 졸기
+  if (document.hidden || !BD.screen) return;
+  const now = Date.now();
+  if (!BD.asleep && now - BD.lastTouch > BD_SLEEP_MS) { BD.asleep = true; bdHush(); bdFace('sleepy'); return; }
+  if (BD.asleep || now < BD.holdUntil) return;
+  BD.faceI = (BD.faceI + 1) % BD_IDLE.length; bdFace(BD_IDLE[BD.faceI]);
+}
+function bdReact(ok) {   // 정답 → 활짝 웃으며 뜀 + 칭찬, 오답 → 윙크 (부정적인 표정은 쓰지 않음)
+  if (BD.screen !== 'quiz') return;
+  BD.asleep = false; BD.lastTouch = Date.now(); BD.holdUntil = Date.now() + BD_FACE_MS / 2;
+  if (ok) { bdFace('bigsmile', true); bdSay(BD_OK_LINES[BD.okI++ % BD_OK_LINES.length]); }
+  else { bdHush(); bdFace('wink'); }
+}
+(function bdInit() {
+  document.querySelector('header.page').insertAdjacentHTML('beforeend',
+    '<div class="bd at-head" id="bd" hidden><button type="button" class="bdbtn" id="bdBtn" aria-label="배실이 — 누르면 말해요">' +
+    '<img id="bdImg" alt="" width="56" height="56" decoding="async" data-face="basic"></button>' +
+    '<div class="bdsay" id="bdSay" aria-live="polite"><span id="bdSayText"></span>' +
+    '<svg class="bdtail" viewBox="0 0 20 24" aria-hidden="true"><path d="M1.5 3 Q9 9 19 12 Q9 15 1.5 21"/></svg></div></div>');
+  const img = document.getElementById('bdImg');
+  img.addEventListener('error', () => { if (img.dataset.face === 'basic') { BD.broken = true; BD.screen = '__'; bdPlace(); } });
+  img.src = BL_IMG + 'basic.webp';   // 첫 화면은 기본 표정 1장(12KB)만
+  // 나머지 표정은 화면이 다 뜬 뒤 조용히 미리 받기 (레벨들이 같이 쓰는 폴더 → 한 번 받으면 재사용)
+  window.addEventListener('load', () => setTimeout(() => BD_ALL.forEach(f => {
+    if (BD.loaded.has(f)) return;
+    const i = new Image(); i.onload = () => BD.loaded.add(f); i.src = BL_IMG + f + '.webp';
+  }), 400));
+  const touch = e => {
+    BD.lastTouch = Date.now();
+    if (BD.asleep && !(e && e.target && e.target.closest && e.target.closest('#bdBtn'))) { BD.asleep = false; bdFace('smile'); }
+  };
+  document.addEventListener('pointerdown', touch, true);
+  document.addEventListener('keydown', touch, true);
+  document.getElementById('bdBtn').addEventListener('click', () => {
+    const now = Date.now();
+    if (now - BD.lastTap < BD_TAP_MS) return;   // 연속으로 눌러도 1초에 한 번
+    BD.lastTap = now; BD.lastTouch = now;
+    if (BD.asleep) {
+      BD.asleep = false; BD.holdUntil = now + Math.max(BD_FACE_MS / 2, 1000);   // 놀람 → 웃음을 보여 줄 동안은 표정 바꾸기 쉼
+      bdFace('surprise', true); bdSay('앗, 깜빡 졸았어요!');
+      setTimeout(() => { if (!BD.asleep) bdFace('smile'); }, 700);
+      return;
+    }
+    const key = BD.screen, list = BD_LINES[key] || BD_LINES.name;
+    BD.lineI[key] = ((BD.lineI[key] == null ? -1 : BD.lineI[key]) + 1) % list.length;
+    BD.holdUntil = now + BD_FACE_MS / 2;
+    bdFace(['smile', 'bigsmile', 'wink', 'playful'][Math.floor(Math.random() * 4)], true);
+    bdSay(list[BD.lineI[key]]);
+  });
+  // 정답·오답 소리가 나는 곳(퀴즈·매칭·스펠·책 제목 게임)에서 배실이도 반응
+  const ok0 = playCorrectSound, no0 = playWrongSound;
+  playCorrectSound = function () { try { bdReact(true); } catch (e) {} return ok0.apply(this, arguments); };
+  playWrongSound = function () { try { bdReact(false); } catch (e) {} return no0.apply(this, arguments); };
+  const mo = new MutationObserver(bdPlace);
+  BD_WATCH.forEach(id => { const e = document.getElementById(id); if (e) mo.observe(e, { attributes: true, attributeFilter: ['hidden'] }); });
+  setInterval(bdTick, BD_FACE_MS);
+  bdPlace();
+})();
+// 진단 8: 스펠(이지) 빈칸 크기를 글자 수에 맞춤 — 가장 긴 단어는 꼭 한 줄에, 줄바꿈은 단어 사이에서만
+function uiFitBlanks() {
+  const wrap = document.getElementById('easyBlanks'), avail = wrap.clientWidth;
+  if (!avail) return;
+  const cells = [...wrap.children], gaps = cells.filter(c => c.classList.contains('gap')), words = [[]];
+  cells.forEach(c => { if (c.classList.contains('gap')) words.push([]); else words[words.length - 1].push(c); });
+  const G = 4, GAP = 14 + 2 * G, letters = cells.length - gaps.length, longest = Math.max(1, ...words.map(x => x.length));
+  let w = Math.max(18, Math.min(34, Math.floor((avail - (longest - 1) * G) / longest)));
+  const all = Math.floor((avail - (letters - words.length) * G - gaps.length * GAP) / Math.max(1, letters));
+  if (all < w && all >= 24) w = all;   // 24px 이상으로 다 들어가면 전체를 한 줄에
+  wrap.style.setProperty('--bw', w + 'px');
+  let line = 0;
+  words.forEach((wd, i) => {
+    const ww = wd.length * w + Math.max(0, wd.length - 1) * G;
+    if (i && line + GAP + ww > avail) { gaps[i - 1].classList.add('br'); line = ww; } else line += (i ? GAP : 0) + ww;
+  });
+}
+(function uiInit() {
+  // 진단 13: 고른 이름을 분홍으로 (번호 칸을 닫으면 지움)
+  const np = document.getElementById('namepicker'), pp = document.getElementById('pinPrompt');
+  const clear = () => np.querySelectorAll('.setbtn.picked').forEach(b => b.classList.remove('picked'));
+  np.addEventListener('click', e => { const b = e.target.closest('.setbtn'); if (!b) return; clear(); b.classList.add('picked'); });
+  if (pp) new MutationObserver(() => { if (pp.hidden) clear(); }).observe(pp, { attributes: true, attributeFilter: ['hidden'] });
+  if (typeof renderEasyBlanks === 'function') {
+    const reb0 = renderEasyBlanks;
+    renderEasyBlanks = function () { const r = reb0.apply(this, arguments); try { uiFitBlanks(); } catch (e) {} return r; };
+  }
+})();
 </script>
 
 </body></html>
