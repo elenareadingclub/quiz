@@ -30,5 +30,25 @@
   <a class="lv" href="./G/"><span class="badge" style="background:#795548;color:#FFFFFF">G</span><b>G레벨</b></a>
   <a class="lv" href="./H/"><span class="badge" style="background:#D81B60;color:#FFFFFF">H</span><b>H레벨</b></a>
 </div>
+<script>
+// ===== AUTO_UPDATE (요구사항 NF-09): 첫 화면도 새 버전이면 한 번 다시 불러온다
+(function () {
+  var APP_BUILD = '20261018-155401', KEY = 'root_quiz_reload', RETRY = 600000;
+  if (!/github\.io$/.test(location.hostname)) return;
+  function check() {
+    if (document.hidden) return;
+    fetch('version.json?t=' + Date.now(), { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (v) {
+      if (!v || !v.build || String(v.build) === APP_BUILD) return;
+      var t = null; try { t = JSON.parse(sessionStorage.getItem(KEY) || 'null'); } catch (e) {}
+      if (t && t.build === String(v.build) && Date.now() - t.at < RETRY) return;
+      try { sessionStorage.setItem(KEY, JSON.stringify({ build: String(v.build), at: Date.now() })); } catch (e) {}
+      var u = new URL(location.href); u.searchParams.set('v', String(v.build)); location.replace(u.toString());
+    }).catch(function () {});
+  }
+  check();
+  document.addEventListener('visibilitychange', function () { if (!document.hidden) check(); });
+  window.addEventListener('pageshow', function (e) { if (e.persisted) check(); });
+})();
+</script>
 </body>
 </html>

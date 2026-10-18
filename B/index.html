@@ -3430,8 +3430,49 @@ function upBannerPending() {
 }
 // 보내는 중이거나 못 보낸 기록이 있으면 앱을 닫을 때 브라우저가 한 번 묻는다 (폰에서는 안 뜰 수도 있음)
 window.addEventListener('beforeunload', e => {
+  if (window.__appReloading) return;   // 새 버전으로 다시 불러올 때는 묻지 않음 (NF-09)
   if (ONLINE && currentName && (upBusy || upMine().length)) { e.preventDefault(); e.returnValue = ''; }
 });
+
+// ===== AUTO_UPDATE (요구사항 NF-09): 새 버전을 올리면 다음 접속이나 탭으로 돌아올 때 최신 화면으로 바꾼다.
+// 문제를 푸는 중·기록을 보내는 중에는 끊지 않고, 이름·Day 목록 화면에서만 한 번 다시 불러온다.
+// 못 보낸 기록은 이미 기기에 먼저 저장돼 있어 다시 불러와도 사라지지 않는다.
+const APP_BUILD = '20261018-155401';
+const VER_URL = '../version.json';
+const VER_FIRST_MS = 1500, VER_POLL_MS = 600000, VER_TICK_MS = 5000, VER_RETRY_MS = 600000;
+let verWant = '';   // 받아야 할 새 번호 (안전한 때를 기다리는 중)
+function verEnabled() { return /github\.io$/.test(location.hostname); }
+function verSafe() {
+  const shown = id => { const el = document.getElementById(id); return !!el && !el.hidden; };
+  if (upBusy || shown('upPop') || shown('pinPrompt')) return false;
+  return shown('nameScreen') || shown('setListScreen');
+}
+function verKey() { return LEVEL_CODE.toLowerCase() + '_quiz_reload'; }
+function verTried() { try { return JSON.parse(sessionStorage.getItem(verKey()) || 'null'); } catch (e) { return null; } }
+function verGo(url) { location.replace(url); }
+function verMaybeReload() {
+  if (!verWant || verWant === APP_BUILD || !verSafe()) return;
+  const t = verTried();
+  if (t && t.build === verWant && Date.now() - t.at < VER_RETRY_MS) return;   // 같은 번호로 방금 시도했으면 반복하지 않음
+  try { sessionStorage.setItem(verKey(), JSON.stringify({ build: verWant, at: Date.now() })); } catch (e) {}
+  window.__appReloading = true;   // 앱 닫기 경고를 띄우지 않음
+  const u = new URL(location.href);
+  u.searchParams.set('v', verWant);   // 주소를 바꿔 캐시된 옛 파일 대신 새 파일을 받는다 (?student= 등은 그대로)
+  verGo(u.toString());
+}
+async function verCheck() {
+  if (!verEnabled() || document.hidden) return;
+  try {
+    const res = await fetch(VER_URL + '?t=' + Date.now(), { cache: 'no-store' });
+    const v = await res.json();
+    if (v && v.build && String(v.build) !== APP_BUILD) { verWant = String(v.build); verMaybeReload(); }
+  } catch (e) {}
+}
+setTimeout(verCheck, VER_FIRST_MS);
+setInterval(verCheck, VER_POLL_MS);
+setInterval(() => { if (verWant) verMaybeReload(); }, VER_TICK_MS);
+document.addEventListener('visibilitychange', () => { if (!document.hidden) verCheck(); });
+window.addEventListener('pageshow', e => { if (e.persisted) verCheck(); });
 
 async function onlineRenderSubmit() {
   const wrap = document.getElementById('submitBanner');
