@@ -9,7 +9,7 @@
 </head>
 <body>
 <title>ERC 단어 퀴즈</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gaegu:wght@700&display=swap" media="print" onload="this.media='all'">
+<link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 <style>
   /* 시작 화면 배실이 (2026-10-18) */
   :root{--bg:#EEF6FC; --card:#FFFFFF; --ink:#4A3628; --soft:#6B5747; --line:#D9CFC6; --bs-line:#6B5747; color-scheme:only light;}
@@ -28,7 +28,7 @@
   /* 말풍선: 배실이 왼쪽, 꼬리는 배실이 쪽, 눌러도 아래가 눌림, 2.5초 뒤 사라짐 */
   .say{position:absolute; right:98px; top:50%; z-index:5; width:max-content; max-width:calc(100% - 104px); box-sizing:border-box;
     background:var(--card); color:var(--ink); border:2px dashed var(--bs-line); border-radius:18px; padding:8px 14px;
-    font-family:"Gaegu",system-ui,sans-serif; font-weight:700; font-size:20px; line-height:1.25; word-break:keep-all;
+    font-family:var(--f-ui); font-weight:700; font-size:20px; line-height:1.25; word-break:keep-all;
     pointer-events:none; opacity:0; visibility:hidden; transform:translate(6px,-50%); transition:opacity .15s, transform .15s, visibility .15s;}
   .say.on{opacity:1; visibility:visible; transform:translate(0,-50%);}
   .say svg{position:absolute; right:-19px; top:50%; margin-top:-12px; width:20px; height:24px; overflow:visible;}
@@ -39,21 +39,28 @@
   .badge{width:52px; height:52px; border-radius:14px; display:flex; align-items:center; justify-content:center; font-size:28px; font-weight:800;}
   .lv b{font-size:18px;}
   @media (prefers-reduced-motion: reduce){ .bd.hop img{animation:none;} .say{transition:none;} }
+  /* 첫 화면 제목·글꼴·색 되돌리기 (2026-10-19) */
+  :root{--bg:#FBF7F0; --ink:#2B2620; --soft:#6B6254; --line:#E7DECE;}
+  body{font-family:var(--f-ui);}
+  h1{font-size:28px; font-weight:700; letter-spacing:0;}
+  /* 도현체 하나로 (2026-10-19) */
+  :root{--f-ui:"Do Hyeon",-apple-system,"Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",sans-serif;}
+  body{font-synthesis:none;}
 </style>
 <div class="wrap">
   <div class="hero">
-    <div class="tt"><small>판교대장 ERC 학생들을 위한</small><h1>단어 퀴즈</h1></div>
-    <button type="button" class="bd" id="bd" aria-label="배실이 — 누르면 말해요"><img id="bdImg" src="img/baesil/basic.webp" width="88" height="88" alt="" decoding="async"></button>
+    <div class="tt"><h1>ERC 단어 퀴즈</h1></div>
+    <button type="button" class="bd" id="bd" aria-label="캐릭터 — 누르면 말해요"><img id="bdImg" src="img/baesil/basic.webp" width="88" height="88" alt="" decoding="async"></button>
     <div class="say" id="say" aria-live="polite"><span id="sayText"></span><svg viewBox="0 0 20 24" aria-hidden="true"><path d="M1.5 3 Q9 9 19 12 Q9 15 1.5 21"/></svg></div>
   </div>
   <p>내 레벨을 눌러서 시작해요.</p>
   <a class="lv" href="./B/"><span class="badge" style="background:#F39C12;color:#2B2620">B</span><b>B레벨</b></a>
   <a class="lv" href="./C/"><span class="badge" style="background:#F1C40F;color:#2B2620">C</span><b>C레벨</b></a>
-  <a class="lv" href="./D/"><span class="badge" style="background:#27AE60;color:#FFFFFF">D</span><b>D레벨</b></a>
-  <a class="lv" href="./E/"><span class="badge" style="background:#2980B9;color:#FFFFFF">E</span><b>E레벨</b></a>
+  <a class="lv" href="./D/"><span class="badge" style="background:#1D874A;color:#FFFFFF">D</span><b>D레벨</b></a>
+  <a class="lv" href="./E/"><span class="badge" style="background:#277AB0;color:#FFFFFF">E</span><b>E레벨</b></a>
   <a class="lv" href="./F/"><span class="badge" style="background:#2C3373;color:#FFFFFF">F</span><b>F레벨</b></a>
   <a class="lv" href="./G/"><span class="badge" style="background:#795548;color:#FFFFFF">G</span><b>G레벨</b></a>
-  <a class="lv" href="./H/"><span class="badge" style="background:#D81B60;color:#FFFFFF">H</span><b>H레벨</b></a>
+  <a class="lv" href="./H/"><span class="badge" style="background:#8BC34A;color:#2B2620">H</span><b>H레벨</b></a>
 </div>
 <script>
 // ===== 시작 화면 배실이 (2026-10-18): 3초마다 표정, 30초면 졸기, 누르면 말풍선 — 레벨 앱과 같은 규칙
@@ -61,7 +68,7 @@
   var FACE_MS = 3000, SAY_MS = 2500, SLEEP_MS = 30000, TAP_MS = 1000, IMG = 'img/baesil/';
   var IDLE = ['basic', 'smile', 'wink', 'playful', 'happy'], ALL = IDLE.concat(['bigsmile', 'surprise', 'sleepy']);
   // 엘레나 지정 문구 2개는 쓴 그대로
-  var LINES = ['내 레벨을 눌러 봐요!', '오늘도 반가워요!', '나는 배실이에요~', '판교대장 ERC에서 만날까?', '오늘도 잼있겠다', '배시시 ^^*', '아이스크림 먹구 싶다.', '판교반디도서관 가봤어?', '나는 철뚝집이 잴 좋아~', '영어 조아~ >_< !!!', '너도 판교대장초다녀?'];
+  var LINES = ['내 레벨을 눌러 봐요!', '오늘도 반가워요!'];
   var bd = document.getElementById('bd'), img = document.getElementById('bdImg'), say = document.getElementById('say');
   var loaded = { basic: 1 }, faceI = 0, lineI = -1, asleep = false, lastTouch = Date.now(), lastTap = 0, holdUntil = 0, sayT = null;
   function reduced() { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) { return false; } }
@@ -102,7 +109,7 @@
 <script>
 // ===== AUTO_UPDATE (요구사항 NF-09): 첫 화면도 새 버전이면 한 번 다시 불러온다
 (function () {
-  var APP_BUILD = '20261018-235037', KEY = 'root_quiz_reload', RETRY = 600000;
+  var APP_BUILD = '20261019-011239', KEY = 'root_quiz_reload', RETRY = 600000;
   if (!/github\.io$/.test(location.hostname)) return;
   function check() {
     if (document.hidden) return;

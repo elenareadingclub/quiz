@@ -13,7 +13,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Andika:wght@400;700&family=Gaegu:wght@700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Andika:wght@400;700&family=Do+Hyeon&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 <style>
   :root{
     --bg:#FFF8EE; --surface:#FFFFFF; --surface-2:#FFF3E1;
@@ -45,7 +45,7 @@
   .mono{font-family:var(--f-ui);}
 
   header.page{display:flex; flex-direction:column; gap:6px; margin-bottom:22px;}
-  .eyebrow{font-family:var(--f-ui); font-size:12px; letter-spacing:.09em; text-transform:uppercase; color:var(--accent); font-weight:600;}
+  .eyebrow{font-family:var(--f-ui); font-size:12px; letter-spacing:.09em; text-transform:uppercase; color:var(--accent-ink); font-weight:600;}
   header.page h1{font-size:clamp(22px,4vw,27px);}
   .currentnamebadge{
     align-self:flex-start; margin-top:2px;
@@ -100,7 +100,7 @@
 
   button.primary{
     font-family:var(--f-ui); font-weight:700; font-size:15px;
-    background:var(--accent); color:#fff; border:none; border-radius:14px;
+    background:var(--accent); color:var(--on-accent); border:none; border-radius:14px;
     padding:12px 18px; cursor:pointer; margin-top:14px; width:100%;
   }
   button.primary:disabled{background:var(--ink-faint); cursor:not-allowed;}
@@ -218,7 +218,7 @@
   .qnum{font-family:var(--f-ui); font-size:11.5px; color:var(--ink-faint); margin-bottom:6px;}
   .qprompt{font-family:var(--f-ui); font-size:clamp(24px,7vw,34px); font-weight:700; color:var(--ink); margin-bottom:6px; letter-spacing:-.01em; word-break:break-word;}
   .qemoji{font-size:clamp(30px,8vw,44px); line-height:1; margin-bottom:2px;}
-  .qdir{font-size:11.5px; color:var(--accent); margin-bottom:16px;}
+  .qdir{font-size:11.5px; color:var(--accent-ink); margin-bottom:16px;}
   .choices{display:grid; grid-template-columns:1fr 1fr; gap:8px;}
   .choice{display:flex; align-items:center; gap:8px;}
   .cnum{flex-shrink:0; width:34px; height:34px; border-radius:50%; background:var(--accent-soft); border:2px solid var(--accent); color:var(--ink); font-family:var(--f-ui); font-weight:700; font-size:19px; line-height:1; display:inline-flex; align-items:center; justify-content:center;}
@@ -274,7 +274,7 @@
   .nextbtn{
     display:flex; align-items:center; justify-content:center; gap:6px;
     font-family:var(--f-ui); font-weight:700; font-size:15px;
-    background:var(--accent); color:#fff; border:none; border-radius:14px;
+    background:var(--accent); color:var(--on-accent); border:none; border-radius:14px;
     padding:12px 18px; cursor:pointer; margin-top:16px; width:100%;
   }
   .nextbtn .arrow{font-style:normal; font-family:var(--f-ui);}
@@ -471,7 +471,7 @@
   .tile.en{font-family:var(--f-ui); font-weight:700;}
   .tile.sel{border-color:var(--accent); background:var(--accent-soft); color:var(--accent-strong);}
   .tile.done{border-color:var(--accent); background:var(--accent-soft); color:var(--accent-strong); opacity:.55; cursor:default;}
-  .tile.correctflash{border-color:var(--accent); background:var(--accent); color:var(--surface);}
+  .tile.correctflash{border-color:var(--accent); background:var(--accent); color:var(--on-accent);}
   .tile.wrongflash{border-color:var(--danger); background:var(--danger-soft); color:var(--danger);}
   @keyframes tileHintGlow{0%,100%{box-shadow:0 0 0 0 var(--gold-soft);} 50%{box-shadow:0 0 0 8px var(--gold-soft);}}
   .tile.hint{border-color:var(--gold); background:var(--gold-soft); animation:tileHintGlow .7s ease-in-out infinite;}
@@ -694,7 +694,7 @@
   /* 말풍선: 배실이 왼쪽(제목 자리)에만, 꼬리는 배실이 쪽, 눌러도 아래가 눌림 */
   .bdsay{position:absolute; right:calc(100% + 10px); top:50%; z-index:60; width:max-content; max-width:240px; box-sizing:border-box;
     background:var(--surface); color:var(--ink); border:2px dashed var(--bs-line); border-radius:18px; padding:8px 14px;
-    font-family:"Gaegu",system-ui,sans-serif; font-weight:700; font-size:19px; line-height:1.25; word-break:keep-all; text-align:left;
+    font-family:var(--f-ui); font-weight:700; font-size:19px; line-height:1.25; word-break:keep-all; text-align:left;
     pointer-events:none; opacity:0; visibility:hidden; transform:translate(6px,-50%); transition:opacity .15s, transform .15s, visibility .15s;}
   .bdsay.on{opacity:1; visibility:visible; transform:translate(0,-50%);}
   .bdtail{position:absolute; right:-19px; top:50%; margin-top:-12px; width:20px; height:24px; overflow:visible;}
@@ -712,6 +712,40 @@
   .grandcelebrate .gtitle{background:#fff; color:var(--gold-ink); border:3px solid var(--gold); border-radius:24px; padding:10px 22px; text-shadow:none;}
   .grandcelebrate .gsub{background:#fff; color:var(--ink); border-radius:999px; padding:6px 16px;}
   .grandcelebrate .gsub:empty{display:none;}
+  /* 예전 글꼴 (2026-10-19) */
+  :root{--f-ui:"Do Hyeon",-apple-system,"Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",sans-serif;}
+  /* 레벨 테마색 (2026-10-19) */
+  :root{--bg:#F0F1F5; --surface:#FFFFFF; --surface-2:#E6E7EE; --line:#C0C2D5; --ink:#2D2A24; --ink-soft:#6E6255; --ink-faint:#6D6153;
+    --accent:#2C3373; --accent-strong:#1F2757; --accent-soft:#DDE0F5; --accent-ink:#2C3373; --on-accent:#FFFFFF; --pink:#2C3373; --lv:#2C3373; --lv-ink:#FFFFFF;}
+  /* 로딩 그림 (2026-10-19) */
+  .blballs{display:flex; justify-content:center; align-items:flex-end; gap:10px; height:34px;}
+  .blballs i{width:14px; height:14px; border-radius:50%; background:var(--accent); animation:blBall 1s ease-in-out infinite;}
+  .blballs i:nth-child(2){animation-delay:.15s; opacity:.75;}
+  .blballs i:nth-child(3){animation-delay:.3s; opacity:.5;}
+  @keyframes blBall{0%,60%,100%{transform:translateY(0)} 30%{transform:translateY(-18px)}}
+  .blsr{position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap;}
+  @media (prefers-reduced-motion: reduce){ .blballs i{animation:blFade 1.4s ease-in-out infinite;} @keyframes blFade{50%{opacity:.25}} }
+  /* 모드 순서 단계 (2026-10-19) */
+  .modeorder{margin:4px 0 14px; font-size:15px; font-weight:600; color:var(--ink);}
+  #modepicker{grid-template-columns:1fr; row-gap:26px; counter-reset:modestep;}
+  #modepicker > .setbtn{padding-left:56px; min-height:56px;}
+  #modepicker > .setbtn:not([hidden]){counter-increment:modestep;}
+  #modepicker > .setbtn::before{content:counter(modestep); position:absolute; left:12px; top:50%; margin-top:-16px; width:32px; height:32px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center; box-sizing:border-box; border:2px solid var(--accent); background:var(--surface); color:var(--accent-ink);
+    font-family:var(--f-ui); font-size:16px; font-weight:800; line-height:1;}
+  #modepicker > .setbtn.active::before{background:var(--accent); color:var(--on-accent);}
+  #modepicker > .setbtn:has(.donechip:not([hidden]))::before{content:"✓"; background:var(--accent); border-color:var(--accent); color:var(--on-accent);}   /* ✓는 레벨 색, 옆 초록 "완료"는 그대로 (엘레나 2026-10-19) */
+  #modepicker > .setbtn.locked::before{content:"🔒"; border-style:dashed; border-color:var(--line); background:var(--surface); font-size:14px;}
+  #modepicker > .setbtn.active{border-color:var(--accent); background:var(--accent-soft); color:var(--ink); box-shadow:0 0 0 1px var(--accent);}
+  /* 버튼 사이 ↓ 화살표 (보이는 버튼 앞에 하나씩, 첫 버튼은 없음). 잠금 표시는 동그라미 안으로 옮김 */
+  #modepicker > .setbtn.locked::after{content:none;}
+  #modepicker > .setbtn:not([hidden]) ~ .setbtn:not([hidden])::after{content:"↓"; position:absolute; left:20px; top:-25px; width:16px; text-align:center;
+    font-family:var(--f-ui); font-size:18px; font-weight:900; line-height:24px; color:var(--accent-ink); opacity:1; filter:none;}
+  /* 모드 화면 시작 버튼 숨김 (2026-10-19) */
+  #modeScreen #startBtn{display:none;}
+  /* 도현체 하나로 (2026-10-19) */
+  :root{--f-ui:"Do Hyeon",-apple-system,"Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",sans-serif;}
+  body{font-synthesis:none;}
 </style>
 
 <div class="celebratebanner" id="celebrateBanner" hidden>🎉 You did it! 🎉</div>
@@ -797,7 +831,7 @@
     </div>
     <div class="modehero"><div class="mhsub" id="mhsub"></div><div class="mhemoji" id="mhemoji"></div><div class="mhtitle" id="mhtitle"></div></div>
     <div id="warmupWrap"></div>
-    <label>모드를 선택하세요</label>
+    <div class="hint modeorder">하나를 끝내면 다음 활동이 열려요 🔓</div>
     <div class="setpicker" id="modepicker">
       <button class="setbtn active" data-mode="wordcheck">📖 단어확인 <span class="donechip" id="doneWord" hidden>완료</span><span class="dot" id="modeDotWord"></span><span class="repbadge" id="repWord"></span><br><span class="hint" style="margin:0;">뜻 확인 · 발음 듣기</span></button>
       <button class="setbtn" data-mode="quiz">📝 단어 퀴즈 <span class="donechip" id="doneQuiz" hidden>완료</span><span class="dot" id="modeDotQuiz"></span><span class="repbadge" id="repQuiz"></span><br><span class="hint" style="margin:0;">단어 수만큼 4지선다</span></button>
@@ -3195,7 +3229,7 @@ async function renderHallForSet(setNo) {
   const draw = () => {
     if (currentSet !== setNo) return;
     const items = hallCache.items.filter(i => i.set === setNo);
-    box.innerHTML = '<div class="hallttl">🌟 이 Day의 Word Stars' + (items.length ? ' <span class="hallcnt">' + items.length + '</span>' : '') + '</div>' +
+    box.innerHTML = '<div class="hallttl">🌟 이 책의 Word Stars' + (items.length ? ' <span class="hallcnt">' + items.length + '</span>' : '') + '</div>' +
       (items.length
         ? '<div class="hallchips">' + items.map(i => '<span class="hallchip">' + escHtml(nameWithIcon(i.name)) + ' ' + (i.diff === '하드' ? '🔥' : '🐣') + ' <small>' + escHtml(fmtShort(i.date)) + '</small></span>').join('') + '</div>'
         : '<div class="hallnone">스펠 8문제를 한 번도 안 틀리고 맞히면 여기에 이름이 올라가요! ✨</div>');
@@ -3423,8 +3457,8 @@ function flushOutbox() { return upKick({ bg: true }); }
     '.uptime{font-size:12.5px;color:var(--ink-soft);font-variant-numeric:tabular-nums}' +
     '.uplist{list-style:none;margin:14px 0 0;padding:0;text-align:left;display:flex;flex-direction:column;gap:8px}.uplist:empty{display:none}' +
     '.uplist li{background:var(--surface-2);border:1px solid var(--line);border-radius:12px;padding:9px 12px;font-size:13.5px;line-height:1.45;color:var(--ink);word-break:keep-all}' +
-    '.uplist b{display:block;font-size:12.5px;color:var(--accent);margin-bottom:2px}' +
-    '.upok{margin-top:14px;min-width:120px;padding:10px 18px;border:0;border-radius:12px;background:var(--accent);color:var(--surface);font-size:15px;font-weight:700;cursor:pointer}';
+    '.uplist b{display:block;font-size:12.5px;color:var(--accent-ink);margin-bottom:2px}' +
+    '.upok{margin-top:14px;min-width:120px;padding:10px 18px;border:0;border-radius:12px;background:var(--accent);color:var(--on-accent);font-size:15px;font-weight:700;cursor:pointer}';
   document.head.appendChild(css);
   document.body.insertAdjacentHTML('beforeend',
     '<div class="uppop" id="upPop" hidden role="alertdialog" aria-modal="true" aria-live="assertive" aria-labelledby="upTitle">' +
@@ -3490,7 +3524,7 @@ window.addEventListener('beforeunload', e => {
 // ===== AUTO_UPDATE (요구사항 NF-09): 새 버전을 올리면 다음 접속이나 탭으로 돌아올 때 최신 화면으로 바꾼다.
 // 문제를 푸는 중·기록을 보내는 중에는 끊지 않고, 이름·Day 목록 화면에서만 한 번 다시 불러온다.
 // 못 보낸 기록은 이미 기기에 먼저 저장돼 있어 다시 불러와도 사라지지 않는다.
-const APP_BUILD = '20261018-235037';
+const APP_BUILD = '20261019-011239';
 const VER_URL = '../version.json';
 const VER_FIRST_MS = 1500, VER_POLL_MS = 600000, VER_TICK_MS = 5000, VER_RETRY_MS = 600000;
 let verWant = '';   // 받아야 할 새 번호 (안전한 때를 기다리는 중)
@@ -3657,9 +3691,9 @@ function blReduced() { try { return !!(window.matchMedia && matchMedia('(prefers
   document.head.appendChild(css);
   document.body.insertAdjacentHTML('beforeend',
     '<div class="blwrap" id="blWrap" hidden role="status" aria-live="polite">' +
-    '<div class="blbox"><div class="blbubble">난 배실이야~ 안녕 !!<svg class="bstail bstail-l" viewBox="0 0 28 24" aria-hidden="true"><path d="M6 2 Q9 15 1 23 Q18 18 24 2"/></svg></div>' +
-    '<img class="blface" id="blFace" alt="배실이" width="96" height="96" decoding="async">' +
-    '<div class="blload">로딩 중<span class="bldots" aria-hidden="true"><i>.</i><i>.</i><i>.</i></span></div>' +
+    '<div class="blbox">' +
+    '<img class="blface" id="blFace" alt="" width="96" height="96" decoding="async">' +
+    '<div class="blload"><span class="blballs" aria-hidden="true"><i></i><i></i><i></i></span><span class="blsr">로딩 중</span></div>' +
     '<div class="blnote" id="blNote"></div>' +
     '<button type="button" class="exitbtn blback" id="blBack">← 다른 이름</button></div></div>');
   document.getElementById('blBack').addEventListener('click', blCancel);
@@ -3686,7 +3720,7 @@ function blStart(name) {
   face.classList.remove('rest');
   face.src = BL_IMG + BL_FACES[0] + '.webp';
   blFaceT = setInterval(() => { i = (i + 1) % BL_FACES.length; face.src = BL_IMG + BL_FACES[i] + '.webp'; }, blReduced() ? BL_FACE_MS * 2 : BL_FACE_MS);
-  document.getElementById('blNote').textContent = (name ? name + '의 ' : '') + 'Day 목록을 불러오고 있어요';
+  document.getElementById('blNote').textContent = 'F레벨 퀴즈를 불러오고 있어요';   // 엘레나 요청 2026-10-19 (Day는 H레벨만 씀)
   document.getElementById('blWrap').hidden = false;
   hallRefresh();   // Word Stars는 누구나 볼 수 있어 번호 확인을 기다리지 않고 바로 받기 시작
   return blGen;
@@ -3870,23 +3904,23 @@ const BD_FACE_MS = 3000, BD_SAY_MS = 2500, BD_SLEEP_MS = 30000, BD_TAP_MS = 1000
 const BD_IDLE = ['basic', 'smile', 'wink', 'playful', 'happy'];
 const BD_ALL = BD_IDLE.concat(['bigsmile', 'surprise', 'sleepy']);   // 화남·삐짐·슬픔·당황은 쓰지 않음
 const BD_LINES = {
-  name: ['오늘도 반가워요!', '같이 단어 공부해요!', '나는 배실이에요~'],
-  days: ['오늘은 어떤 Day 할까요?', '하나씩 차근차근!', '어제보다 한 걸음 더!'],
+  name: ['오늘도 반가워요!', '같이 단어 공부해요!'],
+  days: ['오늘은 어떤 책 할까요?', '하나씩 차근차근!', '어제보다 한 걸음 더!'],
   mode: ['단어확인부터 해 볼까요?', '할 수 있어요!'],
   word: ['소리 내어 읽어 봐요!', '뜻을 떠올려 봐요'],
   quiz: ['집중! 집중!', '천천히 읽어 봐요', '잘하고 있어요!'],   // 퀴즈 중에는 응원만 (답을 알려 주지 않음)
   result: ['오늘도 해냈어요!', '정말 멋져요!']
 };
 // 엘레나 지정 문구 (2026-10-18 밤, 쓴 그대로): 모든 화면에서 누르면 나오는 말에 더함
-const BD_ELENA = ['판교대장 ERC에서 만날까?', '오늘도 잼있겠다', '배시시 ^^*', '아이스크림 먹구 싶다.', '판교반디도서관 가봤어?', '나는 철뚝집이 잴 좋아~', '영어 조아~ >_< !!!', '너도 판교대장초다녀?'];
+const BD_ELENA = [];   // 엘레나 요청 2026-10-19: 잡담 대사는 모두 지움 (나중에 다시 넣을 수 있게 자리만 둠)
 Object.keys(BD_LINES).forEach(k => BD_LINES[k].push(...BD_ELENA));
 const BD_OK_LINES = ['맞았어요!', '최고예요!', '딩동댕~ 정답!', '우와, 천재예요?', '척척박사네요!', '바로 그거예요!', '머리가 반짝반짝!', '역시 내 친구!', '완전 잘했어요 >_<', '박수 짝짝짝!'];   // 정답 칭찬
 // 퀴즈 반응 대사 (엘레나 요청 2026-10-18 밤) — 답은 알려 주지 않음
 const BD_NO_LINES = ['괜찮아요, 다시 해 봐요!', '아깝다~ 거의 다 왔어요!', '틀려도 괜찮아요!', '한 번 더 보면 기억나요!', '실수는 배우는 거예요!', '다음엔 맞힐 거예요!', '천천히 다시 생각해 봐요'];   // 틀렸을 때 응원
 const BD_COMBO_LINES = ['연속 정답! 불타올라요!', '멈출 수가 없어요!', '콤보 최고예요!', '오늘 컨디션 최고!'];   // 매칭 연속 정답
 const BD_HURRY_LINES = ['시간이 얼마 안 남았어요!', '얼른얼른~ 할 수 있어요!', '마지막까지 파이팅!'];   // 매칭 20초 남음
-const BD_IDLE_LINES = ['어떤 짝일까요? 눌러 봐요!', '쉬운 것부터 골라 봐요!', '하나만 골라 봐요!', '배실이가 기다려요~'];   // 매칭 8초 동안 안 누름
-const BD_HINT_LINES = ['반짝이는 카드를 봐요!', '배실이가 살짝 알려 줄게요!'];   // 매칭 힌트 카드
+const BD_IDLE_LINES = ['어떤 짝일까요? 눌러 봐요!', '쉬운 것부터 골라 봐요!', '하나만 골라 봐요!', '내가 기다려요~'];   // 매칭 8초 동안 안 누름
+const BD_HINT_LINES = ['반짝이는 카드를 봐요!', '내가 살짝 알려 줄게요!'];   // 매칭 힌트 카드
 const BD_WATCH = ['nameScreen', 'setListScreen', 'modeScreen', 'tgCard', 'quizCard', 'spellCard', 'matchCard', 'resultCard', 'wordPreviewOverlay', 'hwOverlay', 'blWrap', 'upPop', 'teacherPanel'];
 const BD = { screen: '', faceI: 0, lineI: {}, okI: 0, asleep: false, lastTouch: Date.now(), lastTap: 0, holdUntil: 0, sayT: null, broken: false, loaded: new Set(['basic']), pickI: {}, cueAt: {} };
 function bdVis(id) { const e = document.getElementById(id); return !!e && !e.hidden; }
@@ -3963,7 +3997,7 @@ function bdCue(face, list) {   // 매칭 콤보·시간 부족·응답 없음·�
 }
 (function bdInit() {
   document.querySelector('header.page').insertAdjacentHTML('beforeend',
-    '<div class="bd at-head" id="bd" hidden><button type="button" class="bdbtn" id="bdBtn" aria-label="배실이 — 누르면 말해요">' +
+    '<div class="bd at-head" id="bd" hidden><button type="button" class="bdbtn" id="bdBtn" aria-label="캐릭터 — 누르면 말해요">' +
     '<img id="bdImg" alt="" width="56" height="56" decoding="async" data-face="basic"></button>' +
     '<div class="bdsay" id="bdSay" aria-live="polite"><span id="bdSayText"></span>' +
     '<svg class="bdtail" viewBox="0 0 20 24" aria-hidden="true"><path d="M1.5 3 Q9 9 19 12 Q9 15 1.5 21"/></svg></div></div>');
