@@ -4754,7 +4754,7 @@ window.addEventListener('beforeunload', e => {
 // ===== AUTO_UPDATE (요구사항 NF-09): 새 버전을 올리면 다음 접속이나 탭으로 돌아올 때 최신 화면으로 바꾼다.
 // 문제를 푸는 중·기록을 보내는 중에는 끊지 않고, 이름·Day 목록 화면에서만 한 번 다시 불러온다.
 // 못 보낸 기록은 이미 기기에 먼저 저장돼 있어 다시 불러와도 사라지지 않는다.
-const APP_BUILD = '20261018-233045';
+const APP_BUILD = '20261018-235037';
 const VER_URL = '../version.json';
 const VER_FIRST_MS = 1500, VER_POLL_MS = 600000, VER_TICK_MS = 5000, VER_RETRY_MS = 600000;
 let verWant = '';   // 받아야 할 새 번호 (안전한 때를 기다리는 중)
@@ -5148,13 +5148,17 @@ const BD_LINES = {
   result: ['오늘도 해냈어요!', '정말 멋져요!']
 };
 // 엘레나 지정 문구 (2026-10-18 밤, 쓴 그대로): 모든 화면에서 누르면 나오는 말에 더함
-const BD_ELENA = ['판교대장 ERC에서 만날까?', '오늘도 잼있겠다'];
+const BD_ELENA = ['판교대장 ERC에서 만날까?', '오늘도 잼있겠다', '배시시 ^^*', '아이스크림 먹구 싶다.', '판교반디도서관 가봤어?', '나는 철뚝집이 잴 좋아~', '영어 조아~ >_< !!!', '너도 판교대장초다녀?'];
 Object.keys(BD_LINES).forEach(k => BD_LINES[k].push(...BD_ELENA));
-// 계획 2-3: 퀴즈 중 말에 이 레벨 퀴즈의 답·뜻이 들어가면 퀴즈 화면에서만 뺌 (예: D 'today = 오늘'과 '오늘도 잼있겠다')
-try { const ans = []; QUIZZES.forEach(z => z.questions.forEach(x => [x.correct, x.prompt, ...(x.choices || [])].forEach(a => { if (a && a.length > 1) ans.push(a); }))); BD_LINES.quiz = BD_LINES.quiz.filter(l => !ans.some(a => l.includes(a))); } catch (e) {}
-const BD_OK_LINES = ['맞았어요!', '최고예요!'];
+const BD_OK_LINES = ['맞았어요!', '최고예요!', '딩동댕~ 정답!', '우와, 천재예요?', '척척박사네요!', '바로 그거예요!', '머리가 반짝반짝!', '역시 내 친구!', '완전 잘했어요 >_<', '박수 짝짝짝!'];   // 정답 칭찬
+// 퀴즈 반응 대사 (엘레나 요청 2026-10-18 밤) — 답은 알려 주지 않음
+const BD_NO_LINES = ['괜찮아요, 다시 해 봐요!', '아깝다~ 거의 다 왔어요!', '틀려도 괜찮아요!', '한 번 더 보면 기억나요!', '실수는 배우는 거예요!', '다음엔 맞힐 거예요!', '천천히 다시 생각해 봐요'];   // 틀렸을 때 응원
+const BD_COMBO_LINES = ['연속 정답! 불타올라요!', '멈출 수가 없어요!', '콤보 최고예요!', '오늘 컨디션 최고!'];   // 매칭 연속 정답
+const BD_HURRY_LINES = ['시간이 얼마 안 남았어요!', '얼른얼른~ 할 수 있어요!', '마지막까지 파이팅!'];   // 매칭 20초 남음
+const BD_IDLE_LINES = ['어떤 짝일까요? 눌러 봐요!', '쉬운 것부터 골라 봐요!', '하나만 골라 봐요!', '배실이가 기다려요~'];   // 매칭 8초 동안 안 누름
+const BD_HINT_LINES = ['반짝이는 카드를 봐요!', '배실이가 살짝 알려 줄게요!'];   // 매칭 힌트 카드
 const BD_WATCH = ['nameScreen', 'setListScreen', 'modeScreen', 'tgCard', 'quizCard', 'spellCard', 'matchCard', 'resultCard', 'wordPreviewOverlay', 'hwOverlay', 'blWrap', 'upPop', 'teacherPanel'];
-const BD = { screen: '', faceI: 0, lineI: {}, okI: 0, asleep: false, lastTouch: Date.now(), lastTap: 0, holdUntil: 0, sayT: null, broken: false, loaded: new Set(['basic']) };
+const BD = { screen: '', faceI: 0, lineI: {}, okI: 0, asleep: false, lastTouch: Date.now(), lastTap: 0, holdUntil: 0, sayT: null, broken: false, loaded: new Set(['basic']), pickI: {}, cueAt: {} };
 function bdVis(id) { const e = document.getElementById(id); return !!e && !e.hidden; }
 function bdScreen() {   // 지금 보이는 학생 화면 ('' = 배실이 숨김: 로딩·팝업·선생님 화면)
   if (BD.broken || TEACHER_MODE || bdVis('teacherPanel')) return '';
@@ -5183,7 +5187,7 @@ function bdSay(text) {
   clearTimeout(BD.sayT); BD.sayT = setTimeout(bdHush, BD_SAY_MS);
 }
 function bdReset() {   // 다음 아이에게 앞 아이의 말 순서·표정이 남지 않게 (S-108)
-  BD.faceI = 0; BD.lineI = {}; BD.okI = 0; BD.asleep = false; BD.lastTouch = Date.now(); BD.holdUntil = 0;
+  BD.faceI = 0; BD.lineI = {}; BD.okI = 0; BD.pickI = {}; BD.cueAt = {}; BD.asleep = false; BD.lastTouch = Date.now(); BD.holdUntil = 0;
   bdHush(); bdFace('basic');
 }
 function bdPlace() {   // 화면이 바뀌면 배실이를 그 화면 맨 위 줄로 옮기거나 숨김 (화면당 한 마리)
@@ -5215,7 +5219,17 @@ function bdReact(ok) {   // 정답 → 활짝 웃으며 뜀 + 칭찬, 오답 →
   if (BD.screen !== 'quiz') return;
   BD.asleep = false; BD.lastTouch = Date.now(); BD.holdUntil = Date.now() + BD_FACE_MS / 2;
   if (ok) { bdFace('bigsmile', true); bdSay(BD_OK_LINES[BD.okI++ % BD_OK_LINES.length]); }
-  else { bdHush(); bdFace('wink'); }
+  else { bdFace('wink'); bdSay(bdPick(BD_NO_LINES)); }
+}
+function bdPick(list) {   // 종류마다 차례로 돌림 (같은 말 연달아 안 함)
+  const k = list[0]; BD.pickI[k] = ((BD.pickI[k] == null ? -1 : BD.pickI[k]) + 1) % list.length; return list[BD.pickI[k]];
+}
+function bdCue(face, list) {   // 매칭 콤보·시간 부족·응답 없음·힌트 때 (같은 종류는 4초에 한 번)
+  if (BD.screen !== 'quiz') return;
+  const now = Date.now(), k = list[0];
+  if (now - (BD.cueAt[k] || 0) < 4000) return;
+  BD.cueAt[k] = now; BD.asleep = false; BD.holdUntil = now + BD_FACE_MS / 2;
+  bdFace(face, true); bdSay(bdPick(list));
 }
 (function bdInit() {
   document.querySelector('header.page').insertAdjacentHTML('beforeend',
@@ -5257,6 +5271,11 @@ function bdReact(ok) {   // 정답 → 활짝 웃으며 뜀 + 칭찬, 오답 →
   const ok0 = playCorrectSound, no0 = playWrongSound;
   playCorrectSound = function () { try { bdReact(true); } catch (e) {} return ok0.apply(this, arguments); };
   playWrongSound = function () { try { bdReact(false); } catch (e) {} return no0.apply(this, arguments); };
+  // 매칭게임 반응 (엘레나 요청 2026-10-18 밤): 앱 함수는 그대로 두고 감싸기만 함
+  if (typeof showComboToast === 'function') { const c0 = showComboToast; showComboToast = function () { const r = c0.apply(this, arguments); try { bdCue('bigsmile', BD_COMBO_LINES); } catch (e) {} return r; }; }
+  if (typeof showTimeWarning === 'function') { const t0 = showTimeWarning; showTimeWarning = function () { try { bdCue('surprise', BD_HURRY_LINES); } catch (e) {} return t0.apply(this, arguments); }; }
+  if (typeof triggerSiren === 'function') { const s0 = triggerSiren; triggerSiren = function () { try { if (matchRunning) bdCue('playful', BD_IDLE_LINES); } catch (e) {} return s0.apply(this, arguments); }; }
+  if (typeof showMatchHint === 'function') { const h0 = showMatchHint; showMatchHint = function () { const r = h0.apply(this, arguments); try { BD.cueAt[BD_IDLE_LINES[0]] = 0; bdCue('wink', BD_HINT_LINES); } catch (e) {} return r; }; }
   const mo = new MutationObserver(bdPlace);
   BD_WATCH.forEach(id => { const e = document.getElementById(id); if (e) mo.observe(e, { attributes: true, attributeFilter: ['hidden'] }); });
   setInterval(bdTick, BD_FACE_MS);

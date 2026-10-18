@@ -61,7 +61,7 @@
   var FACE_MS = 3000, SAY_MS = 2500, SLEEP_MS = 30000, TAP_MS = 1000, IMG = 'img/baesil/';
   var IDLE = ['basic', 'smile', 'wink', 'playful', 'happy'], ALL = IDLE.concat(['bigsmile', 'surprise', 'sleepy']);
   // 엘레나 지정 문구 2개는 쓴 그대로
-  var LINES = ['내 레벨을 눌러 봐요!', '오늘도 반가워요!', '나는 배실이에요~', '판교대장 ERC에서 만날까?', '오늘도 잼있겠다'];
+  var LINES = ['내 레벨을 눌러 봐요!', '오늘도 반가워요!', '나는 배실이에요~', '판교대장 ERC에서 만날까?', '오늘도 잼있겠다', '배시시 ^^*', '아이스크림 먹구 싶다.', '판교반디도서관 가봤어?', '나는 철뚝집이 잴 좋아~', '영어 조아~ >_< !!!', '너도 판교대장초다녀?'];
   var bd = document.getElementById('bd'), img = document.getElementById('bdImg'), say = document.getElementById('say');
   var loaded = { basic: 1 }, faceI = 0, lineI = -1, asleep = false, lastTouch = Date.now(), lastTap = 0, holdUntil = 0, sayT = null;
   function reduced() { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) { return false; } }
@@ -102,7 +102,7 @@
 <script>
 // ===== AUTO_UPDATE (요구사항 NF-09): 첫 화면도 새 버전이면 한 번 다시 불러온다
 (function () {
-  var APP_BUILD = '20261018-233045', KEY = 'root_quiz_reload', RETRY = 600000;
+  var APP_BUILD = '20261018-235037', KEY = 'root_quiz_reload', RETRY = 600000;
   if (!/github\.io$/.test(location.hostname)) return;
   function check() {
     if (document.hidden) return;
