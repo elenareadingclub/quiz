@@ -3312,8 +3312,8 @@ function upKick(opt) {
         const item = box[0];
         // 보내는 사이에 다음 기록(예: 마지막 단계 뒤 제출)이 들어오면 '1/2'처럼 바로 고쳐 보인다
         const title = () => { const total = done + upMine().length; return upWant === 'live'
-          ? '선생님께 기록을 보내고 있어요' + (total > 1 ? ' (' + (done + 1) + '/' + total + ')' : '')
-          : '못 보낸 기록 ' + total + '개를 보내고 있어요'; };
+          ? currentName + '의 기록을 선생님께 보내고 있어요' + (total > 1 ? ' (' + (done + 1) + '/' + total + ')' : '')
+          : currentName + '의 못 보낸 기록 ' + total + '개를 보내고 있어요'; };
         if (visible) upPopSending(title());
         const res = await upSendOne(item, ms => { if (visible) { upPopTick(ms); document.getElementById('upTitle').textContent = title(); } });
         if (res.kind === 'ok' || res.kind === 'drop') {
@@ -3326,7 +3326,7 @@ function upKick(opt) {
       }
     } finally { upBusy = false; }
     if (outcome === 'ok') {
-      if (done > 0 && (visible || opt.bg)) upPopDone(upWant === 'live' ? '저장됐어요!' : '못 보냈던 기록을 보냈어요!');
+      if (done > 0 && (visible || opt.bg)) upPopDone(upWant === 'live' ? currentName + '의 기록이 저장됐어요!' : currentName + '의 못 보냈던 기록을 보냈어요!');
     } else {
       if (outcome === 'pin') upPaused = true;
       if (visible) upPopFail(outcome);
@@ -3395,9 +3395,9 @@ function upPopDone(title) {
 function upPopFail(kind) {
   const later = ['[나중에 보낼게요]를 누르면', '기록은 이 기기에 저장돼요. 다음에 인터넷에 연결된 상태로 이 페이지에 다시 들어오면 자동으로 보내요.'];
   if (kind === 'pin') upPopShow('fail', '🔑', '번호 확인이 필요해요', '처음 화면에서 다시 들어와 주세요.', null, '확인');
-  else if (kind === 'busy') upPopShow('fail', '⏳', '기록을 아직 못 보냈어요', '서버가 잠깐 바빠요.',
+  else if (kind === 'busy') upPopShow('fail', '⏳', currentName + '의 기록을 아직 못 보냈어요', '서버가 잠깐 바빠요.',
     [['이 창을 그대로 열어 두면', '잠시 뒤 자동으로 다시 보내요.'], later], '나중에 보낼게요');
-  else upPopShow('fail', '⚠️', '기록을 아직 못 보냈어요', '인터넷연결을 확인해 주세요.',
+  else upPopShow('fail', '⚠️', currentName + '의 기록을 아직 못 보냈어요', '인터넷연결을 확인해 주세요.',
     [['이 창을 그대로 열어 둔 채 인터넷에 연결하면', '자동으로 알아채고 보내요.'], later], '나중에 보낼게요');
 }
 function upPopIsFailOpen() { const pop = document.getElementById('upPop'); return !!pop && !pop.hidden && pop.dataset.state === 'fail'; }
@@ -4161,25 +4161,72 @@ function saveSession(r, pin) {
   try { localStorage.setItem(SESSION_KEY, JSON.stringify({ name: r.name, pin: pin, exp: Date.now() + SESSION_MS })); } catch (e) {}
 }
 function clearSession() { try { localStorage.removeItem(SESSION_KEY); } catch (e) {} }
-async function restoreSession() {
+// ===== WHO_CONTINUE (2026-10-18, 요구사항 S-108): 기억된 로그인은 "OOO 맞아요?" 확인 뒤에만 쓴다 =====
+// - 한 기기를 형제·친구가 같이 쓸 수 있어서, 페이지를 열자마자 자동으로 들어가지 않는다 (S-108 ⓐ)
+// - 아이가 이름을 직접 고르면 확인 상자를 닫고, 기억된 다른 아이의 로그인은 끼어들지 않는다 (S-108 ⓑ)
+// - 못 보낸 기록은 '네, 저예요'로 들어간 뒤에 그 아이 이름으로만 보낸다 (S-108 ⓒ)
+function savedSession() {
   let s = null;
   try { s = JSON.parse(localStorage.getItem(SESSION_KEY) || 'null'); } catch (e) {}
-  if (!s || !s.name || !s.pin || !(s.exp > Date.now())) { clearSession(); return; }
+  if (!s || !s.name || !s.pin || !(s.exp > Date.now())) { clearSession(); return null; }
+  return s;
+}
+function hideWhoBox() { const b = document.getElementById('whoBox'); if (b) b.hidden = true; }
+function restoreSession() {
+  const s = savedSession();
+  if (!s || currentName || pendingName) return;
+  if (!document.getElementById('whoBox')) {
+    const css = document.createElement('style');
+    css.textContent = '.whobox{border:1.5px solid var(--accent);background:var(--accent-soft);border-radius:14px;padding:14px;margin:6px 0 14px;display:flex;flex-direction:column;gap:8px}' +
+      '.whobox[hidden]{display:none}.whotitle{font-size:17px;font-weight:700;color:var(--ink);word-break:keep-all}.whonote{font-size:13px;color:var(--ink-soft)}.whobox button{width:100%;margin:0}';
+    document.head.appendChild(css);
+    document.getElementById('namepicker').insertAdjacentHTML('beforebegin',
+      '<div class="whobox" id="whoBox" hidden><div class="whotitle" id="whoTitle"></div>' +
+      '<div class="whonote">이 기기에서 지난번에 쓴 이름이에요. 내 이름이 아니면 [다른 사람이에요]를 누르고 아래에서 내 이름을 골라요.</div>' +
+      '<button class="primary" id="whoYes">네, 저예요 →</button><button class="secondary" id="whoNo">다른 사람이에요</button>' +
+      '<div class="err" id="whoErr" style="display:none;"></div></div>');
+    document.getElementById('whoYes').addEventListener('click', whoContinue);
+    document.getElementById('whoNo').addEventListener('click', hideWhoBox);
+    // 아이가 이름을 직접 누르면 확인 상자는 닫는다 (S-108 ⓑ)
+    document.getElementById('namepicker').addEventListener('click', e => { if (e.target.closest('.setbtn')) hideWhoBox(); });
+  }
+  document.getElementById('whoTitle').textContent = '👋 ' + s.name + ' 맞아요?';
+  document.getElementById('whoErr').style.display = 'none';
+  document.getElementById('whoBox').hidden = false;
+}
+let whoBusy = false;
+async function whoContinue() {
+  if (whoBusy) return;
+  const s = savedSession();
+  if (!s) { hideWhoBox(); return; }
+  const btn = document.getElementById('whoYes'), err = document.getElementById('whoErr');
+  whoBusy = true; btn.disabled = true; btn.textContent = '확인 중…'; err.style.display = 'none';
   try {
     const r = await relayPost({ action: 'login', level: LEVEL_CODE, name: s.name, pin: s.pin });
-    if (!r.ok) { clearSession(); return; }
-    if (currentName) return; // 그 사이에 직접 로그인했다면 그대로 둔다
+    // 기다리는 사이에 다른 이름을 골랐거나 이미 들어갔으면 끼어들지 않는다 (S-108 ⓑ)
+    if (currentName || (pendingName && pendingName !== s.name) || document.getElementById('whoBox').hidden) return;
+    if (!r.ok) {
+      if (r.error === 'busy' || r.error === 'server_error') { err.textContent = '서버가 잠깐 바빠요. 잠시 뒤 다시 눌러 주세요.'; err.style.display = 'block'; return; }
+      // 번호가 바뀌었거나 잠김·명단에서 빠짐: 기억을 지우고, 번호 문제면 번호를 직접 넣게 한다
+      clearSession(); hideWhoBox();
+      if (r.wrong || r.locked) showPinPrompt(s.name);
+      return;
+    }
     onlinePin = s.pin;
     onlineTrial = !!r.trial;
     onlineClass = r.cls || '';
     if (r.icon) NAME_ICON[r.name] = r.icon;
     currentName = r.name;
+    hideWhoBox(); hidePinPrompt();
     resetIdle();
     upKick({ resume: true });
     openSetList();
-  } catch (e) { /* 인터넷이 없으면 이름 고르는 화면에서 시작 (저장 정보는 30일이 지날 때까지 남겨 둔다) */ }
+  } catch (e) {
+    err.textContent = '인터넷연결을 확인해 주세요.'; err.style.display = 'block';
+  } finally { whoBusy = false; btn.disabled = false; btn.textContent = '네, 저예요 →'; }
 }
 if (ONLINE) restoreSession();
+// ===== /WHO_CONTINUE =====
 
 // ===== TITLE_GAME: 원서 제목 매칭게임 (한글 ↔ 영어, 60초) =====
 const TITLE_KO = {"1-1":"첫 비행","1-2":"세균! 세균! 세균!","2-1":"괴물 예절","2-2":"저 뚱뚱한 모자","3-1":"개구리와 두꺼비는 친구","3-2":"크고 못된 골목대장이 누가 무서워?","4-1":"헬렌 켈러라는 소녀","4-2":"아멜리아 베델리아","5-1":"개는 왜 짖을까요?","5-2":"세상에서 가장 용감한 개","6-1":"멸종 위기 동물","6-2":"공룡 알"};
