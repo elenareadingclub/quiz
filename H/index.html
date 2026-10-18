@@ -16,7 +16,7 @@
 <style>
   :root{
     --bg:#FFF8EE; --surface:#FFFFFF; --surface-2:#FFF3E1;
-    --ink:#2D2A24; --ink-soft:#6E6255; --ink-faint:#A79A87;
+    --ink:#2D2A24; --ink-soft:#6E6255; --ink-faint:#736657;
     --line:#FFE1B8; --accent:#2C3373; --accent-strong:#1F2757; --accent-soft:#DDE0F5;
     --gold:#FFB100; --gold-soft:#FFEFC7; --danger:#EF476F; --danger-soft:#FFE1E9;
     --shadow: 0 2px 4px rgba(255,140,20,0.08), 0 10px 26px -14px rgba(255,120,20,0.28);
@@ -591,6 +591,47 @@
   #wpItems .wpknowbtns{justify-content:center;}
   #wpItems .wpmeaning{font-size:18px; font-weight:800; color:var(--accent-strong);}
   #wpItems .wpknowitem:has(.wpmeaning){border-color:var(--accent); background:var(--accent-soft);}
+
+  /* 학생 화면 2단계 (2026-10-18) */
+  :root{--ok:#3FAE7A; --ok-soft:#E2F5EC; --ok-ink:#1E6E4A; --ok-mark:#2E8B5E; --retry:#F29B4B; --retry-soft:#FDEEDF; --retry-ink:#9A4B0E; --retry-mark:#C2640F;}
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){--ok-soft:#173A2B; --ok-ink:#8FDDB6; --retry-soft:#3E2715; --retry-ink:#F7BC86;} }
+  :root[data-theme="dark"]{--ok-soft:#173A2B; --ok-ink:#8FDDB6; --retry-soft:#3E2715; --retry-ink:#F7BC86;}
+  /* 정답 민트 + ✓, 오답 주황 + ↺ */
+  .choice.correct{background:var(--ok-soft); border:2px solid var(--ok); color:var(--ok-ink); font-weight:700;}
+  .choice.wrong{background:var(--retry-soft); border:2px solid var(--retry); color:var(--retry-ink);}
+  .choice.correct .cnum, .choice.wrong .cnum{font-size:0; color:#fff;}
+  .choice.correct .cnum{background:var(--ok-mark); border-color:var(--ok-mark);}
+  .choice.wrong .cnum{background:var(--retry-mark); border-color:var(--retry-mark);}
+  .choice.correct .cnum::after{content:"✓"; font-size:20px;}
+  .choice.wrong .cnum::after{content:"↺"; font-size:20px;}
+  .choice.needclick{animation-name:pulseOk;}
+  @keyframes pulseOk{0%,100%{box-shadow:0 0 0 0 var(--ok-soft);} 50%{box-shadow:0 0 0 5px var(--ok);}}
+  input.spellinput.correct{border-color:var(--ok); background:var(--ok-soft); color:var(--ok-ink);}
+  input.spellinput.wrong{border-color:var(--retry); background:var(--retry-soft); color:var(--retry-ink);}
+  .spellfeedback.correct{background:var(--ok-soft); color:var(--ok-ink);}
+  .spellfeedback.wrong{background:var(--retry-soft); color:var(--retry-ink);}
+  .tile.correctflash{border-color:var(--ok); background:var(--ok-soft); color:var(--ok-ink);}
+  .tile.wrongflash{border-color:var(--retry); background:var(--retry-soft); color:var(--retry-ink);}
+  .matchoops{min-height:26px; margin:-4px 0 6px; text-align:center; font-size:15px; font-weight:700; color:var(--retry-ink); opacity:0; transition:opacity .15s;}
+  .matchoops.on{opacity:1;}
+  /* 폰에서 퀴즈 보기는 한 줄에 하나 */
+  @media (max-width:480px){ .choices{grid-template-columns:1fr;} }
+  /* 시작 버튼: 모드를 고르면 바로 보이게 화면 아래에 붙여 둠 */
+  #startBtn{position:sticky; bottom:calc(10px + env(safe-area-inset-bottom)); z-index:5; box-shadow:0 0 0 8px var(--surface);}
+  /* 잠긴 모드: 흐리게(대비 낮음) 대신 점선 + 🔒 */
+  .setbtn{position:relative;}
+  .setbtn.locked{opacity:1; filter:none; background:var(--surface-2); border-style:dashed; color:var(--ink-soft);}
+  .setbtn.locked::after{content:"🔒"; position:absolute; top:8px; right:10px; font-size:15px;}
+  /* 누르는 곳 44px 이상 */
+  .exitbtn{display:inline-flex; align-items:center; min-height:44px; padding:8px 14px; font-size:14px;}
+  button.secondary, .wpbtn, .diffbtn, .tile, .wpnav button{min-height:44px;}
+  .soundtoggle{width:44px; height:44px;}
+  .wpspeak{min-width:44px; min-height:44px; display:inline-flex; align-items:center; justify-content:center; font-size:16px; padding:0;}
+  #wpItems .wpspeak{top:2px; right:2px;}
+  .easyTile{width:44px;}
+  /* 영어 음성 안내: 아래 버튼을 가리지 않게 위쪽에, 눌러도 통과 */
+  .ttsnotice{bottom:auto; top:calc(8px + env(safe-area-inset-top)); left:16px; right:16px; transform:none; margin:0 auto; width:fit-content; pointer-events:none;}
+  @media (prefers-reduced-motion: reduce){ .choice.needclick{animation:none;} }
 </style>
 
 <div class="celebratebanner" id="celebrateBanner" hidden>🎉 You did it! 🎉</div>
@@ -741,6 +782,7 @@
     <div class="sirenBanner" id="sirenBanner" hidden>🚨 빨리 눌러요! 🚨</div>
     <div class="timeWarnBanner" id="timeWarnBanner" hidden>⏰ 20초 남았어요!</div>
     <div class="streakrow" id="streakRow" hidden>🔥 <span id="streakNum">0</span>연속!</div>
+    <div class="matchoops" id="matchOops" aria-live="polite"></div>
     <div class="matchgrid" id="matchGrid"></div>
   </div>
 
@@ -1298,6 +1340,15 @@ const OOPS_MSGS = ['앗!', '아이쿠~', '다시 다시!', '괜찮아, 힘내!']
 let matchWrongStreak = 0;
 let matchNewRank = 0;
 function pickMsg(list) { return list[Math.floor(Math.random() * list.length)]; }
+// 틀렸을 때 문구는 카드를 가리지 않게 카드 위 칸에 (진단 4번)
+function showMatchOops(main, sub) {
+  const el = document.getElementById('matchOops');
+  if (!el) return;
+  el.innerHTML = '<b>' + main + '</b> ' + sub;
+  el.classList.add('on');
+  clearTimeout(showMatchOops._t);
+  showMatchOops._t = setTimeout(() => el.classList.remove('on'), 1100);
+}
 function showPointPop(anchor, main, sub, cls) {
   if (!anchor || !anchor.getBoundingClientRect) return;
   const pop = document.createElement('div');
@@ -1679,7 +1730,7 @@ function onChoose(e) {
         if (b === btn) b.classList.add('wrong');
       }
     });
-    document.getElementById('qdir').textContent = '정답(초록, 깜빡이는 버튼)을 클릭하면 다음으로 넘어가요';
+    document.getElementById('qdir').textContent = '✓ 표시된 정답을 누르면 다음으로 넘어가요';
     awaitingConfirm = true;
   }
 }
@@ -2086,7 +2137,7 @@ function tryMatch() {
     const hadCombo = matchStreak >= 3;
     matchWrongStreak++;
     matchPoints -= lost;
-    showPointPop(matchSelKo, lost ? '-' + lost : '0', hadCombo ? '콤보가 끊겼어요 💦' : pickMsg(OOPS_MSGS), 'bad');
+    showMatchOops(lost ? '-' + lost : '0', hadCombo ? '콤보가 끊겼어요 💦' : pickMsg(OOPS_MSGS));
     updateMatchHud();
     updateStreak();
     matchSelEn.classList.add('wrongflash'); matchSelKo.classList.add('wrongflash');
@@ -3043,8 +3094,7 @@ async function renderHallForSet(setNo) {
     box = document.createElement('div');
     box.id = 'hallBox';
     box.className = 'hallbox';
-    const w = document.getElementById('warmupWrap');
-    w.parentNode.insertBefore(box, w);
+    document.getElementById('startBtn').after(box);
   }
   try {
     if (Date.now() - hallCache.at > 60000) {
