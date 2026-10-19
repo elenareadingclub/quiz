@@ -742,8 +742,8 @@
   /* 예전 글꼴 (2026-10-19) */
   :root{--f-ui:"Do Hyeon",-apple-system,"Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",sans-serif;}
   /* 레벨 테마색 (2026-10-19) */
-  :root{--bg:#F6F3F2; --surface:#FFFFFF; --surface-2:#EFEBE9; --line:#D7CCC8; --ink:#2D2A24; --ink-soft:#6E6255; --ink-faint:#736657;
-    --accent:#795548; --accent-strong:#5D4037; --accent-soft:#EFE6E1; --accent-ink:#795548; --on-accent:#FFFFFF; --pink:#795548; --lv:#795548; --lv-ink:#FFFFFF;}
+  :root{--bg:#FEF7EF; --surface:#FFFFFF; --surface-2:#FCEFE2; --line:#F0CFB0; --ink:#2D2A24; --ink-soft:#6E6255; --ink-faint:#736657;
+    --accent:#A5653A; --accent-strong:#87512D; --accent-soft:#FAE7D4; --accent-ink:#87512D; --on-accent:#FFFFFF; --pink:#A5653A; --lv:#A5653A; --lv-ink:#FFFFFF;}
   /* 로딩 그림 (2026-10-19) */
   .blballs{display:flex; justify-content:center; align-items:flex-end; gap:10px; height:34px;}
   .blballs i{width:14px; height:14px; border-radius:50%; background:var(--accent); animation:blBall 1s ease-in-out infinite;}
@@ -3597,7 +3597,7 @@ window.addEventListener('beforeunload', e => {
 // ===== AUTO_UPDATE (요구사항 NF-09): 새 버전을 올리면 다음 접속이나 탭으로 돌아올 때 최신 화면으로 바꾼다.
 // 문제를 푸는 중·기록을 보내는 중에는 끊지 않고, 이름·Day 목록 화면에서만 한 번 다시 불러온다.
 // 못 보낸 기록은 이미 기기에 먼저 저장돼 있어 다시 불러와도 사라지지 않는다.
-const APP_BUILD = '20261019-011239';
+const APP_BUILD = '20261019-194636';
 const VER_URL = '../version.json';
 const VER_FIRST_MS = 1500, VER_POLL_MS = 600000, VER_TICK_MS = 5000, VER_RETRY_MS = 600000;
 let verWant = '';   // 받아야 할 새 번호 (안전한 때를 기다리는 중)
