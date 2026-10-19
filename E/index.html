@@ -750,6 +750,44 @@
   /* 도현체 하나로 (2026-10-19) */
   :root{--f-ui:"Do Hyeon",-apple-system,"Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",sans-serif;}
   body{font-synthesis:none;}
+  /* 사이트워드 v2 */
+  .swsent{font-size:18px; line-height:1.7; margin:8px 0 14px; text-align:center; overflow-wrap:anywhere;}
+  .swsent.big{font-size:22px; font-weight:700;}
+  .swfill{display:inline-block; min-width:3.2em; border-bottom:3px solid var(--accent); padding:0 4px; color:var(--accent-strong); font-weight:800;}
+  .swfill.ok,.swfill.done{background:var(--accent-soft); border-radius:6px;}
+  .swlist{display:flex; flex-direction:column; gap:6px; margin:12px 0 16px; text-align:left;}
+  .swlist .swsent{font-size:15px; margin:0; text-align:left;}
+  .swchoices{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
+  .swword{padding:12px 6px;}
+  .swword b{font-size:22px;}
+  .suword.big.swletters{display:flex; flex-wrap:wrap; justify-content:center; align-items:center; gap:2px; letter-spacing:.02em; font-size:clamp(28px,9vw,44px); margin:6px 0;}
+  .swinp{width:1.3em; height:1.4em; text-align:center; font:inherit; font-weight:800; border:3px solid var(--accent); border-radius:10px; background:var(--surface); color:var(--ink); text-transform:lowercase; margin:0 3px; padding:0;}
+  .swinp.ok{background:var(--accent-soft);}
+  .swinp.no{border-color:var(--danger); background:var(--danger-soft);}
+
+  /* 사이트워드 단계 (5번째) */
+  .swshead{font-family:var(--f-ui); font-weight:800; font-size:18px; margin:6px 0 4px;}
+  .swshead small{font-weight:600; color:var(--ink-soft); font-size:13px;}
+  .swsdir{font-size:14px; color:var(--ink-soft); margin:0 0 14px; line-height:1.55;}
+  .swsent{font-size:18px; line-height:1.7; margin:8px 0 14px; text-align:center; overflow-wrap:anywhere;}
+  .swsent.big{font-size:22px; font-weight:700;}
+  .swfill{display:inline-block; min-width:3.2em; border-bottom:3px solid var(--accent); padding:0 4px; color:var(--accent-strong); font-weight:800;}
+  .swfill.ok,.swfill.done{background:var(--accent-soft); border-radius:6px;}
+  .swlist{display:flex; flex-direction:column; gap:6px; margin:12px 0 16px; text-align:left;}
+  .swlist .swsent{font-size:15px; margin:0; text-align:left;}
+  .swchoices{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:6px;}
+  .swbtn{border:3px solid var(--line); background:var(--surface); color:var(--ink); border-radius:18px; padding:12px 6px; cursor:pointer; font-family:inherit; font-size:22px; font-weight:800; min-width:0;}
+  .swbtn.ok{border-color:var(--accent); background:var(--accent-soft);}
+  .swbtn.no{border-color:var(--danger); background:var(--danger-soft);}
+  .swplay{display:flex; flex-direction:column; align-items:center; gap:6px; margin:10px 0 16px;}
+  .swletters{display:flex; flex-wrap:wrap; justify-content:center; align-items:center; gap:2px; letter-spacing:.02em; font-family:var(--f-ui); font-weight:800; font-size:clamp(28px,9vw,44px); margin:6px 0;}
+  .swinp{width:1.3em; height:1.4em; text-align:center; font:inherit; font-weight:800; border:3px solid var(--accent); border-radius:10px; background:var(--surface); color:var(--ink); text-transform:lowercase; margin:0 3px; padding:0;}
+  .swinp.ok{background:var(--accent-soft);}
+  .swinp.no{border-color:var(--danger); background:var(--danger-soft);}
+  .swspeak{border:2px solid var(--line); background:var(--surface); color:var(--ink); border-radius:999px; padding:7px 16px; font-weight:700; cursor:pointer; font-family:inherit;}
+
+  .swsko{font-size:13px; font-weight:600; color:var(--ink-soft); text-align:center; margin:-6px 0 14px; line-height:1.45; overflow-wrap:anywhere;}
+  .swlist .swsko{text-align:left; margin:2px 0 4px;}
 </style>
 
 <div class="celebratebanner" id="celebrateBanner" hidden>🎉 You did it! 🎉</div>
@@ -840,6 +878,7 @@
       <button class="setbtn active" data-mode="wordcheck">📖 단어확인 <span class="donechip" id="doneWord" hidden>완료</span><span class="dot" id="modeDotWord"></span><span class="repbadge" id="repWord"></span><br><span class="hint" style="margin:0;">뜻 확인 · 발음 듣기</span></button>
       <button class="setbtn" data-mode="quiz">📝 단어 퀴즈 <span class="donechip" id="doneQuiz" hidden>완료</span><span class="dot" id="modeDotQuiz"></span><span class="repbadge" id="repQuiz"></span><br><span class="hint" style="margin:0;">단어 수만큼 4지선다</span></button>
       <button class="setbtn" data-mode="match">🔗 매칭게임 <span class="donechip" id="doneMatch" hidden>완료</span><span class="dot" id="modeDotMatch"></span><br><span class="hint" style="margin:0;">80초 타이머</span></button>
+      <button class="setbtn" data-mode="sight">🔊 사이트워드 <span class="donechip" id="doneSight" hidden>완료</span><span class="dot" id="modeDotSight"></span><br><span class="hint" style="margin:0;">문장 빈칸 · 글자 쓰기</span></button>
       <button class="setbtn" data-mode="spell">✏️ 스펠쓰기 <span class="donechip" id="doneSpell" hidden>완료</span><span class="dot" id="modeDotSpell"></span><br><span class="hint" style="margin:0;">8문항 타이핑</span></button>
     </div>
     <div class="hint" id="modeLockNote" hidden style="color:var(--danger);font-weight:700;margin:-8px 0 10px;">🔒 단어확인을 먼저 해요! 뜻 확인을 모두 누르면 열려요</div>
@@ -851,6 +890,11 @@
   <div class="card" id="tgCard" hidden>
     <button class="exitbtn" id="tgExitBtn" aria-label="그만하고 목록으로">← 그만하기</button>
     <div id="tgBody"></div>
+  </div>
+
+  <div class="card" id="swsCard" hidden>
+    <button class="exitbtn" id="swsExitBtn" aria-label="그만하고 모드 선택으로">← 그만하기</button>
+    <div id="swsBody"></div>
   </div>
 
   <div class="card" id="quizCard" hidden>
@@ -1175,6 +1219,7 @@ function hideAllModeCards() {
   document.getElementById('matchCard').hidden = true;
   document.getElementById('spellCard').hidden = true;
   const tgc = document.getElementById('tgCard'); if (tgc) tgc.hidden = true;
+  const swc = document.getElementById('swsCard'); if (swc) swc.hidden = true;
 }
 
 function showScreen(id) {
@@ -1188,7 +1233,7 @@ function showScreen(id) {
 
 async function fetchStudentProgress(name) {
   const progress = {};
-  QUIZZES.forEach(q => progress[q.no] = { wordcheck: false, quiz: false, match: false, spell: false });
+  QUIZZES.forEach(q => progress[q.no] = { wordcheck: false, quiz: false, match: false, sight: false, spell: false });
   if (!db || !name) return progress;
   try {
     const rows = await db.collection('quiz_results').where('name', '==', name).limit(300).get();
@@ -1203,7 +1248,7 @@ async function fetchStudentProgress(name) {
 
 function renderSetList(progress) {
   const items = QUIZZES.map(q => {
-    const p = progress[q.no] || { wordcheck: false, quiz: false, match: false, spell: false };
+    const p = progress[q.no] || { wordcheck: false, quiz: false, match: false, sight: false, spell: false };
     return { no: q.no, title: q.title, p, complete: isSetComplete(q.no, p) };
   });
   items.sort((a, b) => (b.complete ? 1 : 0) - (a.complete ? 1 : 0));
@@ -1420,12 +1465,14 @@ function saveLocalProgressCache(name, progress) {
 function mergeProgress(...sources) {
   const merged = {};
   QUIZZES.forEach(q => {
-    merged[q.no] = { wordcheck: false, quiz: false, match: false, spell: false };
+    merged[q.no] = { wordcheck: false, quiz: false, match: false, sight: false, spell: false };
     sources.forEach(src => {
       const p = src && src[q.no];
       if (!p) return;
-      ['wordcheck', 'quiz', 'match', 'spell'].forEach(k => { if (p[k]) merged[q.no][k] = true; });
+      ['wordcheck', 'quiz', 'match', 'sight', 'spell'].forEach(k => { if (p[k]) merged[q.no][k] = true; });
     });
+    // 사이트워드 단계가 생기기 전에 스펠까지 통과한 책은 사이트워드도 통과로 인정한다
+    if (merged[q.no].spell) merged[q.no].sight = true;
   });
   return merged;
 }
@@ -1439,7 +1486,7 @@ const startBtn = document.getElementById('startBtn');
 function isSetComplete(setNo, p) {
   if (!p) return false;
   if (setNo === 'review6') return !!(p.wordcheck && p.quiz && p.match);
-  return !!(p.wordcheck && p.quiz && p.match && p.spell);
+  return !!(p.wordcheck && p.quiz && p.match && (p.sight || !swsHas(setNo)) && p.spell);
 }
 
 
@@ -1518,7 +1565,7 @@ function quizStartLabel() {
   const q = QUIZZES.find(x => x.no === currentSet);
   return '퀴즈 시작 (' + (q ? Math.min(QUIZ_MAX_Q, q.questions.length) : 15) + '문항)';
 }
-function stageOrder(setNo) { return setNo === 'review6' ? ['wordcheck', 'quiz', 'match'] : ['wordcheck', 'quiz', 'match', 'spell']; }
+function stageOrder(setNo) { return setNo === 'review6' ? ['wordcheck', 'quiz', 'match'] : (swsHas(setNo) ? ['wordcheck', 'quiz', 'match', 'sight', 'spell'] : ['wordcheck', 'quiz', 'match', 'spell']); }
 // 앞 단계를 통과했거나, 이미 이 단계나 그 뒤 단계를 통과한 기록이 있으면 열려 있다
 function modeUnlocked(setNo, m) {
   const order = stageOrder(setNo);
@@ -1533,12 +1580,13 @@ function firstOpenStage(setNo) {
   return 'quiz';
 }
 function startLabelFor(m) {
-  return m === 'wordcheck' ? '단어확인 시작 (뜻 확인)' : m === 'quiz' ? quizStartLabel() : m === 'spell' ? '스펠쓰기 시작 (8문항)' : '매칭게임 시작 (80초)';
+  return m === 'wordcheck' ? '단어확인 시작 (뜻 확인)' : m === 'quiz' ? quizStartLabel() : m === 'sight' ? '사이트워드 시작 (' + (SIGHT_INDEX[currentSet] || 0) + '문장)' : m === 'spell' ? '스펠쓰기 시작 (8문항)' : '매칭게임 시작 (80초)';
 }
 const LOCK_TEXT = {
   quiz: '🔒 단어확인을 먼저 끝내요! 뜻 확인을 모두 누르면 열려요',
   match: '🔒 단어 퀴즈를 통과하면 매칭게임이 열려요 (70% 이상)',
-  spell: '🔒 매칭게임을 통과하면 스펠쓰기가 열려요 (70% 이상)'
+  sight: '🔒 매칭게임을 통과하면 사이트워드가 열려요 (70% 이상)',
+  get spell() { return swsHas(currentSet) ? '🔒 사이트워드를 통과하면 스펠쓰기가 열려요 (70% 이상)' : '🔒 매칭게임을 통과하면 스펠쓰기가 열려요 (70% 이상)'; }   // E: 사이트워드가 있는 책만 5단계
 };
 function wordcheckDone(setNo) {
   const p = studentProgress[setNo];
@@ -1552,7 +1600,7 @@ function refreshModeLocks() {
     c.setAttribute('aria-disabled', locked ? 'true' : 'false');
   });
   const pp = studentProgress[currentSet] || {};
-  [['Word', 'wordcheck'], ['Quiz', 'quiz'], ['Match', 'match'], ['Spell', 'spell']].forEach(([id, k]) => { const c = document.getElementById('done' + id); if (c) c.hidden = !pp[k]; });
+  [['Word', 'wordcheck'], ['Quiz', 'quiz'], ['Match', 'match'], ['Sight', 'sight'], ['Spell', 'spell']].forEach(([id, k]) => { const c = document.getElementById('done' + id); if (c) c.hidden = !pp[k]; });
   const dot = document.getElementById('modeDotWord');
   if (dot) dot.className = 'dot' + (wc ? ' pass' : '');
   refreshRepBadges();
@@ -1582,9 +1630,13 @@ function openModeScreen(setNo) {
   document.getElementById('modeLockNote').hidden = true;
   const spellBtnEl = [...modepicker.children].find(c => c.dataset.mode === 'spell');
   spellBtnEl.hidden = (setNo === 'review6');
-  const p = studentProgress[setNo] || { wordcheck: false, quiz: false, match: false, spell: false };
+  const p = studentProgress[setNo] || { wordcheck: false, quiz: false, match: false, sight: false, spell: false };
   document.getElementById('modeDotQuiz').className = 'dot' + (p.quiz ? ' pass' : '');
   document.getElementById('modeDotMatch').className = 'dot' + (p.match ? ' pass' : '');
+  document.getElementById('modeDotSight').className = 'dot' + (p.sight ? ' pass' : '');
+  const sightBtnEl = [...modepicker.children].find(c => c.dataset.mode === 'sight');
+  if (sightBtnEl) sightBtnEl.hidden = !swsHas(setNo);
+  if (swsHas(setNo)) setTimeout(() => { loadSight().catch(() => {}); }, 1500);   // 문장 미리 받기
   document.getElementById('modeDotSpell').className = 'dot' + (p.spell ? ' pass' : '');
   refreshModeLocks();
   if (ONLINE) renderHallForSet(setNo);
@@ -1683,7 +1735,7 @@ modepicker.addEventListener('click', e => {
   document.getElementById('modeLockNote').hidden = true;
   mode = btn.dataset.mode;
   [...modepicker.children].forEach(c => c.classList.toggle('active', c === btn));
-  startBtn.textContent = mode === 'wordcheck' ? '단어확인 시작 (뜻 확인)' : mode === 'quiz' ? quizStartLabel() : mode === 'spell' ? '스펠쓰기 시작 (8문항)' : '매칭게임 시작 (80초)';
+  startBtn.textContent = mode === 'sight' ? startLabelFor('sight') : mode === 'wordcheck' ? '단어확인 시작 (뜻 확인)' : mode === 'quiz' ? quizStartLabel() : mode === 'spell' ? '스펠쓰기 시작 (8문항)' : '매칭게임 시작 (80초)';
   loadBoard();
   startBtn.click();   // 모드 버튼을 누르면 [시작]을 따로 누르지 않아도 바로 시작 (엘레나 결정 2026-10-18)
 });
@@ -1697,6 +1749,9 @@ startBtn.addEventListener('click', () => {
   hideAllModeCards();
   if (mode === 'quiz') {
     startQuizRound();
+  } else if (mode === 'sight') {
+    document.getElementById('swsCard').hidden = false;
+    swsStageStart();
   } else if (mode === 'spell') {
     document.getElementById('spellCard').hidden = false;
     startSpell();
@@ -1906,10 +1961,10 @@ const PASS_PCT = 70;
 function configureNextModeBtn(fromMode) {
   const btn = document.getElementById('nextModeBtn');
   // review6 (과거형) has no spelling mode, so match is its last step
-  const chain = currentSet === 'review6' ? { quiz: 'match' } : { quiz: 'match', match: 'spell' };
+  const chain = currentSet === 'review6' ? { quiz: 'match' } : (swsHas(currentSet) ? { quiz: 'match', match: 'sight' } : { quiz: 'match', match: 'spell' });
   const next = chain[fromMode];
   if (!next || !modeUnlocked(currentSet, next)) { btn.hidden = true; return; }
-  const labels = { match: '다음: 매칭게임 →', spell: '다음: 스펠쓰기 →' };
+  const labels = { match: '다음: 매칭게임 →', sight: '다음: 사이트워드 →', spell: '다음: 스펠쓰기 →' };
   btn.textContent = labels[next];
   btn.hidden = false;
   btn.onclick = () => {
@@ -1920,6 +1975,9 @@ function configureNextModeBtn(fromMode) {
     if (next === 'match') {
       document.getElementById('matchCard').hidden = false;
       startMatch();
+    } else if (next === 'sight') {
+      document.getElementById('swsCard').hidden = false;
+      swsStageStart();
     } else {
       document.getElementById('spellCard').hidden = false;
       startSpell();
@@ -1928,7 +1986,7 @@ function configureNextModeBtn(fromMode) {
 }
 
 function markLocalProgress(setNo, m, passed) {
-  if (!studentProgress[setNo]) studentProgress[setNo] = { wordcheck: false, quiz: false, match: false, spell: false };
+  if (!studentProgress[setNo]) studentProgress[setNo] = { wordcheck: false, quiz: false, match: false, sight: false, spell: false };
   if (passed) {
     studentProgress[setNo][m] = true;
     saveLocalProgressCache(currentName, studentProgress);
@@ -3022,7 +3080,8 @@ function openHwCard() {
   else rows.push(hwStatusRow('1 단어확인 (뜻 확인)', 'todo', '– 아직 안 했어요'));
   rows.push(hwScoreRow('2 단어 퀴즈', last.quiz, prog.quiz, r => r.score + ' / ' + r.total + ' (' + r.pct + '%)' + repTxt('quiz')));
   rows.push(hwScoreRow('3 매칭게임', last.match, prog.match, r => r.score + (r.total ? ' / ' + r.total : '') + '쌍 (' + r.pct + '%)' + (r.points != null ? ' · ⭐' + r.points + '점' : '')));
-  if (!noSpell) rows.push(hwScoreRow('4 스펠쓰기', last.spell, prog.spell, r => r.score + ' / ' + r.total + ' (' + r.pct + '%) · ' + (r.diff === 'hard' ? '하드' : '이지')));
+  if (swsHas(currentSet)) rows.push(hwScoreRow('4 사이트워드', last.sight, prog.sight, r => r.score + ' / ' + r.total + ' (' + r.pct + '%)'));
+  if (!noSpell) rows.push(hwScoreRow(swsHas(currentSet) ? '5 스펠쓰기' : '4 스펠쓰기', last.spell, prog.spell, r => r.score + ' / ' + r.total + ' (' + r.pct + '%) · ' + (r.diff === 'hard' ? '하드' : '이지')));
   const done = isSetComplete(currentSet, prog);
   // 오답 노트: 마지막 시도에서 틀린 단어(퀴즈/스펠)와 몰라요로 표시한 단어를 영어-한글 뜻과 함께 모은다
   const tagOf = {};
@@ -3189,7 +3248,7 @@ async function onlineProgress() {
     const r = await relayPost({ action: 'progress', level: LEVEL_CODE, name: currentName, pin: onlinePin });
     if (!r.ok) return null;
     const p = {};
-    (r.complete || []).forEach(s => { p[s] = { wordcheck: true, quiz: true, match: true, spell: true }; });
+    (r.complete || []).forEach(s => { p[s] = { wordcheck: true, quiz: true, match: true, sight: true, spell: true }; });
     return p;
   } catch (e) { return null; }
 }
@@ -3254,6 +3313,9 @@ function buildOnlinePayload(setNo) {
   const noSpell = setNo === 'review6';
   if (!last.quiz || !last.match || (!noSpell && !last.spell)) return null;
   if (!last.quiz.passed || !last.match.passed || (!noSpell && !last.spell.passed)) return null;
+  const sightRec = last.sight || null;
+  // 사이트워드 단계: 이번에 통과했거나, 단계가 생기기 전에 이미 끝낸 책이면 보낼 수 있다
+  if (swsHas(setNo) && (sightRec ? !sightRec.passed : !(studentProgress[setNo] || {}).sight)) return null;
   const wrong = [];
   (last.quiz.wrong || []).forEach(w => wrong.push(w + ' ' + wordKoLookupAny(w) + '(퀴즈)'));
   if (!noSpell) (last.spell.wrong || []).forEach(w => wrong.push(w + ' ' + wordKoLookupAny(w) + '(스펠)'));
@@ -3264,6 +3326,7 @@ function buildOnlinePayload(setNo) {
     quiz: { score: last.quiz.score, pct: last.quiz.pct, reps: last.quiz.reps || reps.quiz || 1 },
     match: { pairs: last.match.score, pct: last.match.pct, points: last.match.points },
     spell: noSpell ? {} : { score: last.spell.score, pct: last.spell.pct, diff: last.spell.diff, clean: !!last.spell.clean },
+    sight: sightRec ? { score: sightRec.score, total: sightRec.total, pct: sightRec.pct } : {},
     wrong: wrong
   };
 }
@@ -3529,7 +3592,7 @@ window.addEventListener('beforeunload', e => {
 // ===== AUTO_UPDATE (요구사항 NF-09): 새 버전을 올리면 다음 접속이나 탭으로 돌아올 때 최신 화면으로 바꾼다.
 // 문제를 푸는 중·기록을 보내는 중에는 끊지 않고, 이름·Day 목록 화면에서만 한 번 다시 불러온다.
 // 못 보낸 기록은 이미 기기에 먼저 저장돼 있어 다시 불러와도 사라지지 않는다.
-const APP_BUILD = '20261019-194636';
+const APP_BUILD = '20261019-231710';
 const VER_URL = '../version.json';
 const VER_FIRST_MS = 1500, VER_POLL_MS = 600000, VER_TICK_MS = 5000, VER_RETRY_MS = 600000;
 let verWant = '';   // 받아야 할 새 번호 (안전한 때를 기다리는 중)
@@ -3594,6 +3657,184 @@ if (ONLINE) {
   setInterval(flushOutbox, 60000);
   document.getElementById('nameBackBtn').addEventListener('click', () => { onlinePin = ''; onlineClass = ''; clearTimeout(idleTimer); clearSession(); });
 }
+
+// ===== SIGHT_STAGE: 사이트워드 단계 (매칭게임 다음, 스펠쓰기 앞) =====
+// s = 빈칸 문장, w = 정답 사이트워드, f = 완성된 문장 (ERC 자료의 Sight Word 파일)
+const SIGHT_INDEX = {"1-1":7,"1-2":8,"2-1":8,"2-2":8,"3-1":8,"3-2":8,"4-1":8,"4-2":8,"5-1":8,"5-2":8,"6-1":8,"6-2":8,"7-1":8,"8-2":8};   // 책별 문장 수 (문장은 sight.js)
+// E: 첫 화면 크기(NF-08) 때문에 문장 자료는 sight.js 로 따로 받는다
+let SIGHT_WORDS = window.SIGHT_WORDS_DATA || {};
+let sightLoad = null;
+function loadSight() {
+  if (window.SIGHT_WORDS_DATA) { SIGHT_WORDS = window.SIGHT_WORDS_DATA; return Promise.resolve(); }
+  if (!sightLoad) sightLoad = new Promise((res, rej) => {
+    const s = document.createElement('script');
+    s.src = 'sight.js?v=' + APP_BUILD;
+    s.onload = () => { SIGHT_WORDS = window.SIGHT_WORDS_DATA || {}; res(); };
+    s.onerror = () => { sightLoad = null; s.remove(); rej(new Error('sight')); };
+    document.head.appendChild(s);
+  });
+  return sightLoad;
+}
+function swsItems(setNo) { return SIGHT_WORDS[setNo] || null; }
+function swsHas(setNo) { return !!SIGHT_INDEX[setNo]; }
+// 첫 빈칸이 문장 맨 앞이면 대문자로 시작해야 한다
+function swsStartsSentence(s) { return /(^|[.?!“"]\s*)$/.test(s.split('_____')[0]); }
+function swsCap(w, cap) { return w === 'I' ? 'I' : (cap ? w.charAt(0).toUpperCase() + w.slice(1) : w); }
+function swsBlankAt(w) { const l = w.toLowerCase(); const m = l.search(/[aeiou]/); return m >= 0 ? m : Math.max(0, l.indexOf('y')); }
+function swsShuffle(a) {
+  const b = a.slice();
+  for (let i = b.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [b[i], b[j]] = [b[j], b[i]]; }
+  return b;
+}
+// 빈칸에 단어를 채운다. 문장 맨 앞이나 마침표 뒤라면 첫 글자를 대문자로 보여 준다
+function swsFill(s, w, cls) {
+  const parts = s.split('_____');
+  let out = parts[0], plain = parts[0];
+  for (let k = 1; k < parts.length; k++) {
+    let shown = '';
+    if (w) {
+      const cap = /(^|[.?!“"]\s*)$/.test(plain);
+      shown = w === 'I' ? 'I' : (cap ? w.charAt(0).toUpperCase() + w.slice(1) : w);
+    }
+    out += '<span class="swfill ' + (cls || '') + '">' + (shown || '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;') + '</span>' + parts[k];
+    plain += (shown || '___') + parts[k];
+  }
+  return out;
+}
+let swsS = null;
+function swsStageStart() {
+  const items = swsItems(currentSet);
+  if (!items) {   // 문장 자료를 아직 못 받았으면 받고 다시 시작
+    if (!swsHas(currentSet)) return;
+    swsS = null;
+    const body = document.getElementById('swsBody'), head = '<div class="swshead">🔊 사이트워드 <small>(' + setLabel(currentSet) + ')</small></div>';
+    document.getElementById('swsCard').hidden = false;
+    body.innerHTML = head + '<div class="swsdir">문장을 불러오는 중이에요…</div>';
+    const want = currentSet;
+    loadSight().then(() => { if (currentSet === want && swsItems(want)) swsStageStart(); })
+      .catch(() => { body.innerHTML = head + '<div class="spellfeedback wrong">앗, 문장을 받지 못했어요. 인터넷 연결을 확인하고 다시 눌러 주세요.</div><button class="primary" id="swsLoadRetry" style="width:100%;margin-top:10px;">다시 받기</button>'; });
+    return;
+  }
+  swsS = { items, order: swsShuffle(items.map((x, i) => i)), i: 0, score: 0, stage: 'word', wrong: 0, locked: false, done: false, missed: [] };
+  document.getElementById('swsCard').hidden = false;
+  swsRender();
+}
+function swsFinish() {
+  const total = swsS.items.length;
+  const pct = Math.round(swsS.score / total * 100);
+  const passed = pct >= PASS_PCT;
+  swsS.done = true; swsS.passed = passed; swsS.pct = pct;
+  recordLast(currentSet, 'sight', { score: swsS.score, total, pct, passed, wrong: swsS.missed });
+  markLocalProgress(currentSet, 'sight', passed);
+  if (swsS.score === total) launchConfetti();
+  else if (passed) playCorrectSound();
+  renderSubmitBanner();
+  checkGrandComplete();
+}
+function swsRender() {
+  const body = document.getElementById('swsBody');
+  const head = '<div class="swshead">🔊 사이트워드 <small>(' + setLabel(currentSet) + ')</small></div>';
+  const items = swsS.items;
+  if (swsS.done) {
+    const total = items.length, perfect = swsS.score === total;
+    const next = swsS.passed && modeUnlocked(currentSet, 'spell') && stageOrder(currentSet).indexOf('spell') >= 0;
+    body.innerHTML = head +
+      '<div class="resultcard" style="text-align:center;margin:10px 0;"><div class="num" style="font-size:40px;font-weight:800;">' + swsS.score + ' / ' + total + '</div>' +
+      '<div class="lbl">한 번에 맞힌 문장</div>' +
+      '<div class="passbadge ' + (swsS.passed ? 'pass' : 'fail') + '">' + (perfect ? '🎉 모두 한 번에 맞혔어요!' : swsS.passed ? '✓ 통과 (' + PASS_PCT + '% 이상)' : '↻ 재도전 필요 (' + PASS_PCT + '% 미만)') + '</div></div>' +
+      '<div class="swlist">' + items.map(x => '<div class="swsent">' + swsFill(x.s, x.w, 'done') + (x.k ? '<div class="swsko">' + x.k + '</div>' : '') + '</div>').join('') + '</div>' +
+      (next ? '<button class="primary" id="swsNext">다음: 스펠쓰기 →</button>' : '') +
+      '<button class="' + (next ? 'secondary' : 'primary') + '" id="swsRetry" style="width:100%;margin-top:10px;">다시 하기</button>' +
+      '<button class="secondary" id="swsBack" style="width:100%;margin-top:10px;">모드 선택으로</button>';
+    return;
+  }
+  const q = items[swsS.order[swsS.i]];
+  swsS.q = q; swsS.locked = false;
+  if (swsS.stage === 'word') swsS.wrong = 0;
+  const prog = '<div class="progress"><span style="width:' + Math.round(swsS.i / items.length * 100) + '%"></span></div><div class="qnum">' + (swsS.i + 1) + ' / ' + items.length + '</div>';
+  if (swsS.stage === 'word') {
+    const words = swsShuffle(items.map(x => x.w).filter((v, k, a) => a.indexOf(v) === k));
+    body.innerHTML = head + prog +
+      '<div class="swsdir">① 빈칸에 들어갈 사이트워드를 골라요</div>' +
+      '<div class="swsent big">' + swsFill(q.s, '') + '</div>' + (q.k ? '<div class="swsko">' + q.k + '</div>' : '') +
+      '<div class="swchoices">' + words.map(c => '<button class="swbtn" data-w="' + c + '">' + swsCap(c, swsStartsSentence(q.s)) + '</button>').join('') + '</div>' +
+      '<div class="spellfeedback" id="swsFb" hidden></div>';
+  } else {
+    const at = swsBlankAt(q.w);
+    const cap = swsStartsSentence(q.s), shown = swsCap(q.w, cap);
+    const letters = shown.split('').map((c, k) => k === at ? '<input id="swsInp" class="swinp"' + (cap && k === 0 ? ' style="text-transform:uppercase"' : '') + ' maxlength="1" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" inputmode="text" aria-label="빈칸 글자 1개">' : '<span>' + c + '</span>').join('');
+    body.innerHTML = head + prog +
+      '<div class="swsdir">② 빈칸에 들어갈 글자 1개를 써요</div>' +
+      '<div class="swsent big">' + swsFill(q.s, q.w, 'ok') + '</div>' + (q.k ? '<div class="swsko">' + q.k + '</div>' : '') +
+      '<div class="swplay"><div class="swletters">' + letters + '</div>' +
+      '<button class="swspeak" id="swsSpeak">🔊 문장 듣기</button></div>' +
+      '<div class="spellfeedback" id="swsFb" hidden></div>';
+    speak(q.f);
+    const inp = document.getElementById('swsInp');
+    if (inp) setTimeout(() => { try { inp.focus(); } catch (e) {} }, 50);
+  }
+}
+function swsAdvance() {
+  swsS.i++;
+  swsS.stage = 'word';
+  if (swsS.i >= swsS.items.length) swsFinish();
+  swsRender();
+}
+document.getElementById('swsExitBtn').addEventListener('click', () => openModeScreen(currentSet));
+document.getElementById('swsBody').addEventListener('click', e => {
+  if (e.target.closest('#swsLoadRetry')) { swsStageStart(); return; }
+  if (!swsS) return;
+  if (e.target.closest('#swsRetry')) { swsStageStart(); return; }
+  if (e.target.closest('#swsBack')) { openModeScreen(currentSet); return; }
+  if (e.target.closest('#swsNext')) {
+    document.getElementById('swsCard').hidden = true;
+    hideAllModeCards();
+    mode = 'spell';
+    [...modepicker.children].forEach(c => c.classList.toggle('active', c.dataset.mode === 'spell'));
+    document.getElementById('spellCard').hidden = false;
+    startSpell();
+    return;
+  }
+  if (swsS.done) return;
+  if (e.target.closest('#swsSpeak')) { speak(swsS.q.f); return; }
+  const b = e.target.closest('.swbtn');
+  if (!b || swsS.locked || swsS.stage !== 'word') return;
+  const fb = document.getElementById('swsFb');
+  if (b.dataset.w === swsS.q.w) {
+    swsS.locked = true;
+    b.classList.add('ok');
+    playCorrectSound();
+    setTimeout(() => { swsS.stage = 'letter'; swsRender(); }, 600);
+  } else {
+    swsS.wrong++;
+    b.classList.add('no');
+    setTimeout(() => b.classList.remove('no'), 500);
+    fb.textContent = '다시 읽어 봐요! 문장에 어울리는 단어는 뭘까요?'; fb.className = 'spellfeedback wrong'; fb.hidden = false;
+    playWrongSound();
+  }
+});
+document.getElementById('swsBody').addEventListener('input', e => {
+  if (!swsS || swsS.stage !== 'letter' || e.target.id !== 'swsInp' || swsS.locked) return;
+  const v = (e.target.value || '').trim().toLowerCase();
+  if (!v) return;
+  const q = swsS.q, right = q.w.charAt(swsBlankAt(q.w)).toLowerCase();
+  const fb = document.getElementById('swsFb');
+  if (v === right) {
+    swsS.locked = true;
+    if (swsS.wrong === 0) swsS.score++; else if (swsS.missed.indexOf(q.w) < 0) swsS.missed.push(q.w);
+    e.target.value = right; e.target.disabled = true; e.target.classList.add('ok');
+    fb.textContent = '✓ ' + q.f; fb.className = 'spellfeedback correct'; fb.hidden = false;
+    playCorrectSound();
+    setTimeout(swsAdvance, 1400);
+  } else {
+    swsS.wrong++;
+    e.target.classList.add('no');
+    setTimeout(() => { e.target.classList.remove('no'); e.target.value = ''; try { e.target.focus(); } catch (x) {} }, 450);
+    fb.textContent = '다시 들어 봐요! ' + q.w + ' 에는 어떤 글자가 들어갈까요?'; fb.className = 'spellfeedback wrong'; fb.hidden = false;
+    playWrongSound();
+    speak(q.w);
+  }
+});
 
 // ===== SESSION_KEEP: 로그인 30일 유지 =====
 const SESSION_KEY = LEVEL_CODE.toLowerCase() + '_quiz_session';
