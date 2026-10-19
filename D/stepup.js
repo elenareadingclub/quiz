@@ -455,8 +455,7 @@ function phPointerMove(e) {
     phDrag.ghost = g;
   }
   if (phDrag.moved && phDrag.ghost) {
-    phDrag.ghost.style.left = e.clientX + 'px';
-    phDrag.ghost.style.top = e.clientY + 'px';
+    if (window.placeFixed) placeFixed(phDrag.ghost, e.clientX, e.clientY); else { phDrag.ghost.style.left = e.clientX + 'px'; phDrag.ghost.style.top = e.clientY + 'px'; }   // 큰 화면 확대 보정 (WIDE_SCREEN)
     const under = document.elementFromPoint ? document.elementFromPoint(e.clientX, e.clientY) : null;
     document.querySelectorAll('.phbucket').forEach(b => b.classList.toggle('over', !!(under && under.closest && under.closest('.phbucket') === b)));
   }
@@ -1025,8 +1024,7 @@ function stPointerMove(e) {
     stDrag.ghost = g;
   }
   if (stDrag.moved && stDrag.ghost) {
-    stDrag.ghost.style.left = e.clientX + 'px';
-    stDrag.ghost.style.top = e.clientY + 'px';
+    if (window.placeFixed) placeFixed(stDrag.ghost, e.clientX, e.clientY); else { stDrag.ghost.style.left = e.clientX + 'px'; stDrag.ghost.style.top = e.clientY + 'px'; }   // 큰 화면 확대 보정 (WIDE_SCREEN)
     const under = document.elementFromPoint ? document.elementFromPoint(e.clientX, e.clientY) : null;
     document.querySelectorAll('.stslot').forEach(b => b.classList.toggle('over', !!(under && under.closest && under.closest('.stslot') === b)));
   }

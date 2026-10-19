@@ -46,6 +46,12 @@
   /* 도현체 하나로 (2026-10-19) */
   :root{--f-ui:"Do Hyeon",-apple-system,"Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",sans-serif;}
   body{font-synthesis:none;}
+  /* ===== WIDE_SCREEN: 컴퓨터·태블릿·전자칠판은 넓게, 핸드폰은 그대로 (엘레나 요청 2026-10-19) ===== */
+  @media (min-width:900px){ .wrap{max-width:720px;} }
+  @media (min-width:1500px) and (min-height:760px){ html{zoom:1.15;} }
+  @media (min-width:1800px) and (min-height:900px){ html{zoom:1.35;} }
+  @media (min-width:2400px) and (min-height:1200px){ html{zoom:1.8;} }
+  @media (min-width:3400px) and (min-height:1700px){ html{zoom:2.4;} }
 </style>
 <div class="wrap">
   <div class="hero">
@@ -109,7 +115,7 @@
 <script>
 // ===== AUTO_UPDATE (요구사항 NF-09): 첫 화면도 새 버전이면 한 번 다시 불러온다
 (function () {
-  var APP_BUILD = '20261019-231710', KEY = 'root_quiz_reload', RETRY = 600000;
+  var APP_BUILD = '20261019-235049', KEY = 'root_quiz_reload', RETRY = 600000;
   if (!/github\.io$/.test(location.hostname)) return;
   function check() {
     if (document.hidden) return;

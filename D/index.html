@@ -961,6 +961,13 @@
   .swlist .swsko{text-align:left; margin:2px 0 4px;}
   /* D2-2 직업 Is she a ~? (2026-10-19) */
   .jyask{font-family:"Andika",var(--f-ui); font-weight:700; font-size:26px; text-align:center; margin:4px 0 6px; overflow-wrap:anywhere;}
+  /* ===== WIDE_SCREEN: 컴퓨터·태블릿·전자칠판은 넓게, 핸드폰은 그대로 (엘레나 요청 2026-10-19) ===== */
+  @media (min-width:900px){ .wrap{max-width:860px;} }
+  @media (min-width:1200px){ .wrap{max-width:960px;} }
+  @media (min-width:1500px) and (min-height:760px){ html{zoom:1.15;} }
+  @media (min-width:1800px) and (min-height:900px){ html{zoom:1.35;} }
+  @media (min-width:2400px) and (min-height:1200px){ html{zoom:1.8;} }
+  @media (min-width:3400px) and (min-height:1700px){ html{zoom:2.4;} }
 </style>
 
 <div class="celebratebanner" id="celebrateBanner" hidden>🎉 You did it! 🎉</div>
@@ -1346,7 +1353,7 @@ function launchConfetti() {
   for (let i = 0; i < 70; i++) {
     const piece = document.createElement('div');
     piece.className = 'confetti-piece';
-    piece.style.left = (Math.random() * 100) + 'vw';
+    piece.style.left = (Math.random() * 100) + '%';
     piece.style.background = colors[Math.floor(Math.random() * colors.length)];
     piece.style.animationDelay = (Math.random() * 0.4) + 's';
     piece.style.animationDuration = (2 + Math.random() * 1.5) + 's';
@@ -1729,14 +1736,29 @@ function showMatchOops(main, sub) {
   clearTimeout(showMatchOops._t);
   showMatchOops._t = setTimeout(() => el.classList.remove('on'), 1100);
 }
+// ===== WIDE_SCREEN: 확대(zoom)된 큰 화면에서도 fixed 요소를 화면 좌표(x, y)에 놓는다 (2026-10-19)
+function wideScale() {
+  if (wideScale.w === innerWidth && wideScale.h === innerHeight && wideScale.z) return wideScale.z;
+  const p = document.createElement('div');
+  p.style.cssText = 'position:fixed;left:100px;top:100px;width:10px;height:10px;visibility:hidden;pointer-events:none;';
+  document.body.appendChild(p);
+  const r = p.getBoundingClientRect();
+  p.remove();
+  wideScale.w = innerWidth; wideScale.h = innerHeight; wideScale.z = (r.left / 100) || 1;
+  return wideScale.z;
+}
+function placeFixed(el, x, y) {
+  const z = wideScale();
+  el.style.left = (x / z) + 'px';
+  el.style.top = (y / z) + 'px';
+}
 function showPointPop(anchor, main, sub, cls) {
   if (!anchor || !anchor.getBoundingClientRect) return;
   const pop = document.createElement('div');
   pop.className = 'pointPop ' + (cls || '');
   pop.innerHTML = '<b>' + main + '</b>' + (sub ? '<span>' + sub + '</span>' : '');
   const r = anchor.getBoundingClientRect();
-  pop.style.left = (r.left + r.width / 2) + 'px';
-  pop.style.top = r.top + 'px';
+  placeFixed(pop, r.left + r.width / 2, r.top);
   document.body.appendChild(pop);
   setTimeout(() => pop.remove(), 1100);
 }
@@ -3828,7 +3850,7 @@ window.addEventListener('beforeunload', e => {
 // ===== AUTO_UPDATE (요구사항 NF-09): 새 버전을 올리면 다음 접속이나 탭으로 돌아올 때 최신 화면으로 바꾼다.
 // 문제를 푸는 중·기록을 보내는 중에는 끊지 않고, 이름·Day 목록 화면에서만 한 번 다시 불러온다.
 // 못 보낸 기록은 이미 기기에 먼저 저장돼 있어 다시 불러와도 사라지지 않는다.
-const APP_BUILD = '20261019-231710';
+const APP_BUILD = '20261019-235049';
 const VER_URL = '../version.json';
 const VER_FIRST_MS = 1500, VER_POLL_MS = 600000, VER_TICK_MS = 5000, VER_RETRY_MS = 600000;
 let verWant = '';   // 받아야 할 새 번호 (안전한 때를 기다리는 중)
