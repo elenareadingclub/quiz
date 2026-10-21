@@ -878,7 +878,7 @@
       <button class="setbtn" data-mode="quiz">📝 단어 퀴즈 <span class="donechip" id="doneQuiz" hidden>완료</span><span class="dot" id="modeDotQuiz"></span><span class="repbadge" id="repQuiz"></span><br><span class="hint" style="margin:0;">단어 수만큼 4지선다</span></button>
       <button class="setbtn" data-mode="match">🔗 매칭게임 <span class="donechip" id="doneMatch" hidden>완료</span><span class="dot" id="modeDotMatch"></span><br><span class="hint" style="margin:0;">80초 타이머</span></button>
       <button class="setbtn" data-mode="sight">🔊 사이트워드 <span class="donechip" id="doneSight" hidden>완료</span><span class="dot" id="modeDotSight"></span><br><span class="hint" style="margin:0;">문장 빈칸 · 글자 쓰기</span></button>
-      <button class="setbtn" data-mode="spell">✏️ 스펠쓰기 <span class="donechip" id="doneSpell" hidden>완료</span><span class="dot" id="modeDotSpell"></span><br><span class="hint" style="margin:0;">8문항 타이핑</span></button>
+      <button class="setbtn" data-mode="spell">✏️ 스펠쓰기 <span class="donechip" id="doneSpell" hidden>완료</span><span class="dot" id="modeDotSpell"></span><br><span class="hint" style="margin:0;">이지 5 · 하드 8</span></button>
     </div>
     <div class="hint" id="modeLockNote" hidden style="color:var(--danger);font-weight:700;margin:-8px 0 10px;">🔒 단어확인을 먼저 해요! 뜻 확인을 모두 누르면 열려요</div>
     <button class="primary" id="startBtn">단어확인 시작 (뜻 확인)</button>
@@ -911,7 +911,7 @@
   <div class="card" id="spellCard" hidden>
     <button class="exitbtn" id="spellExitBtn" aria-label="그만하고 모드 선택으로">← 그만하기</button>
     <div class="spelldiff" id="spellDiffToggle">
-      <button class="diffbtn" data-diff="easy" id="diffEasyBtn">🐣 이지 (빈칸 1개 고르기)</button>
+      <button class="diffbtn" data-diff="easy" id="diffEasyBtn">🐣 이지 (자음 2개 고르기)</button>
       <button class="diffbtn" data-diff="hard" id="diffHardBtn">🔥 하드 (타이핑)</button>
     </div>
     <div class="retestbanner" id="spellRetestBanner" hidden>🔁 복습 라운드 — 틀렸던 단어만 다시!</div>
@@ -1594,7 +1594,7 @@ function firstOpenStage(setNo) {
   return 'quiz';
 }
 function startLabelFor(m) {
-  return m === 'wordcheck' ? '단어확인 시작 (뜻 확인)' : m === 'quiz' ? quizStartLabel() : m === 'sight' ? '사이트워드 시작 (' + ((swsItems(currentSet) || []).length) + '문장)' : m === 'spell' ? '스펠쓰기 시작 (8문항)' : '매칭게임 시작 (80초)';
+  return m === 'wordcheck' ? '단어확인 시작 (뜻 확인)' : m === 'quiz' ? quizStartLabel() : m === 'sight' ? '사이트워드 시작 (' + ((swsItems(currentSet) || []).length) + '문장)' : m === 'spell' ? '스펠쓰기 시작 (이지 5 · 하드 8)' : '매칭게임 시작 (80초)';
 }
 const LOCK_TEXT = {
   quiz: '🔒 단어확인을 먼저 끝내요! 뜻 확인을 모두 누르면 열려요',
@@ -1748,7 +1748,7 @@ modepicker.addEventListener('click', e => {
   document.getElementById('modeLockNote').hidden = true;
   mode = btn.dataset.mode;
   [...modepicker.children].forEach(c => c.classList.toggle('active', c === btn));
-  startBtn.textContent = mode === 'sight' ? startLabelFor('sight') : mode === 'wordcheck' ? '단어확인 시작 (뜻 확인)' : mode === 'quiz' ? quizStartLabel() : mode === 'spell' ? '스펠쓰기 시작 (8문항)' : '매칭게임 시작 (80초)';
+  startBtn.textContent = mode === 'sight' ? startLabelFor('sight') : mode === 'wordcheck' ? '단어확인 시작 (뜻 확인)' : mode === 'quiz' ? quizStartLabel() : mode === 'spell' ? '스펠쓰기 시작 (이지 5 · 하드 8)' : '매칭게임 시작 (80초)';
   loadBoard();
   startBtn.click();   // 모드 버튼을 누르면 [시작]을 따로 누르지 않아도 바로 시작 (엘레나 결정 2026-10-18)
 });
@@ -2442,22 +2442,38 @@ function spellHintText(en) {
 }
 
 function setSpellDifficulty(diff) {
+  if (diff === spellDifficulty) return;
   spellDifficulty = diff;
   document.getElementById('diffEasyBtn').classList.toggle('active', diff === 'easy');
   document.getElementById('diffHardBtn').classList.toggle('active', diff === 'hard');
-  if (spellRoundQuestions.length) renderSpellQuestion();
+  // 이지(고른 5단어)와 하드(아무거나 8개)는 단어 묶음이 달라서 1번부터 새로 시작 (2026-10-21)
+  if (spellRoundQuestions.length) startSpell();
 }
 document.getElementById('diffEasyBtn').addEventListener('click', () => setSpellDifficulty('easy'));
 document.getElementById('diffHardBtn').addEventListener('click', () => setSpellDifficulty('hard'));
 
+// B 스펠 이지 = 고른 쉬운 단어 5개, 하드 = 아무거나 8개 (엘레나 2026-10-21)
+const B_SPELL_EASY = {"1-1":"dog cat bark come hello","1-2":"box nest stop bird fur","2-1":"bed lamp jump run stop","2-2":"hat mat bug hop nap","3-1":"hat wind rabbit mouse find","3-2":"sit best pants head hat","4-1":"fish swim legs arms bear","4-2":"pop put egg nest make","5-1":"red lost fish pail feet","5-2":"sink drink hair sound round","6-1":"sun run mud sing swing","6-2":"sand land rest bees sail","7-1":"hand slip cold nose snow","7-2":"tent pond food snake row","8-1":"rub wet tip suds mud","8-2":"hug kiss doll bed hear"};
+function spellEasyWords(set) {
+  const w = (B_SPELL_EASY[set.no] || '').split(' ').map(en => set.words.find(x => x.en === en)).filter(Boolean);
+  return w.length ? w : null;
+}
+// 이지 빈칸 = 첫·마지막 자음 (y는 모음), 자음 2개 미만이면 예전 방식
+function easyConsonantIdx(en) {
+  const ci = [];
+  en.toLowerCase().replace(/ /g, '').split('').forEach((c, i) => { if ('aeiouy'.indexOf(c) < 0) ci.push(i); });
+  return ci[1] !== undefined ? [ci[0], ci[ci.length - 1]] : null;
+}
+
 function startSpell() {
   const set = WORD_SETS.find(w => w.no === currentSet);
-  const pool = set.words.slice();
+  const easyList = spellDifficulty === 'easy' ? spellEasyWords(set) : null;
+  const pool = easyList || set.words.slice();
   for (let i = pool.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [pool[i], pool[j]] = [pool[j], pool[i]];
   }
-  spellRoundQuestions = pool.slice(0, Math.min(8, pool.length));
+  spellRoundQuestions = pool.slice(0, Math.min(easyList ? 5 : 8, pool.length));
   spellIndex = 0; spellScore = 0;
   spellInRetest = false; spellRetestQueue = []; spellWrongQuestions = [];
   document.getElementById('diffEasyBtn').classList.toggle('active', spellDifficulty === 'easy');
@@ -2491,7 +2507,7 @@ function renderSpellQuestion() {
   document.getElementById('spellNextBtn').hidden = true;
 
   const isHard = spellDifficulty === 'hard';
-  document.getElementById('spellQdir').textContent = isHard ? '뜻을 보고 영단어를 타이핑하세요' : '첫 글자는 힌트예요! 빈칸에 들어갈 글자 1개를 골라요';
+  document.getElementById('spellQdir').textContent = isHard ? '뜻을 보고 영단어를 타이핑하세요' : (easyConsonantIdx(q.en) ? '소리를 생각하며 빈칸에 들어갈 자음 2개를 골라요' : '첫 글자는 힌트예요! 빈칸에 들어갈 글자 1개를 골라요');
   document.getElementById('spellHint').hidden = !isHard;
   document.getElementById('spellInput').hidden = !isHard;
   document.getElementById('spellCheckBtn').hidden = !isHard;
@@ -2522,22 +2538,23 @@ function renderEasyQuestion(q) {
   const chars = q.en.toLowerCase().split('');
   easySlots = chars.map(c => ({ ch: c, isSpace: c === ' ' }));
   const letters = chars.filter(c => c !== ' ');
+  const cIdx = easyConsonantIdx(q.en);   // B 이지: 첫·마지막 자음 2칸 (2026-10-21)
   // 빈칸 고르기: 첫 글자(힌트)는 빼고, 모음이 있으면 모음 중에서
   let blank = 0;
-  if (letters.length > 1) {
+  if (!cIdx && letters.length > 1) {
     const cand = [];
     for (let i = 1; i < letters.length; i++) if (EASY_VOWELS.indexOf(letters[i]) >= 0) cand.push(i);
     if (!cand.length) for (let i = 1; i < letters.length; i++) cand.push(i);
     blank = cand[Math.floor(Math.random() * cand.length)];
   }
-  const correct = letters[blank];
-  const decoys = easyPick(EASY_VOWELS.indexOf(correct) >= 0 ? EASY_VOWELS : EASY_CONSONANTS, 3, correct);
-  const choices = [correct, ...decoys].sort(() => Math.random() - 0.5);
+  const blanks = cIdx || [blank], ans = blanks.map(i => letters[i]), correct = ans[0];
+  const decoys = cIdx ? easyPick(EASY_CONSONANTS.filter(c => ans.indexOf(c) < 0), 4) : easyPick(EASY_VOWELS.indexOf(correct) >= 0 ? EASY_VOWELS : EASY_CONSONANTS, 3, correct);
+  const choices = ans.concat(decoys).sort(() => Math.random() - 0.5);
   // 힌트로 보여 줄 글자들은 이미 놓인 '주어진 글자'(given)로 두고, 고를 수 있는 보기만 아래에 보인다
   easyTiles = [];
   easyPlaced = [];
   letters.forEach((c, i) => {
-    if (i === blank) return;
+    if (blanks.indexOf(i) >= 0) return;
     easyTiles.push({ id: 100 + i, ch: c, used: true, given: true });
     easyPlaced[i] = 100 + i;
   });
@@ -2654,6 +2671,7 @@ function checkEasyAnswer() {
     fb.textContent = '오잉? 😮 힌트 줄게요! 위 정답을 보고 아래 칸에 다시 써보세요';
     fb.className = 'spellfeedback wrong';
     fb.hidden = false;
+    if (easyConsonantIdx(q.en)) { fb.textContent = '오잉? 😮 위 정답을 보고 자음 블록을 다시 골라 보세요'; setTimeout(resetEasyPlacement, 400); return; }
     document.getElementById('spellEasyArea').hidden = true;
     const retypeInput = document.getElementById('spellInput');
     retypeInput.hidden = false; retypeInput.value = ''; retypeInput.className = 'spellinput'; retypeInput.disabled = false;
@@ -3323,7 +3341,7 @@ function renderHomeworkBanner() {
     (h.due ? ' <span class="hwbdue">· 마감 ' + escHtml(fmtDue(h.due)) + ' 23:59</span>' : '') + '</div>').join('');
 }
 
-// --- 명예의 전당: 이 책에서 스펠 8문제를 한 번도 안 틀린 친구들 (영문명·난이도·날짜만)
+// --- 명예의 전당: 이 책에서 스펠(이지 5 · 하드 8)을 한 번도 안 틀린 친구들 (영문명·난이도·날짜만)
 async function renderHallForSet(setNo) {
   let box = document.getElementById('hallBox');
   if (!box) {
@@ -3338,7 +3356,7 @@ async function renderHallForSet(setNo) {
     box.innerHTML = '<div class="hallttl">🌟 이 책의 Word Stars' + (items.length ? ' <span class="hallcnt">' + items.length + '</span>' : '') + '</div>' +
       (items.length
         ? '<div class="hallchips">' + items.map(i => '<span class="hallchip">' + escHtml(nameWithIcon(i.name)) + ' ' + (i.diff === '하드' ? '🔥' : '🐣') + ' <small>' + escHtml(fmtShort(i.date)) + '</small></span>').join('') + '</div>'
-        : '<div class="hallnone">스펠 8문제를 한 번도 안 틀리고 맞히면 여기에 이름이 올라가요! ✨</div>');
+        : '<div class="hallnone">스펠을 한 번도 안 틀리고 다 맞히면 여기에 이름이 올라가요! ✨</div>');
   };
   if (hallCache.at) draw();   // 로그인 때 받아 둔 것으로 바로 (3단계)
   await hallRefresh();
@@ -3634,7 +3652,7 @@ window.addEventListener('beforeunload', e => {
 // ===== AUTO_UPDATE (요구사항 NF-09): 새 버전을 올리면 다음 접속이나 탭으로 돌아올 때 최신 화면으로 바꾼다.
 // 문제를 푸는 중·기록을 보내는 중에는 끊지 않고, 이름·Day 목록 화면에서만 한 번 다시 불러온다.
 // 못 보낸 기록은 이미 기기에 먼저 저장돼 있어 다시 불러와도 사라지지 않는다.
-const APP_BUILD = '20261019-235049';
+const APP_BUILD = '20261021-195421';
 const VER_URL = '../version.json';
 const VER_FIRST_MS = 1500, VER_POLL_MS = 600000, VER_TICK_MS = 5000, VER_RETRY_MS = 600000;
 let verWant = '';   // 받아야 할 새 번호 (안전한 때를 기다리는 중)
