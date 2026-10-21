@@ -3369,7 +3369,7 @@ function renderHomeworkBanner() {
     (h.due ? ' <span class="hwbdue">· 마감 ' + escHtml(fmtDue(h.due)) + ' 23:59</span>' : '') + '</div>').join('');
 }
 
-// --- 명예의 전당: 이 책에서 스펠 8문제를 한 번도 안 틀린 친구들 (영문명·난이도·날짜만)
+// --- 명예의 전당: C는 이 책의 다섯 단계를 모두 마친 친구들 (서버 hall_ = 숙제 완료 기록, 엘레나 2026-10-21) — 영문명·날짜만
 async function renderHallForSet(setNo) {
   let box = document.getElementById('hallBox');
   if (!box) {
@@ -3384,7 +3384,7 @@ async function renderHallForSet(setNo) {
     box.innerHTML = '<div class="hallttl">🌟 이 책의 Word Stars' + (items.length ? ' <span class="hallcnt">' + items.length + '</span>' : '') + '</div>' +
       (items.length
         ? '<div class="hallchips">' + items.map(i => '<span class="hallchip">' + escHtml(nameWithIcon(i.name)) + ' ' + (i.diff === '하드' ? '🔥' : '🐣') + ' <small>' + escHtml(fmtShort(i.date)) + '</small></span>').join('') + '</div>'
-        : '<div class="hallnone">스펠 8문제를 한 번도 안 틀리고 맞히면 여기에 이름이 올라가요! ✨</div>');
+        : '<div class="hallnone">다섯 가지 활동을 모두 하면 여기에 이름이 올라가요! ✨</div>');
   };
   if (hallCache.at) draw();   // 로그인 때 받아 둔 것으로 바로 (3단계)
   await hallRefresh();
@@ -3680,7 +3680,7 @@ window.addEventListener('beforeunload', e => {
 // ===== AUTO_UPDATE (요구사항 NF-09): 새 버전을 올리면 다음 접속이나 탭으로 돌아올 때 최신 화면으로 바꾼다.
 // 문제를 푸는 중·기록을 보내는 중에는 끊지 않고, 이름·Day 목록 화면에서만 한 번 다시 불러온다.
 // 못 보낸 기록은 이미 기기에 먼저 저장돼 있어 다시 불러와도 사라지지 않는다.
-const APP_BUILD = '20261021-195421';
+const APP_BUILD = '20261021-203629';
 const VER_URL = '../version.json';
 const VER_FIRST_MS = 1500, VER_POLL_MS = 600000, VER_TICK_MS = 5000, VER_RETRY_MS = 600000;
 let verWant = '';   // 받아야 할 새 번호 (안전한 때를 기다리는 중)
@@ -4016,7 +4016,6 @@ function swsRender() {
       '<div class="swplay"><div class="swletters">' + letters + '</div>' +
       '<button class="swspeak" id="swsSpeak">🔊 문장 듣기</button></div>' +
       '<div class="spellfeedback" id="swsFb" hidden></div>';
-    speak(q.f);
     const inp = document.getElementById('swsInp');
     if (inp) setTimeout(() => { try { inp.focus(); } catch (e) {} }, 50);
   }
@@ -4050,7 +4049,11 @@ document.getElementById('swsBody').addEventListener('click', e => {
     swsS.locked = true;
     b.classList.add('ok');
     playCorrectSound();
-    setTimeout(() => { swsS.stage = 'letter'; swsRender(); }, 600);
+    // 사이트워드: 고르자마자 문장 읽기 (엘레나 2026-10-21), 빈칸을 채워 보여 주고 ②로
+    const sent = document.querySelector('#swsBody .swsent');
+    if (sent) sent.innerHTML = swsFill(swsS.q.s, swsS.q.w, 'ok');
+    speak(swsS.q.f);
+    setTimeout(() => { swsS.stage = 'letter'; swsRender(); }, 900);
   } else {
     swsS.wrong++;
     b.classList.add('no');
