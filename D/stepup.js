@@ -83,44 +83,7 @@ const EXTRAS = {
         { who: 'they', pic: 'doctor', ask: 'teacher', e: '👨‍⚕️👩‍⚕️' },
         { who: 'they', pic: 'cook', ask: 'farmer', e: '👩‍🍳👨‍🍳👩‍🍳' } ]   // 여러 명 그림은 남녀 섞어서 (2026-10-19 12문제)
     },
-    phonics: {
-      title: '🔊 파닉스 Long O 총정리',
-      hint: 'o_e · oa · oe · ow 모으기',
-      lead: 'Long O 소리를 철자별로 정리해요.',
-      sound: 'Long O',
-      soundLead: "Long O는 알파벳 O의 이름처럼 '오우~' 하고 길게 소리 나요. 카드를 눌러 소리를 들어 보세요. 빨간 글자가 Long O 철자예요.",
-      rules: [
-        { id: 'o_e', label: 'o_e', sub: 'o + e (마법의 e)' },
-        { id: 'oa', label: 'oa', sub: 'oa 소리' },
-        { id: 'oe', label: 'oe', sub: 'oe 소리' },
-        { id: 'ow', label: 'ow', sub: 'ow 소리 (snow)' } ],
-      words: [
-        { w: 'robe', rule: 'o_e', ko: '가운' },
-        { w: 'hole', rule: 'o_e', ko: '구멍' },
-        { w: 'vote', rule: 'o_e', ko: '투표하다' },
-        { w: 'goat', rule: 'oa', ko: '염소' },
-        { w: 'boat', rule: 'oa', ko: '배' },
-        { w: 'coat', rule: 'oa', ko: '외투' },
-        { w: 'soap', rule: 'oa', ko: '비누' },
-        { w: 'road', rule: 'oa', ko: '길' },
-        { w: 'toast', rule: 'oa', ko: '토스트' },
-        { w: 'toe', rule: 'oe', ko: '발가락' },
-        { w: 'doe', rule: 'oe', ko: '암사슴' },
-        { w: 'bow', rule: 'ow', ko: '리본' },
-        { w: 'grow', rule: 'ow', ko: '자라다' },
-        { w: 'snow', rule: 'ow', ko: '눈' },
-        { w: 'bowl', rule: 'ow', ko: '그릇' } ],
-      bank: {
-        'o_e': ['robe', 'hole', 'vote', 'home', 'rope', 'nose', 'bone', 'cone', 'hope', 'note', 'rose', 'pole', 'joke', 'stone', 'smoke', 'globe', 'close', 'those', 'code', 'mole', 'hose', 'zone', 'phone', 'woke', 'broke', 'drove', 'stove', 'froze', 'spoke', 'tone'],
-        'oa': ['goat', 'boat', 'coat', 'float', 'soak', 'soap', 'coal', 'road', 'loaf', 'toast', 'load', 'toad', 'oak', 'oat', 'moan', 'groan', 'foam', 'roam', 'cloak', 'throat', 'goal', 'roast', 'coast', 'boast', 'loan', 'soar'],
-        'oe': ['toe', 'doe', 'hoe', 'foe', 'woe', 'joe'],
-        'ow': ['bow', 'grow', 'blow', 'snow', 'bowl', 'low', 'row', 'mow', 'tow', 'show', 'slow', 'flow', 'glow', 'know', 'throw', 'own', 'crow', 'grown', 'shown', 'yellow', 'pillow', 'window', 'elbow', 'arrow', 'rainbow'] },
-      hints: {
-        'o_e': ['home', 'nose', 'bone'],
-        'oa': ['float', 'soak', 'coal'],
-        'oe': ['toe', 'doe'],
-        'ow': ['blow', 'show', 'slow'] }
-    }
+    phonics: null
   }, '3-1': {
     plant: {
       title: "🌱 식물 이름 맞히기",
@@ -142,42 +105,7 @@ const EXTRAS = {
         { id: 'grow', en: 'grow', ko: '자라다', scene: 'life' },
         { id: 'die', en: 'die', ko: '죽다', scene: 'life' } ]
     },
-    phonics: {
-      title: '🔊 파닉스 Long U 총정리',
-      hint: 'ew · u_e · ue 모으기',
-      lead: 'Long U 소리를 철자별로 정리해요.',
-      sound: 'Long U',
-      soundLead: 'Long U는 알파벳 U의 이름처럼 소리 나요 (우~ / 유~). 카드를 눌러 소리를 들어 보세요. 빨간 글자가 Long U 철자예요.',
-      rules: [
-        { id: 'ew', label: 'ew', sub: 'ew 소리' },
-        { id: 'u_e', label: 'u_e', sub: 'u + e (마법의 e)' },
-        { id: 'ue', label: 'ue', sub: 'ue 소리' },
-        { id: 'ui', label: 'ui', sub: 'ui 소리' } ],
-      words: [
-        { w: 'tune', rule: 'u_e', ko: '곡조' },
-        { w: 'dune', rule: 'u_e', ko: '모래 언덕' },
-        { w: 'tube', rule: 'u_e', ko: '관, 튜브' },
-        { w: 'cube', rule: 'u_e', ko: '정육면체' },
-        { w: 'cute', rule: 'u_e', ko: '귀여운' },
-        { w: 'huge', rule: 'u_e', ko: '거대한' },
-        { w: 'flew', rule: 'ew', ko: '날았다 (fly의 과거)' },
-        { w: 'new', rule: 'ew', ko: '새로운' },
-        { w: 'grew', rule: 'ew', ko: '자랐다 (grow의 과거)' },
-        { w: 'cue', rule: 'ue', ko: '신호' },
-        { w: 'juice', rule: 'ui', ko: '주스' },
-        { w: 'fruit', rule: 'ui', ko: '과일' },
-        { w: 'suit', rule: 'ui', ko: '정장' } ],
-      bank: {
-        'ew': ['new', 'flew', 'grew', 'chew', 'few', 'dew', 'blew', 'drew', 'knew', 'stew', 'threw', 'brew', 'crew', 'screw', 'pew'],
-        'u_e': ['tune', 'dune', 'cube', 'cute', 'huge', 'mule', 'rule', 'june', 'tube', 'use', 'fuse', 'flute', 'rude', 'prune', 'duke', 'mute', 'fume', 'plume', 'dude', 'nude'],
-        'ue': ['cue', 'blue', 'glue', 'clue', 'true', 'due', 'sue', 'hue'],
-        'ui': ['juice', 'fruit', 'suit', 'cruise', 'bruise'] },
-      hints: {
-        'ew': ['few', 'dew', 'chew'],
-        'u_e': ['mule', 'rule', 'flute'],
-        'ue': ['blue', 'glue', 'true'],
-        'ui': ['cruise', 'bruise'] }
-    },
+    phonics: null,
     jobs: {
       title: '🏆 되고 싶은 직업 월드컵',
       hint: "What are you going to be?",
@@ -370,8 +298,48 @@ function renderPlantQ(q) {
 }
 
 
-/* ===== 파닉스 Long U 총정리 (3단계) ===== */
-let phSeen = new Set(), phSel = null, phPlaced = {}, phMistakes = 0, phFails = 0, phDragBound = false, phDrag = null;
+/* ===== 파닉스 총정리 (책마다, 엘레나 2026-10-22): STEP 1 소리 듣기 → STEP 2 듣고 분류하기 → STEP 3 듣고 골라 쓰기 ===== */
+const PH_DATA = {"1-1":{"s":"Long A","ti":"🔊 파닉스 Long A 총정리","hi":"ai · ay · a_e 모으기","so":"Long A는 알파벳 A의 이름처럼 '에이~' 하고 길게 소리 나요. 카드를 눌러 소리를 들어 보세요. 빨간 글자가 Long A 철자예요.","r":[["ai","ai","ai 소리"],["ay","ay","ay 소리"],["a_e","a_e","a + e (마법의 e)"]],"w":[["paint","ai","칠하다, 페인트","🎨"],["mail","ai","우편","📬"],["nail","ai","손톱","💅"],["rain","ai","비","🌧️"],["snail","ai","달팽이","🐌"],["train","ai","기차","🚂"],["tray","ay","쟁반","🍽️"],["lay","ay","놓다",""],["hay","ay","건초","🌾"],["pay","ay","돈을 내다","💰"],["name","a_e","이름","📛"],["maze","a_e","미로","🧩"],["mane","a_e","(동물의) 갈기","🦁"],["cape","a_e","망토","🦸"],["tape","a_e","테이프","📼"]],"q":["rain","snail","train","tray","hay","name","cape","tape"]},"1-2":{"s":"Long E","ti":"🔊 파닉스 Long E 총정리","hi":"ea · ee 모으기","so":"Long E는 알파벳 E의 이름처럼 '이~' 하고 길게 소리 나요. 카드를 눌러 소리를 들어 보세요. 빨간 글자가 Long E 철자예요.","r":[["ea","ea","ea 소리"],["ee","ee","ee 소리"]],"w":[["read","ea","읽다","📖"],["meat","ea","고기","🥩"],["tea","ea","차","🍵"],["team","ea","팀","👥"],["peas","ea","완두콩","🟢"],["peach","ea","복숭아","🍑"],["feet","ee","발 (두 발)","🦶"],["tree","ee","나무","🌳"],["seed","ee","씨앗","🌰"],["bee","ee","벌","🐝"],["heel","ee","발뒤꿈치",""],["beet","ee","비트",""],["weed","ee","잡초","🌿"],["peel","ee","껍질을 벗기다","🍌"],["three","ee","셋","3️⃣"]],"q":["meat","tea","peas","peach","feet","tree","seed","bee"]},"2-1":{"s":"Long I","ti":"🔊 파닉스 Long I 총정리","hi":"ie · igh · y 모으기","so":"Long I는 알파벳 I의 이름처럼 '아이~' 하고 길게 소리 나요. 카드를 눌러 소리를 들어 보세요. 빨간 글자가 Long I 철자예요.","r":[["ie","ie","ie 소리"],["igh","igh","igh 소리"],["y","y","y 소리"]],"w":[["tie","ie","넥타이, 묶다","👔"],["fried","ie","튀긴","🍳"],["dried","ie","말린",""],["lie","ie","눕다, 거짓말",""],["die","ie","죽다",""],["pie","ie","파이","🥧"],["night","igh","밤","🌙"],["tight","igh","꽉 끼는",""],["high","igh","높은","⬆️"],["fight","igh","싸우다","🥊"],["light","igh","빛, 불","💡"],["cry","y","울다","😭"],["dry","y","마른","🌵"],["shy","y","부끄럼 타는","🙈"],["fly","y","날다","🕊️"]],"q":["tie","fried","pie","night","light","fight","cry","shy"]},"2-2":{"s":"Long O","ti":"🔊 파닉스 Long O 총정리","hi":"o_e · oa · oe · ow 모으기","so":"Long O는 알파벳 O의 이름처럼 '오우~' 하고 길게 소리 나요. 카드를 눌러 소리를 들어 보세요. 빨간 글자가 Long O 철자예요.","r":[["o_e","o_e","o + e (마법의 e)"],["oa","oa","oa 소리"],["oe","oe","oe 소리"],["ow","ow","ow 소리 (snow)"]],"w":[["robe","o_e","가운","👘"],["hole","o_e","구멍","🕳️"],["vote","o_e","투표하다","🗳️"],["goat","oa","염소","🐐"],["boat","oa","배","⛵"],["coat","oa","외투","🧥"],["soap","oa","비누","🧼"],["road","oa","길","🛣️"],["toast","oa","토스트","🍞"],["toe","oe","발가락","🦶"],["doe","oe","암사슴","🦌"],["bow","ow","리본","🎀"],["grow","ow","자라다","🌱"],["snow","ow","눈","❄️"],["bowl","ow","그릇","🥣"]],"q":["robe","hole","goat","boat","coat","toe","snow","bowl"]},"3-1":{"s":"Long U","ti":"🔊 파닉스 Long U 총정리","hi":"ew · u_e · ue · ui 모으기","so":"Long U는 알파벳 U의 이름처럼 소리 나요 (우~ / 유~). 카드를 눌러 소리를 들어 보세요. 빨간 글자가 Long U 철자예요.","r":[["ew","ew","ew 소리"],["u_e","u_e","u + e (마법의 e)"],["ue","ue","ue 소리"],["ui","ui","ui 소리"]],"w":[["tune","u_e","곡조","🎵"],["dune","u_e","모래 언덕","🏜️"],["tube","u_e","관, 튜브",""],["cube","u_e","정육면체","🧊"],["cute","u_e","귀여운","🥰"],["huge","u_e","거대한","🐘"],["flew","ew","날았다 (fly의 과거)",""],["new","ew","새로운","🆕"],["grew","ew","자랐다 (grow의 과거)","🌿"],["cue","ue","신호",""],["blue","ue","파란색","🔵"],["glue","ue","풀","🧴"],["juice","ui","주스","🧃"],["fruit","ui","과일","🍎"],["suit","ui","정장","🤵"]],"q":["tune","cube","cute","new","grew","blue","juice","fruit"]},"3-2":{"s":"L 블렌드","ti":"🔊 파닉스 L 블렌드 총정리","hi":"bl · cl · fl · pl/gl/sl 모으기","so":"L 블렌드는 자음 뒤에 l이 붙어서 두 소리가 이어져 나요 (bl, cl, fl, pl, gl, sl). 카드를 눌러 소리를 들어 보세요. 빨간 글자가 블렌드예요.","r":[["bl","bl","blue"],["cl","cl","clap"],["fl","fl","flag"],["pgs","pl · gl · sl","plane · glass · slide"]],"w":[["blend","bl","섞다",""],["block","bl","블록","🧱"],["blue","bl","파란색","🔵"],["clap","cl","박수 치다","👏"],["clean","cl","깨끗한, 청소하다","🧹"],["clip","cl","클립","📎"],["fly","fl","날다","🕊️"],["float","fl","(물에) 뜨다","🛟"],["flame","fl","불꽃","🔥"],["plane","pgs","비행기","✈️","pl"],["plum","pgs","자두","","pl"],["plate","pgs","접시","🍽️","pl"],["slide","pgs","미끄럼틀","🛝","sl"],["glass","pgs","유리잔","🥛","gl"],["glove","pgs","장갑","🧤","gl"]],"q":["clap","flame","float","block","blue","plane","glove","slide"],"c":["bl","cl","fl","pl","gl","sl"]},"4-1":{"s":"R 블렌드","ti":"🔊 파닉스 R 블렌드 총정리","hi":"br · cr · dr · fr/gr/pr/tr 모으기","so":"R 블렌드는 자음 뒤에 r이 붙어서 두 소리가 이어져 나요 (br, cr, dr, fr, gr, pr, tr). 카드를 눌러 소리를 들어 보세요. 빨간 글자가 블렌드예요.","r":[["br","br","bread"],["cr","cr","crab"],["dr","dr","drum"],["fgpt","fr · gr · pr · tr","frog · green · prize · train"]],"w":[["brush","br","솔","🖌️"],["brown","br","갈색","🟤"],["bread","br","빵","🍞"],["crib","cr","아기 침대","🍼"],["crab","cr","게","🦀"],["crown","cr","왕관","👑"],["dream","dr","꿈","💭"],["drum","dr","북","🥁"],["dress","dr","원피스","👗"],["drop","dr","방울, 떨어뜨리다","💧"],["frog","fgpt","개구리","🐸","fr"],["frame","fgpt","액자, 틀","🖼️","fr"],["green","fgpt","초록색","🟢","gr"],["prize","fgpt","상","🏆","pr"],["train","fgpt","기차","🚂","tr"]],"q":["bread","crab","crown","drum","dress","frog","green","train"],"c":["br","cr","dr","fr","gr","pr","tr"]},"4-2":{"s":"S 블렌드","ti":"🔊 파닉스 S 블렌드 총정리","hi":"sc/sk · sl/sm/sn · sp · st/sw 모으기","so":"S 블렌드는 s 뒤에 자음이 붙어서 두 소리가 이어져 나요 (sc, sk, sl, sm, sn, sp, st, sw). 카드를 눌러 소리를 들어 보세요. 빨간 글자가 블렌드예요.","r":[["scsk","sc · sk","scarf · skirt"],["slsmsn","sl · sm · sn","sleep · smile · snake"],["sp","sp","spoon"],["stsw","st · sw","stool · swan"]],"w":[["scale","scsk","저울","⚖️","sc"],["scarf","scsk","스카프","🧣","sc"],["sky","scsk","하늘","🌤️","sk"],["skirt","scsk","치마","👗","sk"],["slide","slsmsn","미끄럼틀","🛝","sl"],["sleep","slsmsn","자다","😴","sl"],["small","slsmsn","작은","🐜","sm"],["smile","slsmsn","웃다","😊","sm"],["snake","slsmsn","뱀","🐍","sn"],["spell","sp","철자를 말하다","🔤"],["spoon","sp","숟가락","🥄"],["spot","sp","점, 얼룩","🔴"],["stamp","stsw","우표","✉️","st"],["stool","stsw","등받이 없는 의자","🪑","st"],["swan","stsw","백조","🦢","sw"]],"q":["scarf","skirt","sleep","smile","snake","spoon","stool","swan"],"c":["sc","sk","sl","sm","sn","sp","st","sw"]},"5-1":{"s":"ph · wh","ti":"🔊 파닉스 ph · wh 총정리","hi":"ph · p · wh · w 모으기","so":"ph는 f 소리, wh는 w 소리가 나요. p와 w는 그냥 p, w 소리예요. 카드를 눌러 소리를 들어 보세요. 빨간 글자가 철자예요.","r":[["ph","ph","phone"],["p","p","pond"],["wh","wh","whale"],["w","w","watch"]],"w":[["phone","ph","전화기","📱"],["dolphin","ph","돌고래","🐬"],["photo","ph","사진","📷"],["graph","ph","그래프","📊"],["elephant","ph","코끼리","🐘"],["trophy","ph","트로피","🏆"],["pond","p","연못","🏞️"],["pear","p","배 (과일)","🍐"],["purse","p","지갑","👛"],["whisker","wh","(동물의) 수염","🐱"],["whistle","wh","호루라기",""],["white","wh","흰색","⚪"],["wheel","wh","바퀴","🛞"],["wheat","wh","밀","🌾"],["whale","wh","고래","🐋"],["well","w","우물",""],["worm","w","벌레","🪱"],["watch","w","손목시계","⌚"]],"q":["phone","dolphin","photo","pear","whale","wheel","worm","watch"],"c":["ph","p","wh","w"]},"5-2":{"s":"sh · ch","ti":"🔊 파닉스 sh · ch 총정리","hi":"sh · ch 모으기","so":"sh는 '쉬' 하고 조용히 하라는 소리, ch는 '취' 하고 나는 소리예요. 카드를 눌러 소리를 들어 보세요. 빨간 글자가 철자예요.","r":[["sh","sh","shark"],["ch","ch","cheese"]],"w":[["shark","sh","상어","🦈"],["shirt","sh","셔츠","👕"],["cash","sh","현금","💵"],["brush","sh","솔","🖌️"],["shell","sh","조개껍데기","🐚"],["sheep","sh","양","🐑"],["ship","sh","배","🚢"],["dish","sh","접시","🍽️"],["bush","sh","덤불","🌿"],["pouch","ch","주머니","👝"],["couch","ch","소파","🛋️"],["cheese","ch","치즈","🧀"],["bench","ch","벤치","🪑"],["peach","ch","복숭아","🍑"],["inch","ch","인치","📏"],["branch","ch","나뭇가지","🌿"],["cherry","ch","체리","🍒"],["chick","ch","병아리","🐥"]],"q":["shark","shell","sheep","ship","couch","cheese","peach","chick"],"c":["sh","ch","th","wh"]},"6-1":{"s":"ng · nk · ck","ti":"🔊 파닉스 ng · nk · ck 총정리","hi":"ng · nk · ck 모으기","so":"낱말 끝에서 ng, nk, ck가 한 덩어리 소리를 내요. 카드를 눌러 소리를 들어 보세요. 빨간 글자가 철자예요.","r":[["ng","ng","king"],["nk","nk","bank"],["ck","ck","clock"]],"w":[["king","ng","왕","👑"],["ring","ng","반지","💍"],["long","ng","긴","📏"],["sing","ng","노래하다","🎤"],["swing","ng","그네",""],["bank","nk","은행","🏦"],["sink","nk","싱크대","🚰"],["skunk","nk","스컹크","🦨"],["pink","nk","분홍색","💗"],["chick","ck","병아리","🐥"],["black","ck","검은색","⚫"],["back","ck","등, 뒤","🔙"],["stick","ck","막대기","🪵"],["truck","ck","트럭","🚚"],["neck","ck","목","🦒"],["clock","ck","시계","🕰️"],["brick","ck","벽돌","🧱"],["rock","ck","바위","🪨"]],"q":["king","ring","sing","bank","skunk","truck","clock","brick"],"c":["ng","nk","ck","ch"]},"6-2":{"s":"th","ti":"🔊 파닉스 th 두 소리 총정리","hi":"바람 소리 · 목이 울리는 소리","so":"th는 두 가지 소리가 나요. 혀를 내밀고 바람만 내보내는 소리(three)와, 목이 울리는 소리(this)예요. 카드를 눌러 소리를 들어 보세요. 빨간 글자가 th예요.","r":[["th1","th 🌬️","바람 소리 (three)"],["th2","th 🗣️","목이 울려요 (this)"]],"w":[["tooth","th1","이, 치아","🦷","th"],["three","th1","셋","3️⃣","th"],["bath","th1","목욕","🛁","th"],["wreath","th1","화환","💐","th"],["mouth","th1","입","👄","th"],["thorn","th1","가시","🌹","th"],["thief","th1","도둑","🦹","th"],["thread","th1","실","🧵","th"],["moth","th1","나방","🦋","th"],["thumb","th1","엄지손가락","👍","th"],["weather","th2","날씨","⛅","th"],["this","th2","이것","👇","th"],["father","th2","아버지","👨","th"],["mother","th2","어머니","👩","th"]],"q":["tooth","three","bath","mouth","thumb","moth","mother","father"],"c":["th","sh","ch","wh"]},"7-1":{"s":"긴 모음 복습","ti":"🔊 파닉스 긴 모음 복습","hi":"Long A · E · I · O 모으기","so":"배운 긴 모음(A · E · I · O) 낱말을 다시 만나요. 카드를 눌러 소리를 들어 보세요. 빨간 글자가 긴 모음 철자예요.","r":[["A","Long A","tail · say · chase"],["E","Long E","each · me · street"],["I","Long I","my · bye · time"],["O","Long O","go · hope · home"]],"w":[["tail","A","꼬리","","ai"],["say","A","말하다","💬","ay"],["chase","A","쫓다","🏃","a_e"],["each","E","각각","","ea"],["me","E","나를","🙋","e"],["street","E","거리","🏘️","ee"],["my","I","나의","","y"],["bye","I","안녕 (헤어질 때)","👋","ye"],["time","I","시간","⏰","i_e"],["go","O","가다","🚶","o"],["hope","O","바라다","🤞","o_e"],["home","O","집","🏠","o_e"]],"q":["chase","say","me","street","bye","time","go","home"]},"7-2":{"s":"블렌드 복습","ti":"🔊 파닉스 블렌드 복습","hi":"L · R · S · 그 밖 모으기","so":"배운 블렌드(L · R · S)와 이중자음 낱말을 다시 만나요. 카드를 눌러 소리를 들어 보세요. 빨간 글자가 블렌드예요.","r":[["L","L 블렌드","cl · fl"],["R","R 블렌드","dr · tr · gr"],["S","S 블렌드","st"],["etc","그 밖","ch · sh · th"]],"w":[["clear","L","맑은, 분명한","","cl"],["cloud","L","구름","☁️","cl"],["flag","L","깃발","🚩","fl"],["dream","R","꿈","💭","dr"],["tree","R","나무","🌳","tr"],["grow","R","자라다","🌱","gr"],["star","S","별","⭐","st"],["still","S","아직도, 가만히","","st"],["study","S","공부하다","📚","st"],["chair","etc","의자","🪑","ch"],["sheep","etc","양","🐑","sh"],["thin","etc","얇은, 마른","","th"]],"q":["cloud","flag","dream","tree","grow","star","chair","sheep"],"c":["cl","fl","dr","tr","gr","st","ch","sh","th"]},"8-1":{"s":"이중자음","ti":"🔊 파닉스 이중자음 복습","hi":"바른 철자 고르기","so":"소리를 듣고 바른 철자를 골라요. 먼저 카드를 눌러 소리와 철자를 눈과 귀로 익혀요.","w":[["brick","","벽돌","🧱"],["shadow","","그림자","🌑"],["trophy","","트로피","🏆"],["chalk","","분필","✏️"],["thumb","","엄지손가락","👍"],["pouch","","주머니","👝"],["photo","","사진","📷"],["whistle","","호루라기",""],["trash","","쓰레기","🗑️"],["wreath","","화환","💐"],["ring","","반지","💍"],["whisker","","(동물의) 수염","🐱"]],"p":{"brick":["brik","brich"],"shadow":["shado","shaddow"],"trophy":["trofy","trophie"],"chalk":["chauk","chawk"],"thumb":["thum","thumbe"],"pouch":["powch","pouche"],"photo":["foto","photoe"],"whistle":["wistle","whissle"],"trash":["trach","trasch"],"wreath":["reath","wreeth"],"ring":["rin","ringg"],"whisker":["wisker","whisler"]},"q":["brick","shadow","trophy","chalk","thumb","pouch","photo","whistle","trash","wreath","ring","whisker"]},"8-2":{"s":"ch · tch","ti":"🔊 파닉스 ch · tch 총정리","hi":"ch · tch 모으기","so":"ch와 tch는 둘 다 같은 소리(취)가 나요. 짧은 모음 뒤에서는 tch를 써요. 카드를 눌러 소리를 들어 보세요. 빨간 글자가 철자예요.","r":[["ch","ch","touch"],["tch","tch","match"]],"w":[["touch","ch","만지다","👆"],["peach","ch","복숭아","🍑"],["munch","ch","우적우적 먹다","😋"],["bunch","ch","다발, 송이","🍇"],["match","tch","성냥, 경기",""],["watch","tch","지켜보다, 손목시계","⌚"],["stretch","tch","늘이다, 쭉 펴다","🤸"],["catch","tch","잡다","🤲"]],"q":["touch","peach","munch","bunch","match","watch","stretch","catch"],"c":["ch","tch","sh","th"]}};   // 자료 원본: 개발도구_패치와_테스트/phonics_data_D.js
+function phBuild(d) {
+  return {
+    title: d.ti, hint: d.hi, lead: d.s + ' 소리를 철자별로 정리해요.',
+    sound: d.s, soundLead: d.so,
+    rules: (d.r || []).map(x => ({ id: x[0], label: x[1], sub: x[2] })),
+    words: d.w.map(x => ({ w: x[0], rule: x[1], ko: x[2], e: x[3], hl: x[4] })),
+    chunks: d.c || null, pickWrong: d.p || null, qw: d.q, pick: !!d.p
+  };
+}
+Object.keys(PH_DATA).forEach(function (s) {
+  if (!EXTRAS[s]) EXTRAS[s] = {};
+  EXTRAS[s].phonics = phBuild(PH_DATA[s]);
+});
+(function () {
+  if (document.getElementById('phStyle')) return;
+  const st = document.createElement('style');
+  st.id = 'phStyle';
+  st.textContent =
+    '.phe{font-size:30px; line-height:1.1;}' +
+    '.phcur{display:flex; flex-direction:column; align-items:center; gap:8px; margin:12px 0; padding:14px 10px; border:2px solid var(--line); border-radius:16px; background:var(--surface-2);}' +
+    '.phcur .phe{font-size:56px;}' +
+    '.phbig{font-family:"Andika",var(--f-ui); font-weight:800; font-size:36px; color:var(--ink);}' +
+    '.phsay{font-family:inherit; font-size:15px; font-weight:700; padding:8px 16px; border-radius:999px; border:2px solid var(--accent); background:var(--surface); color:var(--accent-strong); cursor:pointer;}' +
+    '.phword{display:flex; flex-wrap:wrap; justify-content:center; align-items:flex-end; gap:5px; font-family:"Andika",var(--f-ui); font-weight:800; font-size:40px; color:var(--ink);}' +
+    '.phb{display:inline-flex; align-items:center; justify-content:center; min-width:36px; height:50px; border-bottom:4px solid var(--accent); color:var(--accent-strong); cursor:pointer;}' +
+    '.phb.wide{min-width:70px;}.phb.good{color:var(--ok-ink,var(--accent-strong)); border-bottom-color:var(--ok,var(--accent));}' +
+    '.phtiles{display:flex; flex-wrap:wrap; gap:10px; justify-content:center; margin:6px 0 2px;}' +
+    '.phtile,.phopt{font-family:"Andika",var(--f-ui); font-weight:800; font-size:26px; padding:10px 18px; border-radius:12px; border:2px solid var(--line); background:var(--surface); color:var(--ink); cursor:pointer;}' +
+    '.phtile.used{opacity:.3; pointer-events:none;}' +
+    '.phopts{display:flex; flex-direction:column; gap:8px; width:100%; max-width:320px;}' +
+    '.phopt.bad{opacity:.4; text-decoration:line-through; pointer-events:none;}.phopt.good{border-color:var(--ok,var(--accent)); background:var(--ok-soft,var(--accent-soft));}' +
+    '.phans{min-height:22px; font-size:15px; color:var(--ink-soft);}' +
+    '.phres{text-align:center; padding:18px 8px;}.phres .phe{font-size:48px;}.phres b{font-size:22px;}';
+  document.head.appendChild(st);
+})();
+
+let phSeen = new Set(), phQueue = [], phCur = null, phPlaced = {}, phMistakes = 0, phTimer = null, phBound = false;
+let phQs = [], phQi = 0, phQScore = 0, phQBad = false, phQBusy = false, phQFill = [], phQExp = [], phPass = false;
+
+function phSp(wd) { return wd.hl || wd.rule; }   // 빨간 글자·빈칸으로 쓸 철자 (상자 id 와 다를 때 hl)
 
 function phHighlight(w, rule) {
   if (/^[aeiou]_e$/.test(rule)) {   // u_e·o_e 등 마법의 e (D2-2 o_e 2026-10-19)
@@ -381,6 +349,8 @@ function phHighlight(w, rule) {
   const i = w.lastIndexOf(rule);
   return w.slice(0, i) + '<span class="phl">' + rule + '</span>' + w.slice(i + rule.length);
 }
+function phHl(wd) { return phHighlight(wd.w, phSp(wd)); }
+function phEmoji(wd) { return wd.e ? '<span class="phe">' + wd.e + '</span>' : ''; }
 
 function phShow() {
   exEl('exProgWrap').hidden = true;
@@ -390,18 +360,38 @@ function phShow() {
   exEl('exTitle').textContent = exConf.title;
 }
 
+function phBind() {
+  if (phBound) return;
+  phBound = true;
+  exEl('exLearn').addEventListener('click', function (e) {
+    if (exKind !== 'phonics') return;
+    const t = e.target;
+    if (t.closest('.phsay')) { const wd = exPhase === 'ph2' ? phCur : phQs[phQi]; if (wd) speak(wd.w); return; }
+    const bk = t.closest('.phbucket');
+    if (bk && exPhase === 'ph2') { phTryPlace(bk.dataset.rule); return; }
+    const tile = t.closest('.phtile');
+    if (tile && exPhase === 'ph3') { phPickTile(tile); return; }
+    const opt = t.closest('.phopt');
+    if (opt && exPhase === 'ph3') { phPickOpt(opt); return; }
+    const blank = t.closest('.phb');
+    if (blank && exPhase === 'ph3' && !phQBusy) phQReset();
+  });
+}
+
 function renderPhonics() {
-  phSeen = new Set(); phSel = null; phPlaced = {}; phMistakes = 0; phFails = 0;
+  phBind();
+  clearTimeout(phTimer);
+  phSeen = new Set(); phQueue = []; phCur = null; phPlaced = {}; phMistakes = 0;
   exPhase = 'ph1';
   phShow();
   exEl('exStage').textContent = 'STEP 1 · 소리 듣기';
   exEl('exLead').textContent = exConf.soundLead;
   exEl('exLearn').innerHTML = '<div class="phcards">' + exConf.words.map(wd =>
-    '<button class="phcard" data-w="' + wd.w + '"><span class="phw">' + wd.w + '</span><span class="phko"></span></button>').join('') + '</div>';
+    '<button class="phcard" data-w="' + wd.w + '">' + phEmoji(wd) + '<span class="phw">' + wd.w + '</span><span class="phko"></span></button>').join('') + '</div>';
   exEl('exLearn').querySelectorAll('.phcard').forEach(card => card.addEventListener('click', () => {
     const wd = exConf.words.find(x => x.w === card.dataset.w);
     card.classList.add('seen');
-    card.querySelector('.phw').innerHTML = phHighlight(wd.w, wd.rule);
+    if (!exConf.pick) card.querySelector('.phw').innerHTML = phHl(wd);
     card.querySelector('.phko').textContent = wd.ko;
     speak(wd.w); phSeen.add(wd.w); updatePhStep1();
   }));
@@ -413,96 +403,61 @@ function updatePhStep1() {
   exEl('exCount').textContent = n + ' / ' + total + ' 눌러봄';
   const b = exEl('exMainBtn');
   b.hidden = false; b.disabled = n < total;
-  b.textContent = n < total ? '전부 눌러 보세요 (' + n + '/' + total + ')' : '다음: 같은 규칙끼리 모으기 →';
+  b.textContent = n < total ? '전부 눌러 보세요 (' + n + '/' + total + ')' : (exConf.pick ? '다음: 듣고 철자 고르기 →' : '다음: 듣고 분류하기 →');
 }
 
+/* ----- STEP 2 듣고 분류하기: 낱말이 한 개씩 나오며 소리가 저절로 나요 ----- */
 function renderPhSort() {
-  phSel = null; phPlaced = {};
+  phPlaced = {}; phQueue = exShuffle(exConf.words.slice()); phCur = null;
   exPhase = 'ph2';
   phShow();
-  exEl('exStage').textContent = 'STEP 2 · 같은 규칙끼리 모으기';
-  exEl('exLead').textContent = '같은 철자 규칙의 낱말끼리 모아요. 낱말을 끌어서 (또는 눌러서) 알맞은 상자에 넣어요.';
-  exEl('exLearn').innerHTML = '<div class="phchips" id="phChips">' +
-    exShuffle(exConf.words.slice()).map(wd => '<div class="phchip" data-w="' + wd.w + '">' + wd.w + '</div>').join('') + '</div>' +
+  exEl('exStage').textContent = 'STEP 2 · 듣고 분류하기';
+  exEl('exLead').textContent = '낱말이 하나씩 나와요. 소리를 듣고 알맞은 상자를 눌러요. 🔊를 누르면 다시 들려요.';
+  exEl('exLearn').innerHTML = '<div class="phcur" id="phCur"></div>' +
     '<div class="phbuckets">' + exConf.rules.map(r =>
       '<div class="phbucket" data-rule="' + r.id + '"><div class="phbl">' + r.label + '</div><div class="phbs">' + r.sub + '</div><div class="phdone" id="phDone_' + r.id + '"></div></div>').join('') + '</div>' +
     '<div class="phmsg" id="phMsg"></div>';
   exEl('exMainBtn').hidden = true;
   updatePhSortCount();
-  exEl('exLearn').querySelectorAll('.phbucket').forEach(bk => bk.addEventListener('click', () => {
-    if (phSel) phTryPlace(phSel, bk.dataset.rule);
-  }));
-  if (!phDragBound) {
-    phDragBound = true;
-    document.addEventListener('pointermove', phPointerMove);
-    document.addEventListener('pointerup', phPointerUp);
-  }
-  exEl('phChips').addEventListener('pointerdown', e => {
-    const chip = e.target.closest('.phchip');
-    if (!chip || chip.classList.contains('placed')) return;
-    phDrag = { chip: chip, sx: e.clientX, sy: e.clientY, moved: false, ghost: null };
-  });
+  phNext();
 }
 
-function phPointerMove(e) {
-  if (!phDrag) return;
-  const dx = e.clientX - phDrag.sx, dy = e.clientY - phDrag.sy;
-  if (!phDrag.moved && Math.hypot(dx, dy) > 8) {
-    phDrag.moved = true;
-    const g = phDrag.chip.cloneNode(true);
-    g.className = 'phchip phghost';
-    document.body.appendChild(g);
-    phDrag.ghost = g;
-  }
-  if (phDrag.moved && phDrag.ghost) {
-    if (window.placeFixed) placeFixed(phDrag.ghost, e.clientX, e.clientY); else { phDrag.ghost.style.left = e.clientX + 'px'; phDrag.ghost.style.top = e.clientY + 'px'; }   // 큰 화면 확대 보정 (WIDE_SCREEN)
-    const under = document.elementFromPoint ? document.elementFromPoint(e.clientX, e.clientY) : null;
-    document.querySelectorAll('.phbucket').forEach(b => b.classList.toggle('over', !!(under && under.closest && under.closest('.phbucket') === b)));
-  }
-}
-
-function phPointerUp(e) {
-  if (!phDrag) return;
-  const d = phDrag; phDrag = null;
-  document.querySelectorAll('.phbucket').forEach(b => b.classList.remove('over'));
-  if (d.moved) {
-    if (d.ghost) d.ghost.remove();
-    const under = document.elementFromPoint ? document.elementFromPoint(e.clientX, e.clientY) : null;
-    const bk = under && under.closest ? under.closest('.phbucket') : null;
-    if (bk) phTryPlace(d.chip, bk.dataset.rule);
-  } else {
-    const was = d.chip.classList.contains('sel');
-    document.querySelectorAll('.phchip.sel').forEach(c => c.classList.remove('sel'));
-    if (was) { phSel = null; } else { d.chip.classList.add('sel'); phSel = d.chip; speak(d.chip.dataset.w); }
-  }
+function phNext() {
+  if (exKind !== 'phonics' || exPhase !== 'ph2') return;
+  phCur = phQueue[0] || null;
+  if (!phCur) return;
+  exEl('phCur').innerHTML = phEmoji(phCur) + '<div class="phbig">' + phCur.w + '</div><button type="button" class="phsay">🔊 다시 듣기</button>';
+  speak(phCur.w);
 }
 
 function updatePhSortCount() {
   exEl('exCount').textContent = '모은 낱말 ' + Object.keys(phPlaced).length + ' / ' + exConf.words.length;
 }
 
-function phTryPlace(chip, rule) {
-  if (chip.classList.contains('placed')) return;
-  const wd = exConf.words.find(x => x.w === chip.dataset.w);
-  const msg = exEl('phMsg');
+function phTryPlace(rule) {
+  if (!phCur || exPhase !== 'ph2') return;
+  const wd = phCur, msg = exEl('phMsg');
   if (wd.rule === rule) {
-    chip.classList.add('placed'); chip.classList.remove('sel'); chip.style.display = 'none';
-    phSel = null;
-    phPlaced[wd.w] = rule;
-    exEl('phDone_' + rule).insertAdjacentHTML('beforeend', '<div class="phplaced">' + phHighlight(wd.w, wd.rule) + '</div>');
+    phPlaced[wd.w] = rule; phQueue.shift(); phCur = null;
+    exEl('phDone_' + rule).insertAdjacentHTML('beforeend', '<div class="phplaced">' + (wd.e ? wd.e + ' ' : '') + phHl(wd) + '</div>');
     try { playCorrectSound(); } catch (e) {}
     speak(wd.w);
     msg.style.color = 'var(--accent-strong)';
-    msg.textContent = '⭕ ' + wd.w + ' → ' + rule;
+    msg.textContent = '⭕ ' + wd.w + ' → ' + exConf.rules.find(r => r.id === rule).label;
     updatePhSortCount();
-    if (Object.keys(phPlaced).length === exConf.words.length) {
+    if (phQueue.length === 0) {
+      exEl('phCur').innerHTML = '<div class="phbig">🎉</div>';
       msg.textContent = '🎉 다 모았어요!' + (phMistakes ? ' (틀린 횟수 ' + phMistakes + ')' : ' 한 번도 안 틀렸어요!');
       const b = exEl('exMainBtn');
-      b.hidden = false; b.disabled = false; b.textContent = '다음: 같은 규칙 낱말 쓰기 →';
+      b.hidden = false; b.disabled = false; b.textContent = '다음: 듣고 골라 쓰기 →';
+    } else {
+      clearTimeout(phTimer);
+      phTimer = setTimeout(phNext, 1100);
     }
   } else {
     phMistakes++;
-    chip.classList.add('shake'); setTimeout(() => chip.classList.remove('shake'), 400);
+    const bk = exEl('exLearn').querySelector('.phbucket[data-rule="' + rule + '"]');
+    if (bk) { bk.classList.add('shake'); setTimeout(() => bk.classList.remove('shake'), 400); }
     try { playWrongSound(); } catch (e) {}
     msg.style.color = 'var(--danger)';
     msg.textContent = '❌ ' + wd.w + '의 ' + exConf.sound + ' 철자는 다른 상자예요. 소리를 다시 들어 보세요!';
@@ -510,38 +465,130 @@ function phTryPlace(chip, rule) {
   }
 }
 
-function renderPhWrite() {
-  exPhase = 'ph3'; phFails = 0;
-  phShow();
-  exEl('exStage').textContent = 'STEP 3 · 같은 규칙 낱말 쓰기';
-  exEl('exLead').textContent = '상자마다 같은 철자 규칙을 가진 낱말을 2개씩 써 보세요. 배운 낱말도 좋고, 새로 아는 낱말도 좋아요!';
-  exEl('exLearn').innerHTML = '<div class="phwrite">' + exConf.rules.map(r =>
-    '<div class="phrow"><div class="phrl">' + r.label + '</div>' +
-    '<input type="text" data-rule="' + r.id + '" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="낱말 1">' +
-    '<input type="text" data-rule="' + r.id + '" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="낱말 2"></div>').join('') + '</div>' +
-    '<div class="phmsg" id="phMsg"></div><div id="phHint"></div>';
-  exEl('exCount').textContent = '';
-  const b = exEl('exMainBtn');
-  b.hidden = false; b.disabled = false; b.textContent = '확인하기';
+/* ----- STEP 3 듣고 골라 쓰기: 8문제 (8-1은 바른 철자 고르기 12문제) ----- */
+function startPhQuiz() {
+  exPhase = 'ph3';
+  phQs = exShuffle(exConf.qw.map(n => exConf.words.find(x => x.w === n)));
+  phQi = 0; phQScore = 0;
+  exEl('exMainBtn').hidden = true;
+  renderPhQ();
 }
 
-function checkPhWrite() {
-  let allOk = true; const bad = [];
-  exConf.rules.forEach(r => {
-    const ins = Array.prototype.slice.call(exEl('exLearn').querySelectorAll('input[data-rule="' + r.id + '"]'));
-    const vals = ins.map(i => i.value.trim().toLowerCase());
-    const valid = vals.map(v => !!v && exConf.bank[r.id].indexOf(v) >= 0);
-    const distinct = vals[0] !== vals[1];
-    ins.forEach((inp, k) => { inp.className = (valid[k] && (k === 0 || distinct)) ? 'ok' : 'bad'; });
-    if (!(valid[0] && valid[1] && distinct)) { allOk = false; bad.push(r); }
-  });
-  const msg = exEl('phMsg');
-  if (allOk) { finishPhonics(); return; }
-  phFails++;
-  try { playWrongSound(); } catch (e) {}
-  msg.style.color = 'var(--danger)';
-  msg.textContent = '빨간 칸을 다시 확인해 보세요. 상자의 철자 규칙이 같은 낱말을 서로 다르게 2개씩 써요.';
-  exEl('phHint').innerHTML = '<div class="phhint">💡 힌트: ' + bad.map(r => '<b>' + r.label + '</b> → ' + exConf.hints[r.id].join(', ')).join(' &nbsp;·&nbsp; ') + '</div>';
+function phLayout(wd) {   // 낱말 글자 칸들: {c: 글자, b: 빈칸 번호(-1 이면 보임), wide}
+  const w = wd.w, sp = phSp(wd), cells = [];
+  if (exConf.chunks) {   // 덩어리 책: 그 책의 블렌드·이중자음 한 덩어리를 비움
+    const i = w.lastIndexOf(sp);
+    for (let j = 0; j < i; j++) cells.push({ c: w[j], b: -1 });
+    cells.push({ c: sp, b: 0, wide: true });
+    for (let j = i + sp.length; j < w.length; j++) cells.push({ c: w[j], b: -1 });
+    return { cells: cells, exp: [sp] };
+  }
+  let idx = [];   // 모음 책: 타깃 철자 안의 모음 글자만 비움 (a_e 는 a 와 끝의 e)
+  if (/^[aeiou]_e$/.test(sp)) idx = [w.indexOf(sp[0]), w.length - 1];
+  else { const i = w.lastIndexOf(sp); for (let j = i; j < i + sp.length; j++) if ('aeiouy'.indexOf(w[j]) >= 0) idx.push(j); }
+  let k = 0;
+  for (let j = 0; j < w.length; j++) cells.push(idx.indexOf(j) >= 0 ? { c: w[j], b: k++ } : { c: w[j], b: -1 });
+  return { cells: cells, exp: idx.map(j => w[j]) };
+}
+
+function phTiles(exp) {   // 정답 블록 + 다른 블록, 모두 6개 이하
+  const pool = exConf.chunks ? exConf.chunks : 'aeiouy'.split('');
+  const others = exShuffle(pool.filter(x => exp.indexOf(x) < 0));
+  const total = Math.min(6, exp.length + others.length);
+  return exShuffle(exp.concat(others.slice(0, total - exp.length)));
+}
+
+function renderPhQ() {
+  const wd = phQs[phQi];
+  clearTimeout(phTimer);
+  phQBusy = false; phQBad = false;
+  phShow();
+  exEl('exStage').textContent = 'STEP 3 · 듣고 골라 쓰기';
+  exEl('exLead').textContent = exConf.pick ? '소리를 듣고 바른 철자를 골라요. 🔊를 누르면 다시 들려요.'
+    : exConf.chunks ? '소리를 듣고, 빈칸에 들어갈 철자 덩어리를 블록에서 골라요. 🔊를 누르면 다시 들려요.'
+      : '소리를 듣고, 빈칸에 들어갈 모음 블록을 골라 낱말을 완성해요. 🔊를 누르면 다시 들려요.';
+  exEl('exCount').textContent = '문제 ' + (phQi + 1) + ' / ' + phQs.length;
+  let h = '<div class="phcur">' + phEmoji(wd) + '<button type="button" class="phsay">🔊 다시 듣기</button>';
+  if (exConf.pick) {
+    h += '<div class="phopts">' + exShuffle([wd.w].concat(exConf.pickWrong[wd.w])).map(o => '<button type="button" class="phopt" data-v="' + o + '">' + o + '</button>').join('') + '</div>';
+  } else {
+    const L = phLayout(wd);
+    phQExp = L.exp; phQFill = L.exp.map(() => '');
+    h += '<div class="phword">' + L.cells.map(c => c.b >= 0 ? '<span class="phb' + (c.wide ? ' wide' : '') + '" data-k="' + c.b + '"></span>' : '<span>' + c.c + '</span>').join('') + '</div>' +
+      '<div class="phtiles">' + phTiles(L.exp).map(t => '<button type="button" class="phtile" data-v="' + t + '">' + t + '</button>').join('') + '</div>';
+  }
+  h += '<div class="phans" id="phAns"></div></div><div class="phmsg" id="phMsg"></div>';
+  exEl('exLearn').innerHTML = h;
+  speak(wd.w);
+}
+
+function phQReset() {
+  phQFill = phQExp.map(() => '');
+  exEl('exLearn').querySelectorAll('.phb').forEach(b => { b.textContent = ''; });
+  exEl('exLearn').querySelectorAll('.phtile').forEach(t => t.classList.remove('used'));
+}
+
+function phPickTile(tile) {
+  if (phQBusy || tile.classList.contains('used')) return;
+  const k = phQFill.findIndex(v => !v);
+  if (k < 0) return;
+  phQFill[k] = tile.dataset.v;
+  tile.classList.add('used');
+  exEl('exLearn').querySelector('.phb[data-k="' + k + '"]').textContent = tile.dataset.v;
+  if (phQFill.every(Boolean)) phAnswered(phQFill.every((v, i) => v === phQExp[i]));
+}
+
+function phPickOpt(opt) {
+  if (phQBusy) return;
+  const ok = opt.dataset.v === phQs[phQi].w;
+  if (ok) { opt.classList.add('good'); phAnswered(true); }
+  else { opt.classList.add('bad'); phAnswered(false); }
+}
+
+function phAnswered(ok) {
+  const wd = phQs[phQi], msg = exEl('phMsg');
+  clearTimeout(phTimer);
+  if (ok) {
+    phQBusy = true;
+    if (!phQBad) phQScore++;
+    try { playCorrectSound(); } catch (e) {}
+    speak(wd.w);   // 완성된 낱말을 한 번 더
+    exEl('exLearn').querySelectorAll('.phb').forEach(b => b.classList.add('good'));
+    msg.style.color = 'var(--accent-strong)';
+    msg.textContent = '⭕ ' + wd.w + (wd.ko ? ' · ' + wd.ko : '');
+    phTimer = setTimeout(phQNext, 1500);
+  } else {
+    if (!phQBad) { phQBad = true; phMistakes++; }
+    try { playWrongSound(); } catch (e) {}
+    speak(wd.w);   // 틀리면 정답 소리를 또 한 번
+    msg.style.color = 'var(--danger)';
+    msg.textContent = '❌ 정답은 ' + wd.w + ' 이에요. 소리를 듣고 다시 골라 보세요.';
+    exEl('phAns').innerHTML = '정답: <b>' + phHl(wd) + '</b>';
+    if (!exConf.pick) {
+      phQBusy = true;
+      phTimer = setTimeout(() => { if (exKind === 'phonics' && exPhase === 'ph3') { phQReset(); phQBusy = false; } }, 1200);
+    }
+  }
+}
+
+function phQNext() {
+  if (exKind !== 'phonics' || exPhase !== 'ph3') return;
+  phQi++;
+  if (phQi >= phQs.length) renderPhResult(); else renderPhQ();
+}
+
+function renderPhResult() {
+  exPhase = 'ph4';
+  const n = phQs.length, need = Math.ceil(n * 0.7);
+  phPass = phQScore >= need;
+  phShow();
+  exEl('exStage').textContent = 'STEP 3 · 결과';
+  exEl('exLead').textContent = '';
+  exEl('exCount').textContent = phQScore + ' / ' + n;
+  exEl('exLearn').innerHTML = '<div class="phres"><div class="phe">' + (phPass ? '🎉' : '💪') + '</div><p><b>' + n + '문제 중 ' + phQScore + '개</b> 처음에 맞혔어요.</p><p>' +
+    (phPass ? '잘했어요! 소리를 잘 듣고 골랐어요.' : need + '개 이상 맞히면 통과예요. 소리를 잘 듣고 한 번 더 해 봐요!') + '</p></div>';
+  const b = exEl('exMainBtn');
+  b.hidden = false; b.disabled = false; b.textContent = phPass ? '완료 →' : '다시 도전 →';
 }
 
 async function finishPhonics() {
@@ -570,9 +617,10 @@ async function finishPhonics() {
 }
 
 function phonicsMain() {
-  if (exPhase === 'ph1') { renderPhSort(); return; }
-  if (exPhase === 'ph2') { renderPhWrite(); return; }
-  if (exPhase === 'ph3') { checkPhWrite(); return; }
+  if (exPhase === 'ph1') { if (exConf.pick) startPhQuiz(); else renderPhSort(); return; }
+  if (exPhase === 'ph2') { startPhQuiz(); return; }
+  if (exPhase === 'ph4') { if (phPass) finishPhonics(); else startPhQuiz(); return; }
+  if (exPhase === 'ph3') return;
   openModeScreen(currentSet);
 }
 

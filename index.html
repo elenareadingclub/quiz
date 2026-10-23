@@ -116,7 +116,11 @@
 <script>
 // ===== AUTO_UPDATE (요구사항 NF-09): 첫 화면도 새 버전이면 한 번 다시 불러온다
 (function () {
+<<<<<<< Updated upstream
   var APP_BUILD = '20261023-153712', KEY = 'root_quiz_reload', RETRY = 600000;
+=======
+  var APP_BUILD = '20261023-153745', KEY = 'root_quiz_reload', RETRY = 600000;
+>>>>>>> Stashed changes
   if (!/github\.io$/.test(location.hostname)) return;
   function check() {
     if (document.hidden) return;

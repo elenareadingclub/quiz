@@ -1474,6 +1474,7 @@ function renderSetList(progress) {
           <span class="dot${s.p.wordcheck ? ' pass' : ''}" title="단어 확인"></span>
           <span class="dot${s.p.quiz ? ' pass' : ''}" title="퀴즈"></span>
           <span class="dot${s.p.match ? ' pass' : ''}" title="매칭"></span>
+          ${swsHas(s.no) ? `<span class="dot${s.p.sight ? ' pass' : ''}" title="사이트워드"></span>` : ''}
           <span class="dot${s.p.spell ? ' pass' : ''}" title="스펠"></span>
         </span>
         ${s.complete ? '<span class="setrow-badge">✓</span>' : ''}
@@ -3378,7 +3379,7 @@ document.getElementById('hwOverlay').addEventListener('click', e => { if (e.targ
 
 /* ===== Step Up: 내용은 stepup.js 에 따로 (엘레나 결정 2026-10-19) ===== */
 // 버튼 목록(책 → [코너, 제목, 힌트]). 코너 내용·화면은 stepup.js (열 때만 받음, 첫 화면 크기 그대로)
-const STEPUP_INDEX = {"2-1":[["meals","🍽️ 하루 식사와 시간","breakfast·lunch·dinner·snack"],["body","🐾 강아지 몸","그림에서 찾기"]],"2-2":[["longo","🔍 긴 '오우' 골라보기","긴 '오우' ⭕ / 아니에요 ✖"],["jobsyn","👩‍⚕️ 직업 — Is she a ~?","Yes, she is. / No, she isn't."],["phonics","🔊 파닉스 Long O 총정리","o_e · oa · oe · ow 모으기"]],"3-1":[["plant","🌱 식물 이름 맞히기","그림에서 뿌리·줄기·잎 찾기"],["phonics","🔊 파닉스 Long U 총정리","ew · u_e · ue 모으기"],["jobs","🏆 되고 싶은 직업 월드컵","What are you going to be?"],["story","🎃 그림과 문장 연결하기","How a pumpkin grows"]]};
+const STEPUP_INDEX = {"1-1":[["phonics","🔊 파닉스 Long A 총정리","ai · ay · a_e 모으기"]],"1-2":[["phonics","🔊 파닉스 Long E 총정리","ea · ee 모으기"]],"2-1":[["meals","🍽️ 하루 식사와 시간","breakfast·lunch·dinner·snack"],["body","🐾 강아지 몸","그림에서 찾기"],["phonics","🔊 파닉스 Long I 총정리","ie · igh · y 모으기"]],"2-2":[["longo","🔍 긴 '오우' 골라보기","긴 '오우' ⭕ / 아니에요 ✖"],["jobsyn","👩‍⚕️ 직업 — Is she a ~?","Yes, she is. / No, she isn't."],["phonics","🔊 파닉스 Long O 총정리","o_e · oa · oe · ow 모으기"]],"3-1":[["plant","🌱 식물 이름 맞히기","그림에서 뿌리·줄기·잎 찾기"],["phonics","🔊 파닉스 Long U 총정리","ew · u_e · ue · ui 모으기"],["jobs","🏆 되고 싶은 직업 월드컵","What are you going to be?"],["story","🎃 그림과 문장 연결하기","How a pumpkin grows"]],"3-2":[["phonics","🔊 파닉스 L 블렌드 총정리","bl · cl · fl · pl/gl/sl 모으기"]],"4-1":[["phonics","🔊 파닉스 R 블렌드 총정리","br · cr · dr · fr/gr/pr/tr 모으기"]],"4-2":[["phonics","🔊 파닉스 S 블렌드 총정리","sc/sk · sl/sm/sn · sp · st/sw 모으기"]],"5-1":[["phonics","🔊 파닉스 ph · wh 총정리","ph · p · wh · w 모으기"]],"5-2":[["phonics","🔊 파닉스 sh · ch 총정리","sh · ch 모으기"]],"6-1":[["phonics","🔊 파닉스 ng · nk · ck 총정리","ng · nk · ck 모으기"]],"6-2":[["phonics","🔊 파닉스 th 두 소리 총정리","바람 소리 · 목이 울리는 소리"]],"7-1":[["phonics","🔊 파닉스 긴 모음 복습","Long A · E · I · O 모으기"]],"7-2":[["phonics","🔊 파닉스 블렌드 복습","L · R · S · 그 밖 모으기"]],"8-1":[["phonics","🔊 파닉스 이중자음 복습","바른 철자 고르기"]],"8-2":[["phonics","🔊 파닉스 ch · tch 총정리","ch · tch 모으기"]]};
 let stepupLoad = null, stepupPrefetch = null;
 function loadStepup() {
   if (!stepupLoad) stepupLoad = new Promise((res, rej) => {
@@ -3850,7 +3851,11 @@ window.addEventListener('beforeunload', e => {
 // ===== AUTO_UPDATE (요구사항 NF-09): 새 버전을 올리면 다음 접속이나 탭으로 돌아올 때 최신 화면으로 바꾼다.
 // 문제를 푸는 중·기록을 보내는 중에는 끊지 않고, 이름·Day 목록 화면에서만 한 번 다시 불러온다.
 // 못 보낸 기록은 이미 기기에 먼저 저장돼 있어 다시 불러와도 사라지지 않는다.
+<<<<<<< Updated upstream
 const APP_BUILD = '20261023-153712';
+=======
+const APP_BUILD = '20261023-153745';
+>>>>>>> Stashed changes
 const VER_URL = '../version.json';
 const VER_FIRST_MS = 1500, VER_POLL_MS = 600000, VER_TICK_MS = 5000, VER_RETRY_MS = 600000;
 let verWant = '';   // 받아야 할 새 번호 (안전한 때를 기다리는 중)
