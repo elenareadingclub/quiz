@@ -1803,6 +1803,12 @@ function quizShuffleArr(a) {
 function quizBuildSeq(n, m, strict) {
   const counts = new Array(m).fill(Math.floor(n / m));
   quizShuffleArr(Array.from({ length: m }, (_, p) => p)).slice(0, n % m).forEach(p => { counts[p]++; });
+  // 자리마다 개수가 늘 똑같으면 마지막 문제 정답 자리를 셀 수 있다 → 평균 ±1 안에서 흔든다 (엘레나 2026-10-27)
+  const lo = Math.max(0, Math.floor(n / m) - 1), hi = Math.ceil(n / m) + 1;
+  for (let t = 0; t < m; t++) {
+    const p = Math.floor(Math.random() * m), q = Math.floor(Math.random() * m);
+    if (p !== q && counts[p] > lo && counts[q] < hi) { counts[p]--; counts[q]++; }
+  }
   const seq = []; let budget = 20000;
   function ok(s) {
     const k = s.length - 1;
@@ -1843,10 +1849,13 @@ function reshuffleChoices(q) {
     if (q.choices.length < 2 || q.choices.indexOf(q.correct) !== was) break;
   }
 }
+// 문제 순서도 판마다 섞는다 (엘레나 2026-10-27: 단어 목록 순서 그대로면 순서를 외워 맞힐 수 있음)
 function pickQuizQuestions(list) {
-  const a = list.slice();
-  if (a.length <= QUIZ_MAX_Q) return a;
-  for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; }
+  let a = list.slice();
+  for (let t = 0; t < 20; t++) {
+    a = quizShuffleArr(list);
+    if (a.length < 3 || a.some((q, i) => q !== list[i])) break;
+  }
   return a.slice(0, QUIZ_MAX_Q);
 }
 let inRetest = false;
@@ -2553,7 +2562,7 @@ function renderEasyQuestion(q) {
   }
   const blanks = cIdx || [blank], ans = blanks.map(i => letters[i]), correct = ans[0];
   const decoys = cIdx ? easyPick(EASY_CONSONANTS.filter(c => ans.indexOf(c) < 0), 4) : easyPick(EASY_VOWELS.indexOf(correct) >= 0 ? EASY_VOWELS : EASY_CONSONANTS, 3, correct);
-  const choices = ans.concat(decoys).sort(() => Math.random() - 0.5);
+  const choices = quizShuffleArr(ans.concat(decoys));   // 고르게 섞기 (sort 방식은 정답이 앞쪽에 몰림, 2026-10-27)
   // 힌트로 보여 줄 글자들은 이미 놓인 '주어진 글자'(given)로 두고, 고를 수 있는 보기만 아래에 보인다
   easyTiles = [];
   easyPlaced = [];
@@ -3656,7 +3665,7 @@ window.addEventListener('beforeunload', e => {
 // ===== AUTO_UPDATE (요구사항 NF-09): 새 버전을 올리면 다음 접속이나 탭으로 돌아올 때 최신 화면으로 바꾼다.
 // 문제를 푸는 중·기록을 보내는 중에는 끊지 않고, 이름·Day 목록 화면에서만 한 번 다시 불러온다.
 // 못 보낸 기록은 이미 기기에 먼저 저장돼 있어 다시 불러와도 사라지지 않는다.
-const APP_BUILD = '20261023-153745';
+const APP_BUILD = '20261028-152445';
 const VER_URL = '../version.json';
 const VER_FIRST_MS = 1500, VER_POLL_MS = 600000, VER_TICK_MS = 5000, VER_RETRY_MS = 600000;
 let verWant = '';   // 받아야 할 새 번호 (안전한 때를 기다리는 중)

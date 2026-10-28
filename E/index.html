@@ -1809,6 +1809,12 @@ function quizShuffleArr(a) {
 function quizBuildSeq(n, m, strict) {
   const counts = new Array(m).fill(Math.floor(n / m));
   quizShuffleArr(Array.from({ length: m }, (_, p) => p)).slice(0, n % m).forEach(p => { counts[p]++; });
+  // 자리마다 개수가 늘 똑같으면 마지막 문제 정답 자리를 셀 수 있다 → 평균 ±1 안에서 흔든다 (엘레나 2026-10-27)
+  const lo = Math.max(0, Math.floor(n / m) - 1), hi = Math.ceil(n / m) + 1;
+  for (let t = 0; t < m; t++) {
+    const p = Math.floor(Math.random() * m), q = Math.floor(Math.random() * m);
+    if (p !== q && counts[p] > lo && counts[q] < hi) { counts[p]--; counts[q]++; }
+  }
   const seq = []; let budget = 20000;
   function ok(s) {
     const k = s.length - 1;
@@ -1849,10 +1855,13 @@ function reshuffleChoices(q) {
     if (q.choices.length < 2 || q.choices.indexOf(q.correct) !== was) break;
   }
 }
+// 문제 순서도 판마다 섞는다 (엘레나 2026-10-27: 단어 목록 순서 그대로면 순서를 외워 맞힐 수 있음)
 function pickQuizQuestions(list) {
-  const a = list.slice();
-  if (a.length <= QUIZ_MAX_Q) return a;
-  for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; }
+  let a = list.slice();
+  for (let t = 0; t < 20; t++) {
+    a = quizShuffleArr(list);
+    if (a.length < 3 || a.some((q, i) => q !== list[i])) break;
+  }
   return a.slice(0, QUIZ_MAX_Q);
 }
 let inRetest = false;
@@ -2520,9 +2529,14 @@ function renderEasyQuestion(q) {
   const chars = q.en.toLowerCase().split('');
   easySlots = chars.map(c => ({ ch: c, isSpace: c === ' ' }));
   const shuffled = chars.filter(c => c !== ' ').map((c, i) => ({ id: i, ch: c }));
-  for (let i = shuffled.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  const plain = shuffled.map(t => t.ch).join('');
+  // 섞은 글자가 정답 순서 그대로면 다시 섞는다 (엘레나 2026-10-27 랜덤 점검: own·pay 같은 짧은 단어에서 자주 생김)
+  for (let t = 0; t < 20; t++) {
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    if (new Set(plain).size < 2 || shuffled.map(x => x.ch).join('') !== plain) break;
   }
   easyTiles = shuffled.map(t => ({ ...t, used: false }));
   easyPlaced = [];
@@ -3615,7 +3629,7 @@ window.addEventListener('beforeunload', e => {
 // ===== AUTO_UPDATE (요구사항 NF-09): 새 버전을 올리면 다음 접속이나 탭으로 돌아올 때 최신 화면으로 바꾼다.
 // 문제를 푸는 중·기록을 보내는 중에는 끊지 않고, 이름·Day 목록 화면에서만 한 번 다시 불러온다.
 // 못 보낸 기록은 이미 기기에 먼저 저장돼 있어 다시 불러와도 사라지지 않는다.
-const APP_BUILD = '20261023-153745';
+const APP_BUILD = '20261028-152445';
 const VER_URL = '../version.json';
 const VER_FIRST_MS = 1500, VER_POLL_MS = 600000, VER_TICK_MS = 5000, VER_RETRY_MS = 600000;
 let verWant = '';   // 받아야 할 새 번호 (안전한 때를 기다리는 중)
