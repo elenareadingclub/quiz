@@ -2030,7 +2030,7 @@ async function finishQuiz() {
   badge.className = 'passbadge ' + (passed ? 'pass' : 'fail');
   badge.hidden = false;
   document.getElementById('resultCard').hidden = false;
-  recordLast(currentSet, 'quiz', { score, total: quizRoundQuestions.length, pct, passed, wrong: [...new Set(wrongWords)], reps: bumpReps(currentSet, 'quiz') });
+  recordLast(currentSet, 'quiz', { score, total: quizRoundQuestions.length, pct, passed, wrong: [...new Set(wrongWords)], asked: quizRoundQuestions.map(q => q.direction === 'en2ko' ? q.prompt : q.correct), reps: bumpReps(currentSet, 'quiz') });
   markLocalProgress(currentSet, 'quiz', passed);
   configureNextModeBtn('quiz');
   await saveResult({ setTitle: quiz.title, score, total: quizRoundQuestions.length, pct, passed, wrong: [...new Set(wrongWords)] });
@@ -2707,7 +2707,7 @@ async function finishSpell() {
   badge.hidden = false;
   document.getElementById('resultCard').hidden = false;
   // 이지·하드 어느 쪽을 통과해도 미션 완료(초록불)로 인정
-  recordLast(currentSet, 'spell', { score: spellScore, total, pct, passed, diff: spellDifficulty, wrong: [...new Set(spellWrongQuestions.map(q => q.en))], clean: spellWrongQuestions.length === 0 && spellScore === total });
+  recordLast(currentSet, 'spell', { score: spellScore, total, pct, passed, diff: spellDifficulty, wrong: [...new Set(spellWrongQuestions.map(q => q.en))], asked: spellRoundQuestions.map(q => q.en), clean: spellWrongQuestions.length === 0 && spellScore === total });
   markLocalProgress(currentSet, 'spell', passed);
   configureNextModeBtn('spell');
   // 단, DB 기록(순위표·교사 대시보드)과 축하 연출은 하드 통과에서만 남긴다
@@ -3374,7 +3374,16 @@ function upStage(setNo, m, data) {
   const p = { action: 'stage', level: LEVEL_CODE, name: currentName, set: setNo, stage: m, noAuto: true,
     eventId: LEVEL_CODE + '-' + currentName + '-' + setNo + '-' + m + '-' + upId() };
   if (m === 'wordcheck') { p.total = 0; p.reps = reps || 1; }
-  else { p.score = data.score; p.total = data.total; p.reps = data.reps || reps || 1; p.wrong = (data.wrong || []).slice(0, 60); }
+  else {
+    p.score = data.score; p.total = data.total; p.reps = data.reps || reps || 1; p.wrong = (data.wrong || []).slice(0, 60);
+    // 낯선 단어 노트(T-205): 오답에 뜻을 붙이고, 이번 판에서 맞힌 단어도 같이 보낸다 (2026-10-29)
+    // 틀린 단어는 노트에 쌓이고, 맞힌 단어는 연속정답을 올려 2번 연속이면 졸업한다
+    if (m === 'quiz' || m === 'spell') {
+      p.wrongWords = p.wrong.map(w => ({ w: w, ko: wordKoLookupAny(w) }));
+      const bad = new Set(p.wrong.map(x => String(x).toLowerCase()));
+      p.rightWords = [...new Set(data.asked || [])].filter(x => x && !bad.has(String(x).toLowerCase())).slice(0, 60);
+    }
+  }
   if (m === 'match') p.points = data.points;
   if (m === 'spell') { p.diff = data.diff; p.clean = !!data.clean; }
   if (setNo === 'review6') p.noSpell = true;
@@ -3560,7 +3569,7 @@ window.addEventListener('beforeunload', e => {
 // ===== AUTO_UPDATE (요구사항 NF-09): 새 버전을 올리면 다음 접속이나 탭으로 돌아올 때 최신 화면으로 바꾼다.
 // 문제를 푸는 중·기록을 보내는 중에는 끊지 않고, 이름·Day 목록 화면에서만 한 번 다시 불러온다.
 // 못 보낸 기록은 이미 기기에 먼저 저장돼 있어 다시 불러와도 사라지지 않는다.
-const APP_BUILD = '20261028-152445';
+const APP_BUILD = '20261029-201702';
 const VER_URL = '../version.json';
 const VER_FIRST_MS = 1500, VER_POLL_MS = 600000, VER_TICK_MS = 5000, VER_RETRY_MS = 600000;
 let verWant = '';   // 받아야 할 새 번호 (안전한 때를 기다리는 중)
