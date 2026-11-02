@@ -2400,9 +2400,12 @@ function setSpellDifficulty(diff) {
 document.getElementById('diffEasyBtn').addEventListener('click', () => setSpellDifficulty('easy'));
 document.getElementById('diffHardBtn').addEventListener('click', () => setSpellDifficulty('hard'));
 
+// 스펠은 타일 8개 이내 단어만 낸다 (엘레나 2026-11-02, H-15)
+function spellPool(set) { return set.words.filter(w => w.en.replace(/\s/g, '').length <= 8); }
+
 function startSpell() {
   const set = WORD_SETS.find(w => w.no === currentSet);
-  const pool = set.words.slice();
+  const pool = spellPool(set);
   for (let i = pool.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [pool[i], pool[j]] = [pool[j], pool[i]];
@@ -3569,7 +3572,7 @@ window.addEventListener('beforeunload', e => {
 // ===== AUTO_UPDATE (요구사항 NF-09): 새 버전을 올리면 다음 접속이나 탭으로 돌아올 때 최신 화면으로 바꾼다.
 // 문제를 푸는 중·기록을 보내는 중에는 끊지 않고, 이름·Day 목록 화면에서만 한 번 다시 불러온다.
 // 못 보낸 기록은 이미 기기에 먼저 저장돼 있어 다시 불러와도 사라지지 않는다.
-const APP_BUILD = '20261102-150953';
+const APP_BUILD = '20261102-212102';
 const VER_URL = '../version.json';
 const VER_FIRST_MS = 1500, VER_POLL_MS = 600000, VER_TICK_MS = 5000, VER_RETRY_MS = 600000;
 let verWant = '';   // 받아야 할 새 번호 (안전한 때를 기다리는 중)
