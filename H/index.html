@@ -1262,6 +1262,7 @@ function wpSetWords() {
   return set ? set.words : [];
 }
 function wpPageComplete() {
+  if (isGuestName()) return true;   // 체험(Guest)은 점검용 — 뜻을 다 누르지 않아도 다음 쪽으로 (엘레나 2026-11-03)
   return wpSetWords().slice(wpPage * WP_PAGE_SIZE, (wpPage + 1) * WP_PAGE_SIZE).every(w => wpSeen[w.en]);
 }
 function updateWpNav() {
@@ -1537,7 +1538,9 @@ function quizStartLabel() {
 }
 function stageOrder(setNo) { return setNo === 'review6' ? ['wordcheck', 'quiz', 'match'] : ['wordcheck', 'quiz', 'match', 'spell']; }
 // 앞 단계를 통과했거나, 이미 이 단계나 그 뒤 단계를 통과한 기록이 있으면 열려 있다
+function isGuestName() { return String(currentName || '').trim().toLowerCase() === 'guest'; }
 function modeUnlocked(setNo, m) {
+  if (isGuestName()) return true;   // 체험(Guest)은 점검용 — 단계 순서를 잠그지 않는다 (엘레나 2026-11-03)
   const order = stageOrder(setNo);
   const idx = order.indexOf(m);
   if (idx <= 0) return true;
@@ -3572,7 +3575,7 @@ window.addEventListener('beforeunload', e => {
 // ===== AUTO_UPDATE (요구사항 NF-09): 새 버전을 올리면 다음 접속이나 탭으로 돌아올 때 최신 화면으로 바꾼다.
 // 문제를 푸는 중·기록을 보내는 중에는 끊지 않고, 이름·Day 목록 화면에서만 한 번 다시 불러온다.
 // 못 보낸 기록은 이미 기기에 먼저 저장돼 있어 다시 불러와도 사라지지 않는다.
-const APP_BUILD = '20261103-105112';
+const APP_BUILD = '20261103-192859';
 const VER_URL = '../version.json';
 const VER_FIRST_MS = 1500, VER_POLL_MS = 600000, VER_TICK_MS = 5000, VER_RETRY_MS = 600000;
 let verWant = '';   // 받아야 할 새 번호 (안전한 때를 기다리는 중)
