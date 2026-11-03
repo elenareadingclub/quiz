@@ -313,6 +313,13 @@ Object.keys(PH_DATA).forEach(function (s) {
   if (!EXTRAS[s]) EXTRAS[s] = {};
   EXTRAS[s].phonics = phBuild(PH_DATA[s]);
 });
+EXTRAS['3-2'].blendpick = {   // 워크북 p.8 (보기도 워크북 그대로)
+  title: '🖼️ 그림 보고 낱말 고르기', hint: 'pl · sl · gl 낱말 12문제', sound: 'L 블렌드 낱말',
+  words: [{"w":"plane","rule":"pl","ko":"비행기","e":"✈️"},{"w":"sled","rule":"sl","ko":"썰매","e":"🛷"},{"w":"plate","rule":"pl","ko":"접시","e":"🍽️"},{"w":"slip","rule":"sl","ko":"미끄러지다","e":""},{"w":"plum","rule":"pl","ko":"자두","e":""},{"w":"slide","rule":"sl","ko":"미끄럼틀","e":"🛝"},{"w":"plant","rule":"pl","ko":"식물","e":"🪴"},{"w":"glad","rule":"gl","ko":"기쁜","e":"😄"},{"w":"glass","rule":"gl","ko":"유리잔","e":"🥛"},{"w":"glove","rule":"gl","ko":"장갑","e":"🧤"},{"w":"slippers","rule":"sl","ko":"실내화","e":"🥿"},{"w":"globe","rule":"gl","ko":"지구본","e":"🌏"}],
+  pickWrong: {"plane":["pane","plan"],"sled":["sed","slide"],"plate":["plat","pate"],"slip":["sip","slipe"],"plum":["pum","plume"],"slide":["side","slid"],"plant":["plan","pant"],"glad":["glade","glid"],"glass":["gass","gloss"],"glove":["glov","gove"],"slippers":["sippers","clippers"],"globe":["glob","goble"]},
+  qw: ["plane","sled","plate","slip","plum","slide","plant","glad","glass","glove","slippers","globe"],
+  pick: true, pickStage: '그림 보고 낱말 고르기', pickLead: '그림을 보고 소리를 들어요. 맞는 낱말을 골라요. 🔊를 누르면 다시 들려요.'
+};
 (function () {
   if (document.getElementById('phStyle')) return;
   const st = document.createElement('style');
@@ -339,6 +346,7 @@ Object.keys(PH_DATA).forEach(function (s) {
 let phSeen = new Set(), phQueue = [], phCur = null, phPlaced = {}, phMistakes = 0, phTimer = null, phBound = false;
 let phQs = [], phQi = 0, phQScore = 0, phQBad = false, phQBusy = false, phQFill = [], phQExp = [], phPass = false;
 
+function phOn() { return exKind === 'phonics' || exKind === 'blendpick'; }
 function phSp(wd) { return wd.hl || wd.rule; }   // 빨간 글자·빈칸으로 쓸 철자 (상자 id 와 다를 때 hl)
 
 function phHighlight(w, rule) {
@@ -364,7 +372,7 @@ function phBind() {
   if (phBound) return;
   phBound = true;
   exEl('exLearn').addEventListener('click', function (e) {
-    if (exKind !== 'phonics') return;
+    if (!phOn()) return;
     const t = e.target;
     if (t.closest('.phsay')) { const wd = exPhase === 'ph2' ? phCur : phQs[phQi]; if (wd) speak(wd.w); return; }
     const bk = t.closest('.phbucket');
@@ -423,7 +431,7 @@ function renderPhSort() {
 }
 
 function phNext() {
-  if (exKind !== 'phonics' || exPhase !== 'ph2') return;
+  if (!phOn() || exPhase !== 'ph2') return;
   phCur = phQueue[0] || null;
   if (!phCur) return;
   exEl('phCur').innerHTML = phEmoji(phCur) + '<div class="phbig">' + phCur.w + '</div><button type="button" class="phsay">🔊 다시 듣기</button>';
@@ -503,12 +511,12 @@ function renderPhQ() {
   clearTimeout(phTimer);
   phQBusy = false; phQBad = false;
   phShow();
-  exEl('exStage').textContent = 'STEP 3 · 듣고 골라 쓰기';
-  exEl('exLead').textContent = exConf.pick ? '소리를 듣고 바른 철자를 골라요. 🔊를 누르면 다시 들려요.'
+  exEl('exStage').textContent = exConf.pickStage || 'STEP 3 · 듣고 골라 쓰기';
+  exEl('exLead').textContent = exConf.pickLead ? exConf.pickLead : exConf.pick ? '소리를 듣고 바른 철자를 골라요. 🔊를 누르면 다시 들려요.'
     : exConf.chunks ? '소리를 듣고, 빈칸에 들어갈 철자 덩어리를 블록에서 골라요. 🔊를 누르면 다시 들려요.'
       : '소리를 듣고, 빈칸에 들어갈 모음 블록을 골라 낱말을 완성해요. 🔊를 누르면 다시 들려요.';
   exEl('exCount').textContent = '문제 ' + (phQi + 1) + ' / ' + phQs.length;
-  let h = '<div class="phcur">' + phEmoji(wd) + '<button type="button" class="phsay">🔊 다시 듣기</button>';
+  let h = '<div class="phcur">' + (exConf.pickStage && !wd.e ? '<div class="phbig">' + wd.ko + '</div>' : phEmoji(wd)) + '<button type="button" class="phsay">🔊 다시 듣기</button>';
   if (exConf.pick) {
     h += '<div class="phopts">' + exShuffle([wd.w].concat(exConf.pickWrong[wd.w])).map(o => '<button type="button" class="phopt" data-v="' + o + '">' + o + '</button>').join('') + '</div>';
   } else {
@@ -556,6 +564,7 @@ function phAnswered(ok) {
     exEl('exLearn').querySelectorAll('.phb').forEach(b => b.classList.add('good'));
     msg.style.color = 'var(--accent-strong)';
     msg.textContent = '⭕ ' + wd.w + (wd.ko ? ' · ' + wd.ko : '');
+    if (exConf.pickStage) exEl('phAns').innerHTML = '<b>' + phHl(wd) + '</b>';
     phTimer = setTimeout(phQNext, 1500);
   } else {
     if (!phQBad) { phQBad = true; phMistakes++; }
@@ -566,13 +575,13 @@ function phAnswered(ok) {
     exEl('phAns').innerHTML = '정답: <b>' + phHl(wd) + '</b>';
     if (!exConf.pick) {
       phQBusy = true;
-      phTimer = setTimeout(() => { if (exKind === 'phonics' && exPhase === 'ph3') { phQReset(); phQBusy = false; } }, 1200);
+      phTimer = setTimeout(() => { if (phOn() && exPhase === 'ph3') { phQReset(); phQBusy = false; } }, 1200);
     }
   }
 }
 
 function phQNext() {
-  if (exKind !== 'phonics' || exPhase !== 'ph3') return;
+  if (!phOn() || exPhase !== 'ph3') return;
   phQi++;
   if (phQi >= phQs.length) renderPhResult(); else renderPhQ();
 }
@@ -582,7 +591,7 @@ function renderPhResult() {
   const n = phQs.length, need = Math.ceil(n * 0.7);
   phPass = phQScore >= need;
   phShow();
-  exEl('exStage').textContent = 'STEP 3 · 결과';
+  exEl('exStage').textContent = exConf.pickStage ? '결과' : 'STEP 3 · 결과';
   exEl('exLead').textContent = '';
   exEl('exCount').textContent = phQScore + ' / ' + n;
   exEl('exLearn').innerHTML = '<div class="phres"><div class="phe">' + (phPass ? '🎉' : '💪') + '</div><p><b>' + n + '문제 중 ' + phQScore + '개</b> 처음에 맞혔어요.</p><p>' +
@@ -607,11 +616,11 @@ async function finishPhonics() {
   const b = exEl('exMainBtn');
   b.hidden = false; b.disabled = false; b.textContent = '모드 선택으로 →';
   try { launchConfetti(); playCelebrationSound(); } catch (e) {}
-  markLocalProgress(currentSet, 'phonics', true);
+  markLocalProgress(currentSet, exKind, true);
   if (db) {
     try {
       const id = 'r_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8);
-      await db.doc('quiz_results/' + id).set({ name: currentName, mode: 'phonics', setNo: currentSet, ts: Date.now(), passed: true, mistakes: phMistakes });
+      await db.doc('quiz_results/' + id).set({ name: currentName, mode: exKind, setNo: currentSet, ts: Date.now(), passed: true, mistakes: phMistakes });
     } catch (e) {}
   }
 }
@@ -1197,6 +1206,7 @@ function renderExtraLearn() {
   if (exKind === 'longo') { renderLongo(); return; }
   if (exKind === 'jobsyn') { renderJobsYn(); return; }
   if (exKind === 'phonics') { renderPhonics(); return; }
+  if (exKind === 'blendpick') { phBind(); clearTimeout(phTimer); phMistakes = 0; startPhQuiz(); return; }
   if (exKind === 'jobs') { renderJobs(); return; }
   if (exKind === 'story') { renderStory(); return; }
   exEl('exStage').textContent = 'STEP 1 · 배우기';
@@ -1375,7 +1385,7 @@ document.getElementById('extraExitBtn').addEventListener('click', function () { 
 document.getElementById('exMainBtn').addEventListener('click', function () {
   if (exKind === 'longo') { longoMain(); return; }
   if (exKind === 'jobsyn') { jobsYnMain(); return; }
-  if (exKind === 'phonics') { phonicsMain(); return; }
+  if (phOn()) { phonicsMain(); return; }
   if (exKind === 'jobs') { jobsMain(); return; }
   if (exKind === 'story') { storyMain(); return; }
   if (exPhase === 'learn') { buildExtraQuiz(); renderExtraQ(); return; }
