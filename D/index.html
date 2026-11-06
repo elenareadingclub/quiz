@@ -71,6 +71,9 @@
   .hallchip{font-size:13px; font-weight:700; background:var(--surface); border:1px solid var(--line); border-radius:20px; padding:3px 10px; color:var(--ink);}
   .hallchip small{font-weight:500; color:var(--ink-faint); font-size:11px;}
   .hallnone{font-size:12.5px; color:var(--ink-soft);}
+  /* HALL_D_STARS: 💯 스펠 만점 칸 (같은 상자 안 아랫칸, 레벨 색으로 살짝 강조) */
+  .hallstars{margin-top:10px; padding-top:8px; border-top:1.5px dashed var(--line);}
+  .hallstars .hallchip{background:var(--accent-soft); border-color:var(--accent);}
   .submitnote{font-size:13px; color:var(--ink-soft); margin-top:4px;}
   .setbtn.locked{opacity:.4; filter:grayscale(1); cursor:not-allowed;}
   .wpbtn.wpmeanbtn.on{border-color:var(--accent); background:var(--accent-soft); color:var(--accent-strong);}
@@ -3562,6 +3565,22 @@ function renderHomeworkBanner() {
 }
 
 // --- 명예의 전당: 이 책에서 스펠 8문제를 한 번도 안 틀린 친구들 (영문명·난이도·날짜만)
+// HALL_D_STARS (엘레나 2026-11-06): 새 서버면 윗칸 = 모든 단계를 마친 친구들(완료한 날마다), 아랫칸 = 💯 스펠 만점(이지·하드 각각 한 번)
+const HALL_STAGE_WORD = { 3: '세', 4: '네', 5: '다섯' };
+function hallStageWord(setNo) { return HALL_STAGE_WORD[stageOrder(setNo).length] || '모든'; }
+function hallTwoRowsHtml(setNo, items, stars) {
+  const chip = (i, diffIcon) => '<span class="hallchip">' + (diffIcon ? (i.diff === '하드' ? '🔥 ' : '🐣 ') : '') + escHtml(nameWithIcon(i.name)) + ' <small>' + escHtml(fmtShort(i.date)) + '</small></span>';
+  const people = new Set(items.map(i => i.name)).size;
+  let html = '<div class="hallttl">🌟 이 책의 Word Stars' + (people ? ' <span class="hallcnt">' + people + '</span>' : '') + '</div>' +
+    (items.length ? '<div class="hallchips">' + items.map(i => chip(i, false)).join('') + '</div>'
+                  : '<div class="hallnone">' + hallStageWord(setNo) + ' 가지 활동을 모두 하면 여기에 이름이 올라가요! ✨</div>');
+  if (stageOrder(setNo).indexOf('spell') >= 0) {
+    html += '<div class="hallstars"><div class="hallttl">💯 스펠 만점! 정말 대단해요</div>' +
+      (stars.length ? '<div class="hallchips">' + stars.map(i => chip(i, true)).join('') + '</div>'
+                    : '<div class="hallnone">스펠을 하나도 안 틀리면 여기에 특별히 이름이 올라가요! 💯</div>') + '</div>';
+  }
+  return html;
+}
 async function renderHallForSet(setNo) {
   let box = document.getElementById('hallBox');
   if (!box) {
@@ -3573,6 +3592,7 @@ async function renderHallForSet(setNo) {
   const draw = () => {
     if (currentSet !== setNo) return;
     const items = hallCache.items.filter(i => i.set === setNo);
+    if (Array.isArray(hallCache.stars)) { box.innerHTML = hallTwoRowsHtml(setNo, items, hallCache.stars.filter(i => i.set === setNo)); return; }   // HALL_D_STARS
     box.innerHTML = '<div class="hallttl">🌟 이 책의 Word Stars' + (items.length ? ' <span class="hallcnt">' + items.length + '</span>' : '') + '</div>' +
       (items.length
         ? '<div class="hallchips">' + items.map(i => '<span class="hallchip">' + escHtml(nameWithIcon(i.name)) + ' ' + (i.diff === '하드' ? '🔥' : '🐣') + ' <small>' + escHtml(fmtShort(i.date)) + '</small></span>').join('') + '</div>'
@@ -3636,7 +3656,12 @@ function sentCardHtml() {
 function showSubmitResult(wrap, r, payload) {
   const lines = ['<div class="submittitle">✅ 선생님께 제출됐어요' + (r.attempt ? ' (' + r.attempt + '번째)' : '') + '</div>'];
   if (r.late) lines.push('<div class="submitnote">⏰ 마감 시간이 지나서 늦게 낸 숙제로 기록됐어요.</div>');
-  if (payload.spell && payload.spell.clean) lines.push('<div class="submitnote">🌟 스펠을 한 번도 안 틀렸어요! Word Stars에 이름이 올라가요.</div>');
+  if (!Array.isArray(hallCache.stars)) {   // 옛 서버: 스펠 만점만 이름이 올라감
+    if (payload.spell && payload.spell.clean) lines.push('<div class="submitnote">🌟 스펠을 한 번도 안 틀렸어요! Word Stars에 이름이 올라가요.</div>');
+  } else if (!r.trial) {   // HALL_D_STARS: 체험 계정은 Word Stars에 안 올라감
+    lines.push('<div class="submitnote">🌟 ' + hallStageWord(payload.set) + ' 단계를 모두 마쳤어요! Word Stars에 이름이 올라가요.</div>');
+    if (payload.spell && payload.spell.clean) lines.push('<div class="submitnote">💯 스펠을 하나도 안 틀렸어요! 스펠 만점 칸에도 이름이 올라가요.</div>');
+  }
   if (r.trial) lines.push('<div class="submitnote">체험 계정이라 선생님 표에는 체험으로 표시돼요.</div>');
   if (r.card) {
     recordSent(currentSet, { card: r.card, attempt: r.attempt || 0, late: !!r.late, at: Date.now() });
@@ -3872,7 +3897,7 @@ window.addEventListener('beforeunload', e => {
 // ===== AUTO_UPDATE (요구사항 NF-09): 새 버전을 올리면 다음 접속이나 탭으로 돌아올 때 최신 화면으로 바꾼다.
 // 문제를 푸는 중·기록을 보내는 중에는 끊지 않고, 이름·Day 목록 화면에서만 한 번 다시 불러온다.
 // 못 보낸 기록은 이미 기기에 먼저 저장돼 있어 다시 불러와도 사라지지 않는다.
-const APP_BUILD = '20261103-192859';
+const APP_BUILD = '20261106-194508';
 const VER_URL = '../version.json';
 const VER_FIRST_MS = 1500, VER_POLL_MS = 600000, VER_TICK_MS = 5000, VER_RETRY_MS = 600000;
 let verWant = '';   // 받아야 할 새 번호 (안전한 때를 기다리는 중)
@@ -4211,7 +4236,7 @@ function hallRefresh() {
   if (hallP) return hallP;
   if (Date.now() - hallCache.at <= 60000) return Promise.resolve();
   hallP = relayPost({ action: 'hall', level: LEVEL_CODE })
-    .then(r => { if (r.ok) hallCache = { at: Date.now(), items: r.items || [] }; })
+    .then(r => { if (r.ok) hallCache = { at: Date.now(), items: r.items || [], stars: Array.isArray(r.stars) ? r.stars : null }; })
     .catch(() => {})
     .then(() => { hallP = null; });
   return hallP;
